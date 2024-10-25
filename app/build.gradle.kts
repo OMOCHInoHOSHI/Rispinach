@@ -78,6 +78,21 @@ chaquopy{
 }
 
 dependencies {
+    //カメラライブラリS---------------------------------------------------------
+    val cameraxVersion = "1.3.4"    //変数
+    implementation("androidx.camera:camera-core:${cameraxVersion}")
+    implementation("androidx.camera:camera-camera2:${cameraxVersion}")
+    implementation("androidx.camera:camera-lifecycle:${cameraxVersion}")
+    implementation("androidx.camera:camera-video:${cameraxVersion}")
+    implementation("androidx.camera:camera-view:${cameraxVersion}")
+    implementation("androidx.camera:camera-extensions:${cameraxVersion}")
+    //カメラライブラリE---------------------------------------------------------
+
+    //アイコン関係S----------------------------------------------------------------------
+    implementation ("androidx.compose.material3:material3:1.3.0")
+    implementation("androidx.compose.material:material-icons-core:1.7.4")
+    implementation("androidx.compose.material:material-icons-extended-android:1.7.4")
+    //アイコン関係E----------------------------------------------------------------------
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
