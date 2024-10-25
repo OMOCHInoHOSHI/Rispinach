@@ -1,9 +1,13 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 
+import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.runtime.Composable
@@ -13,6 +17,8 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.google.common.util.concurrent.ListenableFuture
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 //カメラの状態を表すデータクラスとして用意
 data class CameraState (
@@ -60,7 +66,80 @@ data class CameraState (
         //完成したビューをリターンで戻す
         return  previewView
     }
+
+    //写真保存、インテントを使い、写真を別アプリに共有する機能
+    private  val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+    fun takePhoto(){
+        //現在日時からファイルを作成し、ゲームに格納
+        val name = SimpleDateFormat(
+            FILENAME_FORMAT,
+            Locale.US
+        ).format(System.currentTimeMillis())
+
+        val contentValues = ContentValues().apply {//データを格納するために使用するクラス
+            put(
+                //DISPLAY_NAMEがファイル名に
+                android.provider.MediaStore.MediaColumns.DISPLAY_NAME,
+                name
+            )
+            put(
+                //MIMEタイプ
+                android.provider.MediaStore.MediaColumns.MIME_TYPE,
+                "image/jpeg"
+            )
+            put(
+                //保存先の相対パスを渡す
+                android.provider.MediaStore.MediaColumns.RELATIVE_PATH,
+                //フォルダ名
+                "Pictures/CameraX-Image"
+            )
+        }
+
+        //どのように出力したいか
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(
+            context.contentResolver,
+            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            contentValues
+        ).build()
+
+        //出力をメディアストアに保存するため、メディアストアのエントリーを追加
+        //ImageCaptureクラスインスタンスであるImageCaptureオブジェクトのtakePictureを呼び出して撮影
+        imageCapture.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(context),
+            //エグゼキュータ(Executor)と画像が保存される時のためのコールバックを渡す
+            object :ImageCapture.OnImageSavedCallback{
+                //画像キャプチャの失敗や保存の失敗の場合、エラーメッセージ
+                override fun onError(exc: ImageCaptureException){
+                    val msg = "Photo capture failed: ${exc.message}"
+                    //Toastは簡単なメッセージを表示させるUIコンポーネント
+                    Toast.makeText(context,msg,Toast.LENGTH_SHORT).show()
+                    Log.e("Camera",msg,exc)
+                }
+                //成功で呼び出される
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    val msg = "Photo capture succeeded: ${output.savedUri}"
+                    Toast.makeText(context,msg,Toast.LENGTH_SHORT).show()
+                    Log.d("Camera",msg)
+
+                    //ほかのアプリケーションに送信
+                    Intent(Intent.ACTION_SEND).also { share ->
+                        share.type = "image/*"
+                        share.putExtra(Intent.EXTRA_STREAM,output.savedUri)
+                        context.startActivity(
+                            Intent.createChooser(
+                                share,
+                                "Share to"
+                            )
+                        )
+                    }
+                }
+            }
+        )
+    }
 }
+
+
 
 //UI構築の際に、カメラ関連の状態を管理するための関数
 @Composable
