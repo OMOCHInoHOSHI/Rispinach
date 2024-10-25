@@ -33,6 +33,8 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
+                //カメラ権限呼び出し
+                CameraScreen()
             }
         }
     }
