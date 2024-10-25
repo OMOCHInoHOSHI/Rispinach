@@ -1,13 +1,29 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+
+    // Pythonの導入により追加
+    id("com.chaquo.python")
+
 }
 
 android {
     namespace = "io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach"
     compileSdk = 34
 
+    // Pytnonにより追加
+    flavorDimensions += "pyVersion"
+    productFlavors{
+        create("py312"){dimension = "pyVersion"}
+    }
+
     defaultConfig {
+
+        // Pythonにより追加
+        ndk{
+            abiFilters += listOf("arm64-v8a", "x86_64")
+        }
+
         applicationId = "io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach"
         minSdk = 24
         targetSdk = 34
@@ -47,6 +63,18 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+// Pythonにより追加
+chaquopy{
+    defaultConfig{
+
+        version = "3.12"
+    }
+    productFlavors{
+        getByName("py312"){version = "3.12"}
+    }
+    sourceSets{ }
 }
 
 dependencies {
