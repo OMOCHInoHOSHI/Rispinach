@@ -14,18 +14,24 @@ import androidx.compose.runtime.setValue
 fun CameraScreen(){
     //状態保持
     var isGranted by remember { mutableStateOf(false) }
+    //カメラスクリーンを表示
+    val cameraState = remenbreCameraState()
 
     PermissionHand { granted ->
         isGranted = granted
     }
-    //Trueならカメラの権限が許可されている事を意味する
     if(isGranted){  //True
         Box{
-            Text(text = "カメラの権限を取得できました")
-            println("カメラの権限取得")
+            //Text(text = "カメラの権限を取得できました")
+            println("カメラの権限取得!")
+            //作成したプレビューカメラコンポーザブルでビューを表示
+            PreviewCamera { ctx ->
+                cameraState.startCamera(ctx)
+            }
         }
     }else{
         Text(text = "カメラの権限がありません")
         println("カメラの権限が取得がありません")
     }
+
 }
