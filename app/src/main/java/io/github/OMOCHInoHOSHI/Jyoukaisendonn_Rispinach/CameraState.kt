@@ -91,7 +91,7 @@ data class CameraState (
                 //保存先の相対パスを渡す
                 android.provider.MediaStore.MediaColumns.RELATIVE_PATH,
                 //フォルダ名
-                "Pictures/CameraX-Image"
+                "Pictures/Rispinach-Image"
             )
         }
 
@@ -111,14 +111,14 @@ data class CameraState (
             object :ImageCapture.OnImageSavedCallback{
                 //画像キャプチャの失敗や保存の失敗の場合、エラーメッセージ
                 override fun onError(exc: ImageCaptureException){
-                    val msg = "Photo capture failed: ${exc.message}"
+                    val msg = "失敗:: ${exc.message}"
                     //Toastは簡単なメッセージを表示させるUIコンポーネント
                     Toast.makeText(context,msg,Toast.LENGTH_SHORT).show()
                     Log.e("Camera",msg,exc)
                 }
                 //成功で呼び出される
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
+                    val msg = "JPEGで保存: ${output.savedUri}"
                     Toast.makeText(context,msg,Toast.LENGTH_SHORT).show()
                     Log.d("Camera",msg)
 
