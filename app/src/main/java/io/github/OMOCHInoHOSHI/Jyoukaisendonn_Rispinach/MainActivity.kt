@@ -46,9 +46,9 @@ class MainActivity : ComponentActivity() {
                 }
 
                 //カメラボタンでカメラ起動S----------------------------------------------------
-                var flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
+                var camera_flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
                 FilledTonalButton(
-                    onClick = { flg = 1 },
+                    onClick = { camera_flg = 1 },
                     modifier = Modifier.size(80.dp).padding(1.dp)
                 ) {
                     Icon(
@@ -57,9 +57,10 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.size(ButtonDefaults.IconSize)
                     )
                 }
-                if(flg == 1){
-                    //カメラ権限呼び出し
-                    CameraScreen()
+                if(camera_flg==1){
+//                        CameraScreen()
+                    camera_flg = CameraScreen_2(camera_flg)
+//                        camera_flg=0
                 }
                 //カメラボタンでカメラ起動E----------------------------------------------------
             }
