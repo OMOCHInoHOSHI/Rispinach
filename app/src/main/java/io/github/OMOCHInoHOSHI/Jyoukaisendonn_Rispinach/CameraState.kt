@@ -123,16 +123,16 @@ data class CameraState (
                     Log.d("Camera",msg)
 
                     //ほかのアプリケーションに送信
-                    Intent(Intent.ACTION_SEND).also { share ->
-                        share.type = "image/*"
-                        share.putExtra(Intent.EXTRA_STREAM,output.savedUri)
-                        context.startActivity(
-                            Intent.createChooser(
-                                share,
-                                "Share to"
-                            )
-                        )
-                    }
+//                    Intent(Intent.ACTION_SEND).also { share ->
+//                        share.type = "image/*"
+//                        share.putExtra(Intent.EXTRA_STREAM,output.savedUri)
+//                        context.startActivity(
+//                            Intent.createChooser(
+//                                share,
+//                                "Share to"
+//                            )
+//                        )
+//                    }
                 }
             }
         )

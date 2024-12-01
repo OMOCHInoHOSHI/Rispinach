@@ -1,24 +1,25 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.rounded.Camera
-import androidx.compose.material.icons.rounded.Photo
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,8 +52,11 @@ fun TakePhoto(takePhoto:() -> Unit){
             )
         }
 
+        var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
         FloatingActionButton(
-            onClick = { /*do something*/ },
+
+            onClick = {
+                },
             modifier = Modifier
 
                 .align(Alignment.BottomCenter)// 下部中央に配置
@@ -65,31 +69,3 @@ fun TakePhoto(takePhoto:() -> Unit){
     }
 
 }
-
-
-//@Composable
-//fun TakePhoto(takePhoto:() -> Unit){
-//
-//    Box(
-//        modifier = Modifier
-//            .size(60.dp)               // ボタンのサイズを正方形に
-//            .clip(CircleShape)         // 真円にクリップ
-//    ) {
-//        FilledTonalButton(onClick = {  },
-//            modifier = Modifier
-//                .clip(CircleShape)
-//                .align(Alignment.BottomCenter)// 下部中央に配置
-//                .offset(x = (-20).dp)   //左に
-//        ){
-//            Icon(
-//                imageVector = Icons.Rounded.Photo, // フォルダアイコン
-//                contentDescription = "",
-//                modifier = Modifier
-//                    .size(30.dp)                  // アイコンのサイズ
-//            )
-//        }
-//
-//    }
-//
-//
-//}
