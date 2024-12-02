@@ -17,6 +17,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,6 +31,9 @@ import androidx.compose.ui.unit.dp
 //TakePhotoコンポーザはボタンのUIを表示する
 @Composable
 fun TakePhoto(takePhoto:() -> Unit){
+
+    // 選択フラグ
+    var select_flg by remember { mutableIntStateOf(0) }
 
     Box(
         modifier = Modifier
@@ -52,11 +56,12 @@ fun TakePhoto(takePhoto:() -> Unit){
             )
         }
 
-        var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+
+
         FloatingActionButton(
 
-            onClick = {
-                },
+            onClick = {select_flg += 1},
             modifier = Modifier
 
                 .align(Alignment.BottomCenter)// 下部中央に配置
@@ -68,4 +73,15 @@ fun TakePhoto(takePhoto:() -> Unit){
         }
     }
 
+
+    if(select_flg != 0){
+
+        println("選択")
+
+        photosPick2(onNothingSelected = {
+            // Handle nothing selected, e.g., show a message or log an event
+            Log.d("MainActivity", "No image selected")
+            select_flg = 0
+        })
+    }
 }
