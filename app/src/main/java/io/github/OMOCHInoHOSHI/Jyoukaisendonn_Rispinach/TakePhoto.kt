@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FlashAuto
+import androidx.compose.material.icons.filled.FlashOff
+import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.rounded.Camera
 import androidx.compose.material3.FloatingActionButton
@@ -32,15 +35,32 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TakePhoto(takePhoto:() -> Unit){
 
-    // 選択フラグ
-    var select_flg by remember { mutableIntStateOf(0) }
+    // フォトピックフラグ
+    var select_flg by remember { mutableStateOf(false) }
+    // フラッシュ切り替え
+    var flashmode_flg by remember { mutableIntStateOf(0) }
+    // フラッシュモード
+    var flashmode = Icons.Filled.FlashAuto
 
+    //デフォでオフ
+    if(flashmode_flg == 0){
+        flashmode = Icons.Filled.FlashOff
+    }
+    else if(flashmode_flg == 1){
+        flashmode = Icons.Filled.FlashOn
+    }
+    else if(flashmode_flg ==2){
+        flashmode = Icons.Filled.FlashAuto
+    }
+
+    // UI-S-------------------------------------------------------------------------------------------------------------------------------
     Box(
         modifier = Modifier
             .fillMaxSize()
 //            .padding(16.dp)
     ){
 
+        //シャッターボタンS---------------------------------------------------------------
         //takePhotoは、ラムダの引数を受け取る
         FloatingActionButton(onClick = takePhoto,
             modifier = Modifier
@@ -55,13 +75,12 @@ fun TakePhoto(takePhoto:() -> Unit){
 //                modifier = Modifier.size(ButtonDefaults.IconSize)
             )
         }
+        //シャッターボタンE---------------------------------------------------------------
 
-
-
-
+        // フォトピッカーボタンS-------------------------------------------------------------
         FloatingActionButton(
 
-            onClick = {select_flg += 1},
+            onClick = {select_flg = true},
             modifier = Modifier
 
                 .align(Alignment.BottomCenter)// 下部中央に配置
@@ -71,17 +90,42 @@ fun TakePhoto(takePhoto:() -> Unit){
         ){
             Icon(Icons.Filled.Photo, contentDescription = "追加")
         }
+        // フォトピッカーボタンS-------------------------------------------------------------
+
+        //フラシュボタンS-------------------------------------------------------------------
+        FloatingActionButton(
+            onClick = {
+                flashmode_flg ++
+                // flashflgループ
+                if(flashmode_flg >= 3) {
+                    flashmode_flg = 0
+                }
+                      },
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .clip(CircleShape)
+        ){
+            Icon(flashmode, contentDescription = "フラッシュオート")
+        }
+        //フラシュボタンE-------------------------------------------------------------------
+
+        //
+
+        // UI-E-------------------------------------------------------------------------------------------------------------------------------
+
     }
 
 
-    if(select_flg != 0){
+    //ボタンが押されたらフォトピッカー起動S-----------------------------------------------
+    if(select_flg != false){
 
         println("選択")
 
         photosPick2(onNothingSelected = {
             // Handle nothing selected, e.g., show a message or log an event
             Log.d("MainActivity", "No image selected")
-            select_flg = 0
+            select_flg = false
         })
     }
+    //ボタンが押されたらフォトピッカー起動E-----------------------------------------------
 }
