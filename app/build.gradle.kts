@@ -5,6 +5,8 @@ plugins {
     // Pythonの導入により追加
     id("com.chaquo.python")
 
+    // MapsSDK
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
