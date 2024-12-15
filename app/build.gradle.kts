@@ -36,6 +36,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        // map追記
+        manifestPlaceholders["MAPS_API_KEY"] = project.property("MAPS_API_KEY").toString()
     }
 
     buildTypes {
@@ -80,6 +83,11 @@ chaquopy{
 }
 
 dependencies {
+
+    //map
+    implementation ("com.google.maps.android:maps-compose:6.1.0")
+    implementation ("com.google.android.gms:play-services-maps:19.0.0")
+
     //カメラライブラリS---------------------------------------------------------
     val cameraxVersion = "1.3.4"    //変数
     implementation("androidx.camera:camera-core:${cameraxVersion}")

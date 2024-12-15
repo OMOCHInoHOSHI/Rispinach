@@ -23,6 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chaquo.python.Python
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.rememberCameraPositionState
 import io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach.ui.theme.RispinachTheme
 
 class MainActivity : ComponentActivity() {
@@ -37,6 +41,9 @@ class MainActivity : ComponentActivity() {
 
         //enableEdgeToEdge()    //スマホの端を無くす
         setContent {
+
+
+
             RispinachTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
@@ -59,7 +66,8 @@ class MainActivity : ComponentActivity() {
                 }
                 if(camera_flg==1){
 //                        CameraScreen()
-                    camera_flg = CameraScreen_2(camera_flg)
+//                    camera_flg = CameraScreen_2(camera_flg)
+                    MapContent()
 //                        camera_flg=0
                 }
                 //カメラボタンでカメラ起動E----------------------------------------------------
@@ -73,6 +81,19 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
         modifier = modifier
+    )
+}
+
+@Composable
+fun MapContent() {
+    val defaultPosition = LatLng(35.689501, 139.691722) // 東京都庁
+    val defaultZoom = 8f
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(defaultPosition, defaultZoom)
+    }
+    GoogleMap(
+        modifier = Modifier.fillMaxSize(),
+        cameraPositionState = cameraPositionState,
     )
 }
 
