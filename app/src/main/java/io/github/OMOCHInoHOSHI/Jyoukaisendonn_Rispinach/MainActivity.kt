@@ -1,5 +1,6 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
+import ResNetPage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,7 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.chaquo.python.Python
+import com.chaquo.python.Python     // Python
+import com.chaquo.python.android.AndroidPlatform        // Chaquopy
 import io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach.ui.theme.RispinachTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,19 +26,30 @@ class MainActivity : ComponentActivity() {
         val tex1 = module.callAttr("hello_world")
         println(tex1)
         
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
         setContent {
             RispinachTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "print_py",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                // Chaquopyを初期化
+                if (!Python.isStarted()) {
+                    Python.start(AndroidPlatform(this))
                 }
+
+                ResNetPage() // ResNet_page関数を呼び出す
+
             }
+
+            /*
+            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Greeting(
+                    name = "print_py",
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
+             */
         }
     }
 }
+
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
