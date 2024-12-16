@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                 }
                 if(camera_flg==1){
 //                        CameraScreen()
-//                    camera_flg = CameraScreen_2(camera_flg)
+                    camera_flg = CameraScreen_2(camera_flg)
                     MapContent()
 //                        camera_flg=0
                 }
@@ -84,18 +84,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Composable
-fun MapContent() {
-    val defaultPosition = LatLng(35.689501, 139.691722) // 東京都庁
-    val defaultZoom = 8f
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(defaultPosition, defaultZoom)
-    }
-    GoogleMap(
-        modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState,
-    )
-}
+
 
 @Preview(showBackground = true)
 @Composable
