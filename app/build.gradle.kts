@@ -81,17 +81,17 @@ dependencies {
     //カメラライブラリS---------------------------------------------------------
     val cameraxVersion = "1.3.4"    //変数
     implementation("androidx.camera:camera-core:${cameraxVersion}")
-    implementation("androidx.camera:camera-camera2:${cameraxVersion}")
-    implementation("androidx.camera:camera-lifecycle:${cameraxVersion}")
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
     implementation("androidx.camera:camera-video:${cameraxVersion}")
-    implementation("androidx.camera:camera-view:${cameraxVersion}")
-    implementation("androidx.camera:camera-extensions:${cameraxVersion}")
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.extensions)
     //カメラライブラリE---------------------------------------------------------
 
     //アイコン関係S----------------------------------------------------------------------
-    implementation ("androidx.compose.material3:material3:1.3.0")
-    implementation("androidx.compose.material:material-icons-core:1.7.4")
-    implementation("androidx.compose.material:material-icons-extended-android:1.7.4")
+    implementation (libs.material3)
+    implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.material.icons.extended.android)
     //アイコン関係E----------------------------------------------------------------------
 
     implementation(libs.androidx.core.ktx)
