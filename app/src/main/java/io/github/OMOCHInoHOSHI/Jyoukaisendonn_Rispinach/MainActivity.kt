@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
+                MapMarkers()        // マーカー
 
                 //カメラボタンでカメラ起動S----------------------------------------------------
                 var camera_flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
