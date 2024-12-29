@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach"
-    compileSdk = 34
+    compileSdk = 35
 
     // Pytnonにより追加
     flavorDimensions += "pyVersion"
@@ -101,7 +101,11 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation("androidx.compose.material:material-icons-extended:1.7.4")//これ追加
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.camera.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
