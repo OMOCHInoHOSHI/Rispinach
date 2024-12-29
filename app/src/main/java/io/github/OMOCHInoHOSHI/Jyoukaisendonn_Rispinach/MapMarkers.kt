@@ -19,13 +19,14 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 @Composable
-fun loadMarkers(context: Context): List<MarkerOptions> {
+fun loadMarkers(context: Context): Pair<MutableList<MarkerOptions>, MutableList<MarkerOptions>> {
     Log.i("MarkerUtils", "Marker_Start")
 
-    val markers = remember { mutableListOf<MarkerOptions>() }  // マーカーのリストを保持するための可変リストを作成
+    val markers_enemy = remember { mutableListOf<MarkerOptions>() }  // マーカーのリストを保持するための可変リストを作成
+    val markers_safe = remember { mutableListOf<MarkerOptions>() }  // マーカーのリストを保持するための可変リストを作成
 
     // markersが空の場合のみファイルを読み込む
-    if (markers.size <= 0) {
+    if (markers_enemy.size <= 0) {
 
         // 指定されたファイル名のアセットファイルを開く
         val inputStream = context.assets.open("Mark.txt")
@@ -47,14 +48,16 @@ fun loadMarkers(context: Context): List<MarkerOptions> {
                         //val color = BitmapDescriptorFactory.HUE_BLUE
                         Log.i("MarkerUtils", "Marker_center")
 
-                        // 緯度と経度が有効な場合、MarkerOptionsを作成してリストに追加
-                        markers.add(
-                            MarkerOptions()
-                                .position(LatLng(Lat, Lng))
-                                .title(Title)
-                                .snippet(Snippet)
-                                //.icon(BitmapDescriptorFactory.defaultMarker(color))
-                        )
+                        val marker = MarkerOptions()
+                            .position(LatLng(Lat, Lng))
+                            .title(Title)
+                            .snippet(Snippet)
+
+                        if (Snippet == "enemy") {
+                            markers_enemy.add(marker)
+                        } else if (Snippet == "safe") {
+                            markers_safe.add(marker)
+                        }
                     }
                 }
             }
@@ -62,13 +65,14 @@ fun loadMarkers(context: Context): List<MarkerOptions> {
     }
 
     // markersの中身をログに出力
-    markers.forEach { markerOptions ->
-        Log.i("MarkerUtils", "Marker: ${markerOptions.position}, Title: ${markerOptions.title}")
+    markers_safe.forEach { markerOptions ->
+        Log.i("MarkerUtils", "Safe Marker: ${markerOptions.position}, Title: ${markerOptions.title}")
     }
 
     Log.i("MarkerUtils", "Marker_End")
-    return markers
+    return Pair(markers_enemy, markers_safe)
 }
+
 
 @Composable
 fun MapMarkers() {
@@ -76,15 +80,16 @@ fun MapMarkers() {
 
     // Mark.txtファイルからマーカー情報を読み込む
     val context = LocalContext.current
-    val markers: List<MarkerOptions>
-    markers = loadMarkers(context)
+    val (markers_enemy, markers_safe) = loadMarkers(context)
 
     val defaultPosition = LatLng(35.689501, 139.691722) // 東京都庁
     val defaultZoom = 8f
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(defaultPosition, defaultZoom)
     }
-    val color = BitmapDescriptorFactory.HUE_BLUE
+
+    val color_enemy = BitmapDescriptorFactory.HUE_RED
+    val color_safe = BitmapDescriptorFactory.HUE_GREEN
 
     Log.i("GoogleMap", "GoogleMap_Mark_Start")
     GoogleMap(
@@ -92,17 +97,26 @@ fun MapMarkers() {
         cameraPositionState = cameraPositionState,
     ) {
         // 読み込んだマーカー情報をマップに追加
-        markers.forEach { markerOptions ->
+        markers_enemy.forEach { markerOptions ->
             Marker(
                 state = rememberMarkerState(position = markerOptions.position),
                 title = markerOptions.title,
                 snippet = markerOptions.snippet,
-                icon = (BitmapDescriptorFactory.defaultMarker(color)) // マーカーの色を設定
+                icon = BitmapDescriptorFactory.defaultMarker(color_enemy)
+            )
+        }
+        markers_safe.forEach { markerOptions ->
+            Marker(
+                state = rememberMarkerState(position = markerOptions.position),
+                title = markerOptions.title,
+                snippet = markerOptions.snippet,
+                icon = BitmapDescriptorFactory.defaultMarker(color_safe)
             )
         }
     }
 
     // マーカーの数をログに出力
-    println("現在のマーカーの数: ${markers.size}")
+    println("危険マーカーの数: ${markers_enemy.size}")
+    println("安全マーカーの数: ${markers_safe.size}")
     Log.i("GoogleMap", "GoogleMap_Mark_End")
 }
