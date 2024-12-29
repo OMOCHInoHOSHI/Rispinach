@@ -50,46 +50,39 @@ class MainActivity : ComponentActivity() {
         setContent {
             RispinachTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "print_py",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-class MainActivity : ComponentActivity()
-{
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        enableEdgeToEdge()
-        super.onCreate(savedInstanceState)
-        setContent()
-        {
-            RispinachTheme()
-            {
-                Surface(
-                    color = MaterialTheme.colorScheme.background
-                )
-                {
-                    SideEffect { Log.d("compose-log", "Surface") }
-                    DRAWER()
-                }
+                    val a = innerPadding
+//                    Greeting(
+//                        name = "print_py",
+//                        modifier = Modifier.padding(innerPadding)
+//                    )
 
-                //カメラボタンでカメラ起動S----------------------------------------------------
-                var camera_flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
-                FilledTonalButton(
-                    onClick = { camera_flg = 1 },
-                    modifier = Modifier.size(80.dp).padding(1.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.PhotoCamera, // カメラのアイコンに変更
-                        contentDescription = "カメラ起動",
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                    Surface(
+                        color = MaterialTheme.colorScheme.background
                     )
-                }
-                if(camera_flg==1){
+                    {
+                        SideEffect { Log.d("compose-log", "Surface") }
+                        DRAWER()
+                    }
+
+                    //カメラボタンでカメラ起動S----------------------------------------------------
+                    var camera_flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
+                    FilledTonalButton(
+                        onClick = { camera_flg = 1 },
+                        modifier = Modifier.size(80.dp).padding(1.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.PhotoCamera, // カメラのアイコンに変更
+                            contentDescription = "カメラ起動",
+                            modifier = Modifier.size(ButtonDefaults.IconSize)
+                        )
+                    }
+                    if (camera_flg == 1) {
 //                        CameraScreen()
-                    camera_flg = CameraScreen_2(camera_flg)
+                        camera_flg = CameraScreen_2(camera_flg)
 //                        camera_flg=0
+                    }
+                    //カメラボタンでカメラ起動E----------------------------------------------------
                 }
-                //カメラボタンでカメラ起動E----------------------------------------------------
             }
         }
     }
@@ -120,12 +113,12 @@ fun DRAWER(
 
 
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview()
-{
-    RispinachTheme()
-    {
-        DRAWER()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview()
+//{
+//    RispinachTheme()
+//    {
+//        DRAWER()
+//    }
+//}

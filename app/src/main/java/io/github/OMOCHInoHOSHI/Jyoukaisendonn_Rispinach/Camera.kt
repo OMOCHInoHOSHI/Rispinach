@@ -10,14 +10,17 @@ import androidx.compose.runtime.SideEffect
 @Composable
 fun Camera()
 {
-    SideEffect { Log.d("compose-log", "Camera") }
-    Column()
-    {
-//        Button()
-//        {
-//
-//        }
-    }
+    var camera_flg = 1
+    camera_flg = CameraScreen_2(1)
+
+//    SideEffect { Log.d("compose-log", "Camera") }
+//    Column()
+//    {
+////        Button()
+////        {
+////
+////        }
+//    }
 
 
     //val permissionState: PermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
@@ -30,12 +33,12 @@ fun Camera()
     println("Camera")
 }
 
-fun StartCamera()
-{
-    //カメラ起動
-}
-
-fun StartPhoto()
-{
-    //スマホ内の画像で判定
-}
+//fun StartCamera()
+//{
+//    //カメラ起動
+//}
+//
+//fun StartPhoto()
+//{
+//    //スマホ内の画像で判定
+//}
