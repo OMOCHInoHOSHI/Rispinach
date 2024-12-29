@@ -1,13 +1,29 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+
+    // Pythonの導入により追加
+    id("com.chaquo.python")
+
 }
 
 android {
     namespace = "io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach"
     compileSdk = 34
 
+    // Pytnonにより追加
+    flavorDimensions += "pyVersion"
+    productFlavors{
+        create("py312"){dimension = "pyVersion"}
+    }
+
     defaultConfig {
+
+        // Pythonにより追加
+        ndk{
+            abiFilters += listOf("arm64-v8a", "x86_64")
+        }
+
         applicationId = "io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach"
         minSdk = 24
         targetSdk = 34
@@ -49,7 +65,34 @@ android {
     }
 }
 
+// Pythonにより追加
+chaquopy{
+    defaultConfig{
+
+        version = "3.12"
+    }
+    productFlavors{
+        getByName("py312"){version = "3.12"}
+    }
+    sourceSets{ }
+}
+
 dependencies {
+    //カメラライブラリS---------------------------------------------------------
+    val cameraxVersion = "1.3.4"    //変数
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.video)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.extensions)
+    //カメラライブラリE---------------------------------------------------------
+
+    //アイコン関係S----------------------------------------------------------------------
+    implementation (libs.material3)
+    implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.material.icons.extended.android)
+    //アイコン関係E----------------------------------------------------------------------
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
