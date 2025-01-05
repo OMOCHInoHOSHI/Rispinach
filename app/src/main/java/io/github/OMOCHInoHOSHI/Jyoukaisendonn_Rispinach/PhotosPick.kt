@@ -1,5 +1,6 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -61,7 +62,12 @@ fun photosPick2(onNothingSelected: () -> Unit,){
 
     // Uriを関数に渡す
     if(pickedImageUri != Uri.EMPTY){
-        image_Uri(pickedImageUri)
+        val bitmap = image_Uri_to_Bitmap(pickedImageUri)
+
+        if(bitmap is Bitmap){
+            println("bitmap取得")
+        }
+
     }
 
 }

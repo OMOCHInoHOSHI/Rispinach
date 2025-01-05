@@ -186,3 +186,84 @@ fun ResNetPage() {
         }
     }
 }
+
+// 画像選択画面の設定(ResNet)---------------------------------------------------------------
+@Composable
+fun ResNetPage(bitmaps: Bitmap) {
+    // 関数の開始を確認
+    Log.d("ResNet_page", "ResNet_Start")
+
+    // 現在のコンテキストを取得
+    val context = LocalContext.current
+    // ImageAnalyzerのインスタンスを作成
+    val imageAnalyzer = remember { ImageAnalyzer(context) }
+    // 選択された画像を保持するための状態を定義
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    // 解析結果を保持するための状態を定義
+    var result by remember { mutableStateOf("") }
+    // コルーチンスコープを作成
+    val coroutineScope = rememberCoroutineScope()
+
+    // 画像選択のランチャーを作成
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let {
+            // 選択された画像のURIからビットマップを取得
+            val inputStream = context.contentResolver.openInputStream(it)
+            bitmap = BitmapFactory.decodeStream(inputStream)
+        }
+    }
+
+    // マテリアルテーマを適用
+    MaterialTheme {
+        // 画面全体を覆うSurfaceを作成
+        Surface(modifier = Modifier.fillMaxSize()) {
+            // 縦に並べるColumnを作成
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // ビットマップが存在する場合、画像を表示
+                bitmap?.let {
+                    Image(
+                        bitmap = it.asImageBitmap(),
+                        contentDescription = null,
+                        modifier = Modifier.size(224.dp)
+                    )
+                }
+                // スペースを追加
+                Spacer(modifier = Modifier.height(16.dp))
+                // 画像選択ボタンを作成
+                Button(onClick = { launcher.launch("image/*") }) {
+                    Text("写真を選択")
+                }
+                // スペースを追加
+                Spacer(modifier = Modifier.height(16.dp))
+                // 画像解析ボタンを作成
+                Button(onClick = {
+                    bitmap?.let { bmp ->
+                        // コルーチンを起動して画像を解析
+                        coroutineScope.launch {
+                            try {
+                                Log.d("ResNet_page", "imageAnalyzer")
+                                result = imageAnalyzer.analyzePhoto(bmp)
+                            } catch (e: Exception) {
+                                Log.e("ResNet_page", "Error analyzing photo", e)
+                            }
+                        }
+                    }
+                }) {
+                    Text("解析")
+                }
+                // スペースを追加
+                Spacer(modifier = Modifier.height(16.dp))
+                // 解析結果を表示
+                Text(text = result)
+            }
+        }
+    }
+}
