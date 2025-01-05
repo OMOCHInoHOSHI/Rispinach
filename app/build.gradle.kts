@@ -54,6 +54,7 @@ android {
     }
     buildFeatures {
         compose = true
+        mlModelBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -94,6 +95,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended.android)
     //アイコン関係E----------------------------------------------------------------------
 
+    // 既存の依存関係
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -102,6 +104,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    //implementation(libs.litert)       // tensorflow-liteの使用のためコメントアウト
+    //implementation(libs.litert.support.api)       // tensorflow-liteの使用のためコメントアウト
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -109,4 +113,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // tensorflow-liteの依存関係を追加
+    implementation(libs.tensorflow.lite.metadata)
+    implementation(libs.tensorflow.lite)
+    implementation (libs.tensorflow.lite.support)
+
 }
