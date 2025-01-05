@@ -23,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.chaquo.python.Python
 import com.chaquo.python.Python     // Python
 import com.chaquo.python.android.AndroidPlatform        // Chaquopy
 import io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach.ui.theme.RispinachTheme
@@ -48,11 +47,11 @@ class MainActivity : ComponentActivity() {
                     Python.start(AndroidPlatform(this))
                 }
 
-                ResNetPage() // ResNet_page関数を呼び出す
+//                ResNetPage() // ResNet_page関数を呼び出す
 
             }
 
-            /*
+
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 Greeting(
                     name = "print_py",
@@ -80,11 +79,12 @@ class MainActivity : ComponentActivity() {
                 if(camera_flg==1){
 //                        CameraScreen()
                     camera_flg = CameraScreen_2(camera_flg)
+//                    ResNetPage() // ResNet_page関数を呼び出す
 //                        camera_flg=0
                 }
                 //カメラボタンでカメラ起動E----------------------------------------------------
             }
-             */
+
         }
     }
 }
