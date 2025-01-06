@@ -5,6 +5,8 @@ plugins {
     // Pythonの導入により追加
     id("com.chaquo.python")
 
+    // MapsSDK
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -34,6 +36,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        // map追記
+        val mapsApiKey = rootProject.properties["GOOGLE_MAPS_API_KEY"] as? String ?: ""
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
@@ -78,6 +84,11 @@ chaquopy{
 }
 
 dependencies {
+
+    //map
+    implementation ("com.google.maps.android:maps-compose:6.1.0")
+    implementation ("com.google.android.gms:play-services-maps:19.0.0")
+
     //カメラライブラリS---------------------------------------------------------
     val cameraxVersion = "1.3.4"    //変数
     implementation(libs.androidx.camera.core)
