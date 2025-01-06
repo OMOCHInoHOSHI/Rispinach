@@ -76,7 +76,7 @@ class ImageAnalyzer(context: Context) {
             // モデルの入力サイズに合わせて画像をリサイズ
             val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 224, 224, true)
             // リソースの解放
-            bitmap.recycle()
+//            bitmap.recycle()
             val tensorImage = TensorImage(DataType.FLOAT32)
             tensorImage.load(resizedBitmap)
             Log.d("ImageAnalyzer", "analyzePhoto_1")
