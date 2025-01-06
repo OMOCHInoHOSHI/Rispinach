@@ -1,5 +1,6 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
+import ResNetPage
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
@@ -66,6 +67,7 @@ fun photosPick2(onNothingSelected: () -> Unit,){
 
         if(bitmap is Bitmap){
             println("bitmap取得")
+            ResNetPage(bitmap)
         }
 
     }

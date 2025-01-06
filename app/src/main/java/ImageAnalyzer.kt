@@ -205,15 +205,17 @@ fun ResNetPage(bitmaps: Bitmap) {
     val coroutineScope = rememberCoroutineScope()
 
     // 画像選択のランチャーを作成
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri ->
-        uri?.let {
-            // 選択された画像のURIからビットマップを取得
-            val inputStream = context.contentResolver.openInputStream(it)
-            bitmap = BitmapFactory.decodeStream(inputStream)
-        }
-    }
+//    val launcher = rememberLauncherForActivityResult(
+//        contract = ActivityResultContracts.GetContent()
+//    ) { uri ->
+//        uri?.let {
+//            // 選択された画像のURIからビットマップを取得
+//            val inputStream = context.contentResolver.openInputStream(it)
+//            bitmap = BitmapFactory.decodeStream(inputStream)
+//        }
+//    }
+
+    bitmap = bitmaps
 
     // マテリアルテーマを適用
     MaterialTheme {
@@ -238,9 +240,9 @@ fun ResNetPage(bitmaps: Bitmap) {
                 // スペースを追加
                 Spacer(modifier = Modifier.height(16.dp))
                 // 画像選択ボタンを作成
-                Button(onClick = { launcher.launch("image/*") }) {
-                    Text("写真を選択")
-                }
+//                Button(onClick = { launcher.launch("image/*") }) {
+//                    Text("写真を選択")
+//                }
                 // スペースを追加
                 Spacer(modifier = Modifier.height(16.dp))
                 // 画像解析ボタンを作成
