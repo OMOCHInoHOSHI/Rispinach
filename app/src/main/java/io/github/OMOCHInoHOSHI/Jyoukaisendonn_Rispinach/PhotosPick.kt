@@ -65,6 +65,7 @@ fun photosPick2(onNothingSelected: () -> Unit,){
     if(pickedImageUri != Uri.EMPTY){
         val bitmap = image_Uri_to_Bitmap(pickedImageUri)
 
+        // bitmapで判定
         if(bitmap is Bitmap){
             val cameraState = remenbreCameraState()
             //カメラ停止
