@@ -38,7 +38,8 @@ android {
         }
 
         // map追記
-        manifestPlaceholders["MAPS_API_KEY"] = project.property("MAPS_API_KEY").toString()
+        val mapsApiKey = rootProject.properties["GOOGLE_MAPS_API_KEY"] as? String ?: ""
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {

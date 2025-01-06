@@ -29,6 +29,18 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
 import io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach.ui.theme.RispinachTheme
 
+import androidx.compose.foundation.layout.* // layout関連をまとめてimport
+import androidx.compose.material.icons.rounded.* // roundedアイコンをまとめてimport
+import androidx.compose.material3.* // Material3コンポーネントをまとめてimport
+import androidx.compose.runtime.* // runtime関連をまとめてimport
+import androidx.compose.ui.* // ui関連をまとめてimport
+
+import android.util.Log
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.ui.Alignment
+import com.google.android.gms.maps.CameraUpdateFactory
+import kotlinx.coroutines.launch
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,39 +53,33 @@ class MainActivity : ComponentActivity() {
 
         //enableEdgeToEdge()    //スマホの端を無くす
         setContent {
-
-
-
             RispinachTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "print_py",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-
-                //カメラボタンでカメラ起動S----------------------------------------------------
-                var camera_flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
-                FilledTonalButton(
-                    onClick = { camera_flg = 1 },
-                    modifier = Modifier.size(80.dp).padding(1.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.PhotoCamera, // カメラのアイコンに変更
-                        contentDescription = "カメラ起動",
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
-                    )
-                }
-                if(camera_flg==1){
-//                        CameraScreen()
-//                    camera_flg = CameraScreen_2(camera_flg)
-                    MapContent()
-//                        camera_flg=0
-                }
-                //カメラボタンでカメラ起動E----------------------------------------------------
+                MapContent()
             }
         }
     }
+}
+
+@Composable
+fun MainScreen() {
+    var showMap by remember { mutableStateOf(false) }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        floatingActionButton = {
+            FloatingActionButton(onClick = { showMap = !showMap }) {
+                Icon(Icons.Rounded.PhotoCamera, contentDescription = "マップ表示/非表示")
+            }
+        },
+        content = { innerPadding ->
+            Column(Modifier.padding(innerPadding)) { // Columnでコンテンツを配置
+                Greeting("print_py")
+                if (showMap) {
+                    MapContent()
+                }
+            }
+        }
+    )
 }
 
 @Composable
@@ -84,17 +90,70 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
+
 @Composable
 fun MapContent() {
-    val defaultPosition = LatLng(35.689501, 139.691722) // 東京都庁
-    val defaultZoom = 8f
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(defaultPosition, defaultZoom)
-    }
-    GoogleMap(
-        modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState,
+    // 地名と緯度経度の対応付け
+    val locations = mapOf(
+        "東京" to LatLng(35.689501, 139.691722), // 東京都庁
+        "大阪" to LatLng(34.6937, 135.5023),   // 大阪府庁
+        "京都" to LatLng(35.0116, 135.7681),   // 京都市役所
+        "福岡" to LatLng(33.5890, 130.4020)    // 福岡市役所
     )
+    val defaultPosition = locations["東京"]!! // 東京都庁
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(defaultPosition, 8f)
+    }
+
+    // CoroutineScopeをrememberで保持
+    val coroutineScope = rememberCoroutineScope()
+
+    Box(Modifier.fillMaxSize()) {
+        GoogleMap(
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState
+        )
+
+        var expanded by remember { mutableStateOf(false) }
+        val options = locations.keys.toList()
+        var selectedOptionText by remember { mutableStateOf(options[0]) }
+
+        Box(Modifier.align(Alignment.TopEnd).padding(16.dp)) {
+            IconButton(onClick = { expanded = true }) {
+                Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                options.forEach { option ->
+                    DropdownMenuItem(
+                        text = { Text(option) },
+                        onClick = {
+                            selectedOptionText = option
+                            expanded = false
+                            // 地名に対応する緯度経度を取得
+                            val selectedLocation = locations[option]
+
+                            // マップを移動
+                            if (selectedLocation != null) {
+                                coroutineScope.launch {
+                                    cameraPositionState.animate(
+                                        CameraUpdateFactory.newLatLngZoom(
+                                            selectedLocation,
+                                            10f
+                                        ), //ズームレベルも変更
+                                        1000 // アニメーション時間（ミリ秒）
+                                    )
+                                }
+                                Log.d("MapContent", "$option が選択されました")
+                            }
+                        }
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
