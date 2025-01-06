@@ -1,7 +1,6 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -99,33 +98,12 @@ class MainActivity : ComponentActivity() {
                     }
                     //カメラボタンでカメラ起動E----------------------------------------------------
                 }
-                MapContent()
+
             }
         }
     }
 }
 
-@Composable
-fun MainScreen() {
-    var showMap by remember { mutableStateOf(false) }
-
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        floatingActionButton = {
-            FloatingActionButton(onClick = { showMap = !showMap }) {
-                Icon(Icons.Rounded.PhotoCamera, contentDescription = "マップ表示/非表示")
-            }
-        },
-        content = { innerPadding ->
-            Column(Modifier.padding(innerPadding)) { // Columnでコンテンツを配置
-                Greeting("print_py")
-                if (showMap) {
-                    MapContent()
-                }
-            }
-        }
-    )
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -134,8 +112,7 @@ fun DRAWER(
         .padding(top = 20.dp, start = 30.dp),
     navController: NavHostController = rememberNavController(),
     startDestination: String = "main" // mainに変更
-)
-{
+) {
     SideEffect { Log.d("compose-log", "DRAWER") }
     Box(
         modifier = Modifier
@@ -147,8 +124,8 @@ fun DRAWER(
         {
             mainScreen() // 先程の拡張関数 mainScreenを呼び出す
         }
+    }
 }
-
 
 @Composable
 fun MapContent() {
@@ -215,22 +192,10 @@ fun MapContent() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RispinachTheme {
-        Greeting("Android")
-    }
-}
-
-
-
 //@Preview(showBackground = true)
 //@Composable
-//fun GreetingPreview()
-//{
-//    RispinachTheme()
-//    {
-//        DRAWER()
+//fun GreetingPreview() {
+//    RispinachTheme {
+//        Greeting("Android")
 //    }
 //}
