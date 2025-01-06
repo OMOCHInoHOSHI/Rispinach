@@ -73,12 +73,31 @@ class ImageAnalyzer(context: Context) {
             // 画像の解析の開始を確認
             Log.d("ImageAnalyzer", "analyzePhoto_Start")
 
-            // モデルの入力サイズに合わせて画像をリサイズ
-            val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 224, 224, true)
+            // モデルの入力サイズ
+            val targetWidth = 224
+            val targetHeight = 224
+
+            // 画像の縦横比を維持しながらリサイズ
+            val aspectRatio = bitmap.width.toFloat() / bitmap.height.toFloat()
+            val resizedBitmap = if (bitmap.width > bitmap.height) {
+                Bitmap.createScaledBitmap(bitmap, targetWidth, (targetWidth / aspectRatio).toInt(), true)
+            } else {
+                Bitmap.createScaledBitmap(bitmap, (targetHeight * aspectRatio).toInt(), targetHeight, true)
+            }
+
+            // 余白を追加して224x224にする
+            val finalBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888)
+            val canvas = android.graphics.Canvas(finalBitmap)
+            val left = (targetWidth - resizedBitmap.width) / 2
+            val top = (targetHeight - resizedBitmap.height) / 2
+            canvas.drawBitmap(resizedBitmap, left.toFloat(), top.toFloat(), null)
+
+            Log.d("ImageAnalyzer", "analyzePhoto_1")
+
             // リソースの解放
 //            bitmap.recycle()
             val tensorImage = TensorImage(DataType.FLOAT32)
-            tensorImage.load(resizedBitmap)
+            tensorImage.load(finalBitmap)
             Log.d("ImageAnalyzer", "analyzePhoto_1")
 
             // バッファの形式を確認
