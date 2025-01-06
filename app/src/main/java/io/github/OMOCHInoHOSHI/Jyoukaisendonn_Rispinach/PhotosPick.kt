@@ -67,7 +67,11 @@ fun photosPick2(onNothingSelected: () -> Unit,){
 
         // bitmapで判定
         if(bitmap is Bitmap){
+            val cameraState = remenbreCameraState()
+            //カメラ停止
+            cameraState.stopCamera()
             println("bitmap取得")
+            // bitmap判定
             ResNetPage(bitmap)
         }
 
