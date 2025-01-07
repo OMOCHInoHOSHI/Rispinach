@@ -1,5 +1,7 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,25 +15,32 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PostScreen() {
+fun PostScreen(bitmap: Bitmap?) {
+    // 投稿タイトルの状態を保持する変数
     var title by rememberSaveable { mutableStateOf("") }
+    // 生物名の状態を保持する変数
     var speciesName by rememberSaveable { mutableStateOf("") }
+    // 発見場所の状態を保持する変数
     var location by rememberSaveable { mutableStateOf("") }
+    // 発見日付の状態を保持する変数
     var discoveryDate by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
         topBar = {
+            // トップバーの設定
             TopAppBar(
                 title = { Text("投稿準備画面") }
             )
         },
         floatingActionButton = {
+            // 投稿ボタンの設定
             FloatingActionButton(
-                onClick = { /* TODO: Implement post functionality */ },
+                onClick = { /* TODO: 投稿機能を実装 */ },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
@@ -47,7 +56,7 @@ fun PostScreen() {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Picture Area
+            // 画像エリアの設定
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -59,14 +68,22 @@ fun PostScreen() {
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "picture",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.outline
-                )
+                bitmap?.let {
+                    Image(
+                        bitmap = it.asImageBitmap(),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } ?: run {
+                    Text(
+                        text = "picture",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                }
             }
 
-            // Title Input
+            // タイトル入力フィールドの設定
             OutlinedTextField(
                 value = title,
                 onValueChange = { title = it },
@@ -85,7 +102,7 @@ fun PostScreen() {
                 )
             )
 
-            // Species Name Input
+            // 生物名入力フィールドの設定
             OutlinedTextField(
                 value = speciesName,
                 onValueChange = { speciesName = it },
@@ -97,7 +114,7 @@ fun PostScreen() {
                 )
             )
 
-            // Location Input
+            // 発見場所入力フィールドの設定
             OutlinedTextField(
                 value = location,
                 onValueChange = { location = it },
@@ -116,7 +133,7 @@ fun PostScreen() {
                 )
             )
 
-            // Discovery Date Input
+            // 発見日付入力フィールドの設定
             OutlinedTextField(
                 value = discoveryDate,
                 onValueChange = { discoveryDate = it },
@@ -137,4 +154,3 @@ fun PostScreen() {
         }
     }
 }
-

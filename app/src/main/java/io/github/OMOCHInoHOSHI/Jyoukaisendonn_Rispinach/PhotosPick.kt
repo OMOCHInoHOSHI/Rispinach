@@ -76,7 +76,7 @@ fun photosPick2(onNothingSelected: () -> Unit,){
             println("bitmap取得")
             // 画像の回転情報を考慮して正しい向きに回転させる
             val rotatedBitmap = rotateBitmapIfRequired(LocalContext.current, bitmap, pickedImageUri)
-            PostScreen()
+            PostScreen(rotatedBitmap)
             // bitmap判定
             //ResNetPage(rotatedBitmap)
         }
