@@ -1,5 +1,6 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
+import ResNetPage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -37,6 +38,8 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.chaquo.python.Python     // Python
+import com.chaquo.python.android.AndroidPlatform        // Chaquopy
 import io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach.ui.theme.RispinachTheme
 
 import androidx.compose.foundation.layout.* // layout関連をまとめてimport
@@ -62,8 +65,25 @@ class MainActivity : ComponentActivity() {
         println(tex1)
 
         //enableEdgeToEdge()    //スマホの端を無くす
+
+        //enableEdgeToEdge()
         setContent {
             RispinachTheme {
+                // Chaquopyを初期化
+                if (!Python.isStarted()) {
+                    Python.start(AndroidPlatform(this))
+                }
+
+//                ResNetPage() // ResNet_page関数を呼び出す
+
+            }
+
+
+            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Greeting(
+                    name = "print_py",
+                    modifier = Modifier.padding(innerPadding)
+                )
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val a = innerPadding
 //                    Greeting(
@@ -94,15 +114,19 @@ class MainActivity : ComponentActivity() {
                     if (camera_flg == 1) {
 //                        CameraScreen()
                         camera_flg = CameraScreen_2(camera_flg)
+                    camera_flg = CameraScreen_2(camera_flg)
+//                    ResNetPage() // ResNet_page関数を呼び出す
 //                        camera_flg=0
                     }
                     //カメラボタンでカメラ起動E----------------------------------------------------
                 }
 
             }
+
         }
     }
 }
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
