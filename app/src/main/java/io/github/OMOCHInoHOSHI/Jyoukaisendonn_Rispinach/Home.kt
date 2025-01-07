@@ -55,7 +55,7 @@ fun Home()
     //val itemsIndexedList = rememberSaveable { mutableListOf("A", "B", "C", "D", "E")}
     //var activePhotoId by rememberSaveable { mutableStateOf<Int?>(null) }
     //var openBottomSheet by remember { mutableStateOf(false) }
-    var skipPartiallyExpanded by rememberSaveable { mutableStateOf(false) }
+    var skipPartiallyExpanded by rememberSaveable { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = skipPartiallyExpanded
@@ -77,7 +77,9 @@ fun Home()
     //var pictureName=R.drawable.test1
     var lsName=""
     //var open=openBottomSheet
-    Column()
+    Column(
+        modifier = Modifier
+    )
     {
         //地図枠(仮)
         Box()
@@ -90,6 +92,7 @@ fun Home()
 
         //投稿(仮)
         LazyVerticalGrid(
+            modifier = Modifier,
             columns = GridCells.Fixed(4),
             //columns = GridCells.FixedSize(/*minSize = */128.dp)
             //columns = GridCells.Adaptive(minSize = 128.dp),
@@ -155,6 +158,7 @@ fun Home()
                 if (openBottomSheet)
                 {
                     ModalBottomSheet(
+                        modifier = Modifier,
                         //modifier = Modifier.padding(top = 16.dp),
                         onDismissRequest = {openBottomSheet = false },
                         sheetState = bottomSheetState,
@@ -163,7 +167,7 @@ fun Home()
                         Column(
                             modifier = Modifier
                                 //.padding(start = 16.dp, bottom = 50.dp)
-                                .imePadding()//.padding(start = 16.dp, bottom = 24.dp)
+                                //.imePadding()//.padding(start = 16.dp, bottom = 24.dp)
                         ) {
                             //Posts(pictureName[index], lsName)
                             println(pictureName[index].name)

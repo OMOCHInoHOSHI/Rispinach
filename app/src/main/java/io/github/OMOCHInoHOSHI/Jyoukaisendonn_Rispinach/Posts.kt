@@ -30,6 +30,7 @@ fun Posts(pName: Int, lName: String, cName: String) {
     val bottomSheetState = rememberModalBottomSheetState()
 
     Scaffold(
+        modifier = Modifier,
         topBar = {
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -96,6 +97,17 @@ fun Posts(pName: Int, lName: String, cName: String) {
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text("場所:", style = MaterialTheme.typography.titleMedium)
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = cName,
+                                textDecoration = TextDecoration.Underline,
+                                color = Color.Blue,
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.clickable { /* 必要に応じてクリック処理を追加 */ }
+                            )
+
+                            //通報場所
+                            Text("通報:", style = MaterialTheme.typography.titleMedium)
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = cName,
