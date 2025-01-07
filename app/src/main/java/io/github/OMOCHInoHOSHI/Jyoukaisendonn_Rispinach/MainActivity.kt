@@ -28,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.chaquo.python.Python
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -78,52 +77,45 @@ class MainActivity : ComponentActivity() {
 
             }
 
-
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                Greeting(
-                    name = "print_py",
-                    modifier = Modifier.padding(innerPadding)
-                )
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val a = innerPadding
+                val a = innerPadding
 //                    Greeting(
 //                        name = "print_py",
 //                        modifier = Modifier.padding(innerPadding)
 //                    )
 
-                    Surface(
-                        color = MaterialTheme.colorScheme.background
-                    )
-                    {
-                        SideEffect { Log.d("compose-log", "Surface") }
-                        DRAWER()
-                    }
+                Surface(
+                    color = MaterialTheme.colorScheme.background
+                )
+                {
+                    SideEffect { Log.d("compose-log", "Surface") }
+                    DRAWER()
+                }
 
-                    //カメラボタンでカメラ起動S----------------------------------------------------
-                    var camera_flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
-                    FilledTonalButton(
-                        onClick = { camera_flg = 1 },
-                        modifier = Modifier.size(80.dp).padding(1.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.PhotoCamera, // カメラのアイコンに変更
-                            contentDescription = "カメラ起動",
-                            modifier = Modifier.size(ButtonDefaults.IconSize)
-                        )
-                    }
-                    if (camera_flg == 1) {
+                //カメラボタンでカメラ起動S----------------------------------------------------
+                var camera_flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
+                FilledTonalButton(
+                    onClick = { camera_flg = 1 },
+                    modifier = Modifier.size(80.dp).padding(1.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.PhotoCamera, // カメラのアイコンに変更
+                        contentDescription = "カメラ起動",
+                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                    )
+                }
+                if (camera_flg == 1) {
 //                        CameraScreen()
-                        camera_flg = CameraScreen_2(camera_flg)
+                    camera_flg = CameraScreen_2(camera_flg)
                     camera_flg = CameraScreen_2(camera_flg)
 //                    ResNetPage() // ResNet_page関数を呼び出す
 //                        camera_flg=0
-                    }
-                    //カメラボタンでカメラ起動E----------------------------------------------------
                 }
-
+                //カメラボタンでカメラ起動E----------------------------------------------------
             }
 
         }
+
     }
 }
 
