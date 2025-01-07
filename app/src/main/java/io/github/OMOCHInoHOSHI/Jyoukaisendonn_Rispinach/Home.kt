@@ -9,6 +9,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -160,7 +161,9 @@ fun Home()
                     )
                     {
                         Column(
-                            modifier = Modifier//.padding(start = 16.dp, bottom = 24.dp)
+                            modifier = Modifier
+                                //.padding(start = 16.dp, bottom = 50.dp)
+                                .imePadding()//.padding(start = 16.dp, bottom = 24.dp)
                         ) {
                             //Posts(pictureName[index], lsName)
                             println(pictureName[index].name)
