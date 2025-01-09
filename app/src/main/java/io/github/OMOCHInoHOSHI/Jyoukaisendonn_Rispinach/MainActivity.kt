@@ -1,6 +1,6 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
-import ResNetPage
+//import ResNetPage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
