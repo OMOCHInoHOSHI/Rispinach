@@ -129,23 +129,28 @@ fun PostScreen(bitmap: Bitmap?) {
             // 生物名入力フィールドの設定
             Box {
                 OutlinedTextField(
-                    value = speciesName,
-                    onValueChange = { speciesName = it },
+                    value = speciesName, // 入力された生物名の状態を保持
+                    onValueChange = { speciesName = it }, // 生物名が変更されたときの処理
                     placeholder = { Text("生物名入力") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            if (!speciesNameSet) {
+                            Log.d("PostScreen_image", "Clickable triggered") // クリック時のログ
+
+                            if (!speciesNameSet) { // 生物名がまだ設定されていない場合
                                 bitmap?.let { bmp ->
                                     coroutineScope.launch {
-                                        val result = imageAnalyzer.analyzePhoto(bmp)
-                                        dropdownItems = listOf(result)
-                                        dropdownExpanded = true
-                                        speciesNameSet = true
+                                        val result = imageAnalyzer.analyzePhoto(bmp) // 画像解析
+
+                                        dropdownItems = listOf(result) // ドロップダウンの項目を設定
+                                        dropdownExpanded = true // ドロップダウンを表示
+
+                                        speciesNameSet = true // 生物名が設定されたことを記録
+                                        Log.d("PostScreen_image", "speciesName before setting: $speciesName") // 解析結果のログ
                                     }
                                 }
-                            } else {
-                                dropdownExpanded = true
+                            } else { // 生物名が設定されている場合
+                                dropdownExpanded = true // ドロップダウンを表示
                             }
                         },
                     shape = RoundedCornerShape(8.dp),
@@ -154,16 +159,17 @@ fun PostScreen(bitmap: Bitmap?) {
                     )
                 )
 
+                // ドロップダウンメニュー
                 DropdownMenu(
-                    expanded = dropdownExpanded,
-                    onDismissRequest = { dropdownExpanded = false }
+                    expanded = dropdownExpanded, // ドロップダウンの表示状態
+                    onDismissRequest = { dropdownExpanded = false } // ドロップダウンが閉じられたときの処理
                 ) {
-                    dropdownItems.forEach { item ->
+                    dropdownItems.forEach { item -> // ドロップダウンの各項目
                         DropdownMenuItem(
-                            text = { Text(item) },
+                            text = { Text(item) }, // 項目のテキスト
                             onClick = {
-                                speciesName = item
-                                dropdownExpanded = false
+                                speciesName = item // 項目がクリックされたときに生物名を設定
+                                dropdownExpanded = false // ドロップダウンを閉じる
                             }
                         )
                     }
@@ -310,7 +316,12 @@ class ImageAnalyzer(context: Context) {
             Log.d("ImageAnalyzer", "analyzePhoto_3")
             val maxIndex = output[0].indices.maxByOrNull { output[0][it] } ?: -1
             Log.d("ImageAnalyzer", "analyzePhoto_4")
-            if (maxIndex != -1) labels[maxIndex] else "Unknown"
+            if (maxIndex != -1) {
+                val label = labels[maxIndex]
+                label.substringBefore(",") // 1つ目のコンマまでの文字列を取得
+            } else {
+                "Unknown"
+            }
 
         } catch (e: Exception) {        // 画像の解析に失敗した場合(エラーログ)
             Log.e("ImageAnalyzer", "Error analyzing photo", e)
