@@ -16,8 +16,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
@@ -96,26 +101,51 @@ fun Posts(pName: Int, lName: String, cName: String) {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text("場所:", style = MaterialTheme.typography.titleMedium)
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = cName,
-                                textDecoration = TextDecoration.Underline,
-                                color = Color.Blue,
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.clickable { /* 必要に応じてクリック処理を追加 */ }
-                            )
+
+                            //場所は一旦コメントアウト
+
+//                            Text("場所:", style = MaterialTheme.typography.titleMedium)
+//                            Spacer(modifier = Modifier.height(8.dp))
+//                            Text(
+//                                text = cName,
+//                                textDecoration = TextDecoration.Underline,
+//                                color = Color.Blue,
+//                                style = MaterialTheme.typography.bodyLarge,
+//                                modifier = Modifier.clickable { /* 必要に応じてクリック処理を追加 */ }
+//                            )
 
                             //通報場所
-                            Text("通報:", style = MaterialTheme.typography.titleMedium)
+                            Text("通報", style = MaterialTheme.typography.titleMedium)
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = cName,
-                                textDecoration = TextDecoration.Underline,
-                                color = Color.Blue,
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.clickable { /* 必要に応じてクリック処理を追加 */ }
+                                buildAnnotatedString()
+                                {
+                                    withLink(
+                                        LinkAnnotation.Url(
+                                            "https://www.env.go.jp/nature/intro/reo.html",
+                                            TextLinkStyles(
+                                                style = SpanStyle(
+                                                    color = Color.Blue,
+                                                    textDecoration = TextDecoration.Underline
+                                                )
+                                            )
+                                        )
+                                    )
+                                    {
+                                        append("地方環境事務所等一覧")
+                                    }
+                                }
                             )
+
+//                            Text("通報:", style = MaterialTheme.typography.titleMedium)
+//                            Spacer(modifier = Modifier.height(8.dp))
+//                            Text(
+//                                text = cName,
+//                                textDecoration = TextDecoration.Underline,
+//                                color = Color.Blue,
+//                                style = MaterialTheme.typography.bodyLarge,
+//                                modifier = Modifier.clickable { /* 必要に応じてクリック処理を追加 */ }
+//                            )
                         }
                     }
                 }
