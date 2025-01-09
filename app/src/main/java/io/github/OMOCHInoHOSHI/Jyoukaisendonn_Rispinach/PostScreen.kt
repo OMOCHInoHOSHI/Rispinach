@@ -11,7 +11,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -49,10 +51,6 @@ fun PostScreen(bitmap: Bitmap?) {
     val context = LocalContext.current
     // ImageAnalyzerのインスタンスを作成
     val imageAnalyzer = remember { ImageAnalyzer(context) }
-
-    // ドロップダウンの準備
-    var dropdownExpanded by remember { mutableStateOf(false) }
-    var dropdownItems by remember { mutableStateOf(listOf<String>()) }
 
     Scaffold(
         topBar = {
@@ -132,48 +130,32 @@ fun PostScreen(bitmap: Bitmap?) {
                     value = speciesName, // 入力された生物名の状態を保持
                     onValueChange = { speciesName = it }, // 生物名が変更されたときの処理
                     placeholder = { Text("生物名入力") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            Log.d("PostScreen_image", "Clickable triggered") // クリック時のログ
+                    modifier = Modifier.fillMaxWidth(),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                            tint = androidx.compose.ui.graphics.Color(0xFF89C3EB), // アイコンを勿忘草色(わすれなぐさいろ)に変更
+                            modifier = Modifier.clickable {
+                                Log.d("PostScreen_image", "Icon clicked") // クリック時のログ
 
-                            if (!speciesNameSet) { // 生物名がまだ設定されていない場合
                                 bitmap?.let { bmp ->
                                     coroutineScope.launch {
                                         val result = imageAnalyzer.analyzePhoto(bmp) // 画像解析
 
-                                        dropdownItems = listOf(result) // ドロップダウンの項目を設定
-                                        dropdownExpanded = true // ドロップダウンを表示
-
+                                        speciesName = result // 解析結果を生物名に設定
                                         speciesNameSet = true // 生物名が設定されたことを記録
-                                        Log.d("PostScreen_image", "speciesName before setting: $speciesName") // 解析結果のログ
+                                        Log.d("PostScreen_image", "speciesName set to: $speciesName") // 解析結果のログ
                                     }
                                 }
-                            } else { // 生物名が設定されている場合
-                                dropdownExpanded = true // ドロップダウンを表示
                             }
-                        },
+                        )
+                    },
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
                     )
                 )
-
-                // ドロップダウンメニュー
-                DropdownMenu(
-                    expanded = dropdownExpanded, // ドロップダウンの表示状態
-                    onDismissRequest = { dropdownExpanded = false } // ドロップダウンが閉じられたときの処理
-                ) {
-                    dropdownItems.forEach { item -> // ドロップダウンの各項目
-                        DropdownMenuItem(
-                            text = { Text(item) }, // 項目のテキスト
-                            onClick = {
-                                speciesName = item // 項目がクリックされたときに生物名を設定
-                                dropdownExpanded = false // ドロップダウンを閉じる
-                            }
-                        )
-                    }
-                }
             }
 
             // 発見場所入力フィールドの設定
