@@ -50,6 +50,10 @@ fun PostScreen(bitmap: Bitmap?) {
     // ImageAnalyzerのインスタンスを作成
     val imageAnalyzer = remember { ImageAnalyzer(context) }
 
+    // ドロップダウンの準備
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    var dropdownItems by remember { mutableStateOf(listOf<String>()) }
+
     Scaffold(
         topBar = {
             // トップバーの設定
@@ -123,29 +127,48 @@ fun PostScreen(bitmap: Bitmap?) {
             )
 
             // 生物名入力フィールドの設定
-            OutlinedTextField(
-                value = speciesName,
-                onValueChange = { speciesName = it },
-                placeholder = { Text("生物名入力") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable() {
-                        Log.d("PostScreen_image", "Clickable triggered")
-                        if (!speciesNameSet) {
-                            bitmap?.let { bmp ->
-                                coroutineScope.launch {
-                                    speciesName = imageAnalyzer.analyzePhoto(bmp)
-                                    Log.d("PostScreen_image", "speciesName before setting: $speciesName")
-                                    speciesNameSet = true
+            Box {
+                OutlinedTextField(
+                    value = speciesName,
+                    onValueChange = { speciesName = it },
+                    placeholder = { Text("生物名入力") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            if (!speciesNameSet) {
+                                bitmap?.let { bmp ->
+                                    coroutineScope.launch {
+                                        val result = imageAnalyzer.analyzePhoto(bmp)
+                                        dropdownItems = listOf(result)
+                                        dropdownExpanded = true
+                                        speciesNameSet = true
+                                    }
                                 }
+                            } else {
+                                dropdownExpanded = true
                             }
-                        }
-                    },
-                shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                        },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                    )
                 )
-            )
+
+                DropdownMenu(
+                    expanded = dropdownExpanded,
+                    onDismissRequest = { dropdownExpanded = false }
+                ) {
+                    dropdownItems.forEach { item ->
+                        DropdownMenuItem(
+                            text = { Text(item) },
+                            onClick = {
+                                speciesName = item
+                                dropdownExpanded = false
+                            }
+                        )
+                    }
+                }
+            }
 
             // 発見場所入力フィールドの設定
             OutlinedTextField(
