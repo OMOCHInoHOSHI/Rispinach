@@ -93,24 +93,24 @@ class MainActivity : ComponentActivity() {
                 }
 
                 //カメラボタンでカメラ起動S----------------------------------------------------
-                var camera_flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
-                FilledTonalButton(
-                    onClick = { camera_flg = 1 },
-                    modifier = Modifier.size(80.dp).padding(1.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.PhotoCamera, // カメラのアイコンに変更
-                        contentDescription = "カメラ起動",
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
-                    )
-                }
-                if (camera_flg == 1) {
-//                        CameraScreen()
-                    camera_flg = CameraScreen_2(camera_flg)
-                    camera_flg = CameraScreen_2(camera_flg)
-//                    ResNetPage() // ResNet_page関数を呼び出す
-//                        camera_flg=0
-                }
+//                var camera_flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
+//                FilledTonalButton(
+//                    onClick = { camera_flg = 1 },
+//                    modifier = Modifier.size(80.dp).padding(1.dp)
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Rounded.PhotoCamera, // カメラのアイコンに変更
+//                        contentDescription = "カメラ起動",
+//                        modifier = Modifier.size(ButtonDefaults.IconSize)
+//                    )
+//                }
+//                if (camera_flg == 1) {
+////                        CameraScreen()
+//                    camera_flg = CameraScreen_2(camera_flg)
+//                    camera_flg = CameraScreen_2(camera_flg)
+////                    ResNetPage() // ResNet_page関数を呼び出す
+////                        camera_flg=0
+//                }
                 //カメラボタンでカメラ起動E----------------------------------------------------
             }
 
