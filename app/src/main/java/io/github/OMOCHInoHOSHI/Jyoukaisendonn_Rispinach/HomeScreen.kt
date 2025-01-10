@@ -53,7 +53,7 @@ import io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach.ui.theme.RispinachTheme
 import kotlinx.coroutines.delay
 
 enum class MainScreenTab(
-    val id: String,
+    var id: String,
     val icon: ImageVector,
     val label: String,
     val idx:Int,
@@ -67,14 +67,14 @@ enum class MainScreenTab(
         idx=0,
        // enabled = true
     ),
-    List(
+    Camera(
         id = "main/camera",
         icon = Icons.Outlined.Camera,
         label = "Camera",
         idx=1,
       //  enabled = true
     ),
-    Settings(
+    Map(
         id = "main/map",
         icon = Icons.Outlined.Map,
         label = "Map",
@@ -97,6 +97,9 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
     val localDensity = LocalDensity.current
     var bottomBarHeight by remember { mutableStateOf(0.dp) }
     var btmEnabled by rememberSaveable { mutableStateOf(true) }
+
+
+    //var navEnabled by rememberSaveable { mutableStateOf(true) }
     //var n=true
     //currentTab=="main/home"
     //var x=null
@@ -109,6 +112,31 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
             {
                 SideEffect { Log.d("compose-log", "NavigationBar") }
                 MainScreenTab.entries.forEachIndexed { index, item ->
+                    var selectBottom=currentTab
+                    var selectIndex=item.idx
+//                    var selectId=item.id
+//                    var selectIndex=0
+//                    var selectBottom=currentTab
+
+                    if(selectBottom=="main/camera")
+                    {
+                        selectBottom="main/home"
+                        selectIndex=0
+                    }
+//
+//                    if(currentTab=="main/camera")
+//                    {
+//                        selectIndex=0
+//                        selectBottom="main/home"
+//                        selectId="main/home"
+//                    }
+//                    else
+//                    {
+//
+//                        selectBottom=currentTab
+//                        selectId=item.id
+//                    }
+
                     NavigationBarItem(
                         modifier = Modifier
                             .onGloballyPositioned { coordinates ->
@@ -142,6 +170,10 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                         label = { Text(item.label) },
                         onClick = dropUnlessResumed()
                         {
+//                            if(item.id=="main/camera")
+//                            {
+//                                Home()
+//                            }
                             //デバッグ用
                             //println(item.id)
                             if(currentTab==item.id)
@@ -181,8 +213,8 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                         },
 
                         //selected = btmEnabled
-                        enabled = currentTab!=item.id/*!=btmEnabled*/,
-                        selected = currentTab == item.id/*==(!btmEnabled)*/,
+                        enabled = selectBottom!=item.id/*selectId*//*currentTab!=item.id*//*!=btmEnabled*/,
+                        selected = selectBottom==item.id/*selectIndex == item.idx*//*==(!btmEnabled)*/,
                         //enabled = false==item.enabled,
                     )
                 }
@@ -340,6 +372,7 @@ fun NavGraphBuilder.screenMode()
     composable("main/camera")
     {
         Camera()
+
 
 
     }
