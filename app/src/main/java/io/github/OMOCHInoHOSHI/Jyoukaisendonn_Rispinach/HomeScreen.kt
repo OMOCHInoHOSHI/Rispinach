@@ -97,7 +97,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
     val localDensity = LocalDensity.current
     var bottomBarHeight by remember { mutableStateOf(0.dp) }
     var btmEnabled by rememberSaveable { mutableStateOf(true) }
-
+    var selectBottom=currentTab
 
     //var navEnabled by rememberSaveable { mutableStateOf(true) }
     //var n=true
@@ -112,8 +112,8 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
             {
                 SideEffect { Log.d("compose-log", "NavigationBar") }
                 MainScreenTab.entries.forEachIndexed { index, item ->
-                    var selectBottom=currentTab
-                    var selectIndex=item.idx
+
+                    //var selectIndex=item.idx
 //                    var selectId=item.id
 //                    var selectIndex=0
 //                    var selectBottom=currentTab
@@ -121,7 +121,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                     if(selectBottom=="main/camera")
                     {
                         selectBottom="main/home"
-                        selectIndex=0
+                        //selectIndex=0
                     }
 //
 //                    if(currentTab=="main/camera")
@@ -240,6 +240,11 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                         SideEffect { Log.d("compose-log", "ModalNavigationDrawer") }
                         Text(text = "ナビゲーションドロワー")
                         MainScreenTab.entries.forEachIndexed { index, item ->
+                            if(selectBottom=="main/camera")
+                            {
+                                selectBottom="main/home"
+                                //selectIndex=0
+                            }
                             NavigationDrawerItem(
                                 icon = { Icon(item.icon, contentDescription = item.label) },
                                 label = { Text(item.label) },
@@ -280,7 +285,8 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 
                                 },
                                 //enabled = currentTab==item.id==(!btmEnabled),
-                                selected = currentTab == item.id/*==btmEnabled*/,
+                                //selected = currentTab == item.id/*==btmEnabled*/,
+                                selected = selectBottom==item.id,
                             )
                         }
                     }
