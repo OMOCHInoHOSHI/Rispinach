@@ -1,7 +1,6 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 import android.util.Log
-import androidx.camera.core.Camera
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.*
 import androidx.compose.material.icons.outlined.Camera
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Map
@@ -97,7 +95,9 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
     val localDensity = LocalDensity.current
     var bottomBarHeight by remember { mutableStateOf(0.dp) }
     var btmEnabled by rememberSaveable { mutableStateOf(true) }
-    var selectBottom=currentTab
+    var selectButton=currentTab
+    var DismissibleDrawerEnabled=true
+    var goMap=false
 
     //var navEnabled by rememberSaveable { mutableStateOf(true) }
     //var n=true
@@ -118,9 +118,9 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //                    var selectIndex=0
 //                    var selectBottom=currentTab
 
-                    if(selectBottom=="main/camera")
+                    if(selectButton=="main/camera")
                     {
-                        selectBottom="main/home"
+                        selectButton="main/home"
                         //selectIndex=0
                     }
 //
@@ -213,8 +213,8 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                         },
 
                         //selected = btmEnabled
-                        enabled = selectBottom!=item.id/*selectId*//*currentTab!=item.id*//*!=btmEnabled*/,
-                        selected = selectBottom==item.id/*selectIndex == item.idx*//*==(!btmEnabled)*/,
+                        enabled = selectButton!=item.id/*selectId*//*currentTab!=item.id*//*!=btmEnabled*/,
+                        selected = selectButton==item.id/*selectIndex == item.idx*//*==(!btmEnabled)*/,
                         //enabled = false==item.enabled,
                     )
                 }
@@ -230,19 +230,32 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
         //ナビゲーションバー--------------------------------------------------------------------
         //ドロワーメニュー----------------------------------------------------------------------
         topBar = {
+            if(selectButton=="main/map")
+            {
+                goMap=true
+                DismissibleDrawerEnabled=false
+                drawerState = DrawerState(initialValue = DrawerValue.Closed)
+            }
+            else
+            {
+                goMap=false
+                DismissibleDrawerEnabled=true
+            }
             ModalNavigationDrawer(
                 drawerState = drawerState,
+                gesturesEnabled = DismissibleDrawerEnabled,
                 drawerContent = {
                     DismissibleDrawerSheet(
                         modifier = Modifier.width(200.dp)
                     )
                     {
+
                         SideEffect { Log.d("compose-log", "ModalNavigationDrawer") }
                         Text(text = "ナビゲーションドロワー")
                         MainScreenTab.entries.forEachIndexed { index, item ->
-                            if(selectBottom=="main/camera")
+                            if(selectButton=="main/camera")
                             {
-                                selectBottom="main/home"
+                                selectButton="main/home"
                                 //selectIndex=0
                             }
                             NavigationDrawerItem(
@@ -286,7 +299,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                 },
                                 //enabled = currentTab==item.id==(!btmEnabled),
                                 //selected = currentTab == item.id/*==btmEnabled*/,
-                                selected = selectBottom==item.id,
+                                selected = selectButton==item.id,
                             )
                         }
                     }
@@ -297,7 +310,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                     modifier = Modifier
                         .fillMaxSize()
                         .systemBarsPadding()
-                        .padding(bottom=bottomBarHeight)
+                        .padding(bottom = bottomBarHeight)
                 )
                 {
                     SideEffect { Log.d("compose-log", "Box2") }
@@ -316,18 +329,25 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                     }
                     //ドロワーメニューのアイコン----------------------------------------
                     IconButton(
+                        enabled = !goMap,
                         modifier = Modifier.padding(start = 30.dp, top = 20.dp, end = 20.dp),
-                        onClick = { drawerState = DrawerState(initialValue = DrawerValue.Open) }
+                        onClick = {
+                            //DismissibleDrawerEnabled=true
+                            drawerState = DrawerState(initialValue = DrawerValue.Open)
+                        }
                     )
                     {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier
-                                .height(60.dp)
-                                .width(60.dp)
-                        )
+                        if(!goMap)
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier
+                                    .height(60.dp)
+                                    .width(60.dp)
+                            )
+                        }
                     }
                     //ドロワーメニューのアイコン----------------------------------------
                 }
@@ -372,21 +392,14 @@ fun NavGraphBuilder.screenMode()
     composable("main/home")
     {
         Home()
-
-
     }
     composable("main/camera")
     {
         Camera()
-
-
-
     }
     composable("main/map")
     {
         Map()
-
-
     }
 }
 //各画面の処理------------------------------------------------
