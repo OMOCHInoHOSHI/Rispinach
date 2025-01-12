@@ -71,7 +71,7 @@ fun PostScreen(bitmap: Bitmap?) {
         floatingActionButton = {
             // 投稿ボタンの設定
             FloatingActionButton(
-                onClick = { TransmitData(bitmap) }, // 投稿ボタンがクリックされたときに TransmitData 関数を呼び出す
+                onClick = { TransmitData(bitmap, title.ifEmpty { "無題" }, speciesName.ifEmpty { "不明" }) }, // 投稿ボタンがクリックされたときに TransmitData 関数を呼び出す
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
@@ -322,7 +322,7 @@ class ImageAnalyzer(context: Context) {
 }
 
 // 投稿データの送信
-fun TransmitData(bitmap: Bitmap?) {
+fun TransmitData(bitmap: Bitmap?, title: String, speciesName: String) {
     if (bitmap == null) {
         Log.e("TransmitData", "Bitmap is null")
         return
@@ -338,10 +338,17 @@ fun TransmitData(bitmap: Bitmap?) {
     val baos = ByteArrayOutputStream()
     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
     val data = baos.toByteArray()
-    Log.d("TransmitData", "TransmitData_2")
+    Log.d("TransmitData", "image")
+
+    // メタデータを作成
+    val metadata = com.google.firebase.storage.StorageMetadata.Builder()
+        .setCustomMetadata("title", title.ifEmpty { "無題" }) // タイトルが空の場合は「無題」とする
+        .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" }) // 生物名が空の場合は「不明」とする
+        .build()
+    Log.d("TransmitData", "metadata")
 
     // Firebase Storage にアップロード
-    val uploadTask = imagesRef.putBytes(data)
+    val uploadTask = imagesRef.putBytes(data, metadata)
     uploadTask.addOnFailureListener { exception ->
         Log.e("TransmitData", "Upload failed", exception)
     }.addOnSuccessListener { taskSnapshot ->
