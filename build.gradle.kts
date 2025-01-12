@@ -6,6 +6,8 @@ plugins {
     // Python導入により追加
     id("com.chaquo.python") version  "15.0.1" apply false
 
+    // Firebaseプラグインの追加
+    id("com.google.gms.google-services") version "4.4.2" apply false
 }
 
 buildscript {

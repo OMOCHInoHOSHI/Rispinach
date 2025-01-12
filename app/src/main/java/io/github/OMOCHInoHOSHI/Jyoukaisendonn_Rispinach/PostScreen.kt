@@ -1,5 +1,6 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
+import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
@@ -30,6 +31,10 @@ import org.tensorflow.lite.support.image.TensorImage
 import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import java.io.ByteArrayOutputStream
+import com.google.firebase.FirebaseApp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,6 +57,10 @@ fun PostScreen(bitmap: Bitmap?) {
     // ImageAnalyzerのインスタンスを作成
     val imageAnalyzer = remember { ImageAnalyzer(context) }
 
+    // Firebaseの初期化
+    FirebaseApp.initializeApp(context)
+    Log.d("TransmitData", "Firebase initialized")
+
     Scaffold(
         topBar = {
             // トップバーの設定
@@ -62,7 +71,7 @@ fun PostScreen(bitmap: Bitmap?) {
         floatingActionButton = {
             // 投稿ボタンの設定
             FloatingActionButton(
-                onClick = { /* TODO: 投稿機能を実装 */ },
+                onClick = { TransmitData(bitmap, title.ifEmpty { "無題" }, speciesName.ifEmpty { "不明" }) }, // 投稿ボタンがクリックされたときに TransmitData 関数を呼び出す
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
@@ -309,5 +318,40 @@ class ImageAnalyzer(context: Context) {
             Log.e("ImageAnalyzer", "Error analyzing photo", e)
             "Error analyzing photo"
         }
+    }
+}
+
+// 投稿データの送信
+fun TransmitData(bitmap: Bitmap?, title: String, speciesName: String) {
+    if (bitmap == null) {
+        Log.e("TransmitData", "Bitmap is null")
+        return
+    }
+
+    // Firebase Storage のインスタンスを取得
+    val storage = Firebase.storage
+    val storageRef = storage.reference
+    val imagesRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+    Log.d("TransmitData", "TransmitData_1")
+
+    // Bitmap を JPEG に変換
+    val baos = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    val data = baos.toByteArray()
+    Log.d("TransmitData", "image")
+
+    // メタデータを作成
+    val metadata = com.google.firebase.storage.StorageMetadata.Builder()
+        .setCustomMetadata("title", title.ifEmpty { "無題" }) // タイトルが空の場合は「無題」とする
+        .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" }) // 生物名が空の場合は「不明」とする
+        .build()
+    Log.d("TransmitData", "metadata")
+
+    // Firebase Storage にアップロード
+    val uploadTask = imagesRef.putBytes(data, metadata)
+    uploadTask.addOnFailureListener { exception ->
+        Log.e("TransmitData", "Upload failed", exception)
+    }.addOnSuccessListener { taskSnapshot ->
+        Log.d("TransmitData", "Upload successful")
     }
 }

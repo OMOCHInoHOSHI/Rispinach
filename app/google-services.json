@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "796232278012",
+    "project_id": "rispinach-7a276",
+    "storage_bucket": "rispinach-7a276.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796232278012:android:816b9d6b30db56f5a6dc79",
+        "android_client_info": {
+          "package_name": "io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz21i8IYtZaRAbwPmOaXsmXWeu7Tvjtqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
