@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavGraphBuilder
@@ -25,18 +26,12 @@ import androidx.navigation.NavGraphBuilder
 @Composable
 fun Camera()
 {
-    var isCameraOpen by remember { mutableStateOf(false) }
+//    var isCameraOpen by remember { mutableStateOf(false) }
 
     var camera_flg = 1
 //    camera_flg = CameraScreen_2(1)
-//    Popup(alignment = Alignment.Center) {
-//        Box(
-//            modifier = Modifier
-//                .fillMaxSize()
-//        ) {
-//            camera_flg = CameraScreen_2(1)
-//        }
-//    }
+
+
     var showCamera by remember { mutableStateOf(true) } // カメラ表示フラグ
 
     if (showCamera) {
@@ -46,18 +41,24 @@ fun Camera()
 //            showCamera = false // カメラ画面を閉じる
 //        }
 
-        Popup(alignment = Alignment.Center) {
+        Dialog(
+            onDismissRequest = { var showPopup = false },
+            properties = DialogProperties(usePlatformDefaultWidth = false) // 幅を制限しない
+            ) {
             // バックボタン処理を追加
-            BackHandler {
-                println("BackHandler")
-                showCamera = false // カメラ画面を閉じる
-            }
+//            BackHandler {
+//                println("BackHandler")
+//                showCamera = false // カメラ画面を閉じる
+//            }
 
             Box(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-            camera_flg = CameraScreen_2(1)
+
+                camera_flg = CameraScreen_2(1)
+
+                // バック操作でカメラ終了
                 BackHandler {
                     println("BackHandler")
                     showCamera = false // カメラ画面を閉じる
@@ -65,12 +66,13 @@ fun Camera()
             }
         }
     } else {
+
         // カメラ画面を閉じた後の処理（元の画面）
         Home()
 
     }
 
-//    }
+    }
 
 
     //val permissionState: PermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
@@ -79,9 +81,9 @@ fun Camera()
 
 
     //デバッグ用
-    Text("main/camera")
-    println("Camera")
-}
+//    Text("main/camera")
+//    println("Camera")
+//}
 
 //fun StartCamera()
 //{
