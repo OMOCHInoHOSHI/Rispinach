@@ -1,0 +1,1000 @@
+テンチ,(コイ目コイ科),学名:Tinca tinca
+キンギョ,(コイ目コイ科),学名:Carassius auratus
+ホホジロザメ,(ネズミザメ目ネズミザメ科ホホジロザメ属),学名:Carcharodon carcharias
+イタチザメ,(メジロザメ目イタチザメ科イタチザメ属),学名:Galeocerdo cuvier
+シュモクザメ,(メジロザメ目シュモクザメ科),学名:Sphyrnidae
+シビレエイ,(シビレエイ目シビレエイ科),学名:Torpediniformes
+アカエイ,(トビエイ目アカエイ科),学名:Hemitrygon akajei
+おんどり,(キジ目キジ科キジ亜科ヤケイ属セキショクヤケイ種),学名:Gallus gallus domesticus
+めんどり,(キジ目キジ科),学名:Gallus gallus domesticus
+ダチョウ,(ダチョウ目ダチョウ科ダチョウ属),学名:Struthio camelus
+アトリ,(スズメ目アトリ科アトリ属),学名:Fringilla montifringilla
+ゴシキヒワ,(スズメ目アトリ科ヒワ属),学名:Carduelis carduelis
+メキシコマシコ,(スズメ目アトリ科マシコ属),学名:Carpodacus mexicanus
+ユキヒメドリ,(スズメ目ホオジロ科ユキヒメドリ属),学名:Junco hyemalis
+ルリノジコ,(スズメ目ショウジョウコウカンチョウ科ルリノジコ属),学名:Passerina cyanea
+コマツグミ,(スズメ目ツグミ科ツグミ属),学名:Turdus migratorius
+ヒヨドリ,(スズメ目ヒヨドリ科ヒヨドリ属),学名:Hypsipetes amaurotis
+カケス,(スズメ目カラス科カケス属),学名:Garrulus glandarius
+カササギ,(スズメ目カラス科カササギ属),学名:Pica pica
+コガラ,(スズメ目シジュウカラ科コガラ属),学名:Poecile montanus
+カワガラス(スズメ目カワガラス科)_学名:Cinclus pallasii
+トビ,(タカ目タカ科トビ属),学名:Milvus migrans
+ハクトウワシ,(タカ目タカ科ウミワシ属),学名:Haliaeetus leucocephalus
+ハゲタカ,(タカ目タカ科),学名:Aegypiinae
+カラフトフクロウ,(フクロウ目フクロウ科フクロウ属),学名:Strix nebulosa
+ファイアサラマンダー,(有尾目イモリ科サラマンドラ属),学名:Salamandra salamandra
+スベイモリ,(有尾目イモリ科スベイモリ属),学名:Lissotriton vulgaris
+ブチイモリ,(有尾目イモリ科トウブイモリ属),学名:Notophthalmus viridescens
+キボシサンショウウオ,(有尾目トラフサンショウウオ科トラフサンショウウオ属),学名:Ambystoma maculatum
+メキシコサンショウウオ,(有尾目トラフサンショウウオ科トラフサンショウウオ属),学名:Ambystoma mexicanum
+ウシガエル,(無尾目アカガエル科アメリカアカガエル属),学名:Rana catesbeiana
+アマガエル,(無尾目アマガエル科アマガエル属),学名:Hyla
+オガエル,(無尾目オガエル科オガエル属),学名:Ascaphus truei
+アカウミガメ,(カメ目ウミガメ科アカウミガメ属),学名:Caretta caretta
+オサガメ,(カメ目オサガメ科オサガメ属),学名:Dermochelys coriacea
+ドロガメ属(カメ目ドロガメ科ドロガメ属)
+キスイガメ,(カメ目ヌマガメ科キスイガメ属),学名:Malaclemys terrapin
+ハコガメ属(カメ目イシガメ科ハコガメ属)
+バンドトカゲモドキ(学名: Coleonyx variegatus)
+グリーンイグアナ(学名: Iguana iguana)
+グリーンアノール(学名: Anolis carolinensis)
+ハシリトカゲ属(有鱗目テグートカゲ科ハシリトカゲ属)
+ニジトカゲ,(有鱗目アガマ科アガマ属),学名:Agama agama
+エリマキトカゲ,(有鱗目アガマ科エリマキトカゲ属),学名:Chlamydosaurus kingiialligator lizard
+アシナシトカゲ科,(有隣目アシナシトカゲ科)
+アメリカドクトカゲ,(有鱗目ドクトカゲ科ドクトカゲ属),学名:Heloderma suspectum
+ミドリカナヘビ,(有鱗目カナヘビ科ドクトカゲ属)_学名:Lacerta viridis
+チチュウカイカメレオン,(有鱗目カメレオン科カメレオン属),学名:Chamaeleo chamaeleon
+コモドオオトカゲ,(有鱗目オオトカゲ科オオトカゲ属),学名:Varanus komodoensis
+ナイルワニ,(ワニ目クロコダイル科クロコダイル属),学名:Crocodylus niloticus
+アメリカアリゲーター,(ワニ目アリゲーター科アリゲーター属),学名:Alligator mississippiensis
+トリケラトプス,(鳥盤目角竜下目ケラトプス科トリケラトプス属),学名:Triceratops horridus
+ワームスネーク,(有鱗目ミミズヘビ科ミミズヘビ属),学名:Carphophis amoenus
+リングネックスネーク,(有鱗目ナミヘビ科リングネックヘビ属),学名:Diadophis punctatus
+クサリヘビ属,(有隣目クサリヘビ科クサリヘビ属)
+アメリカアオヘビ属,(有鱗目ナミヘビ科アメリカアオヘビ属)
+キングヘビ属,(有鱗目ナミヘビ科キングヘビ属)
+ガーターヘビ属,(有鱗目ナミヘビ科ガーターヘビ属)
+ミズベヘビ属,(有鱗目ユウダ科ミズベヘビ属)
+エダムチヘビ属,(有鱗目ナミヘビ科エダムチヘビ属)
+ナイトスネーク,(有鱗目ナミヘビ科ナイトスネーク属),学名:Hypsiglena torquata
+ボアコンストリクター,(有鱗目ボア科ボア属),学名:Boa constrictor
+アフリカニシキヘビ,(有鱗目ニシキヘビ科ニシキヘビ属),学名:Python sebae
+インドコブラ,(有鱗目コブラ科コブラ属),学名:Naja naja
+グリーンマンバ,(有鱗目コブラ科マンバ属),学名:Dendroaspis angusticeps
+ウミヘビ亜科,(有鱗目コブラ科ウミヘビ亜科)
+サハラツノクサリヘビ,(クサリヘビ科ツノクサリヘビ属),学名:Cerastes cerastes
+ダイヤガラガラヘビ,(クサリヘビ科ガラガラヘビ属),学名:Crotalus adamanteus
+ヨコバイガラガラヘビ,(クサリヘビ科ガラガラヘビ属),学名:Crotalus cerastes
+三葉虫,(三葉虫綱),学名:Trilobite
+マザトウムシ,(ザトウムシ目マザトウムシ科),学名:Phalangium opilio
+サソリ目,(サソリ目)
+キマダラコガネグモ,(クモ目コガネグモ科コガネグモ属),学名:Argiope aurantia
+ニワオニグモ,(クモ目コガネグモ科オニグモ属),学名:Araneus cavaticus
+ニワオニグモ,(クモ目コガネグモ科オニグモ属),学名:Araneus diadematus
+クロゴケグモ,(クモ目ヒメグモ科),学名:Latrodectus mactans
+オオツチグモ科,(クモ目オオツチグモ科)
+コモリグモ科,(クモ目コモリグモ科)
+ダニ,(ダニ目),学名:Acari
+ムカデ,(ムカデ目),学名:Chilopoda
+クロライチョウ,(キジ目ライチョウ科),学名:Lyrurus tetrix
+ライチョウ,(キジ目ライチョウ科),学名:Lagopus muta
+エリマキライチョウ,(キジ目ライチョウ科),学名:Bonasa umbellus
+ソウゲンライチョウ,(キジ目ライチョウ科),学名:Tympanuchus cupido
+クジャク,(キジ目キジ科),学名:Pavo cristatus
+ウズラ,(キジ目ウズラ科ウズラ属),学名:Coturnix coturnix
+ヤマウズラ,(キジ目ウズラ科ウズラ属),学名:Perdix perdix
+ヨウム,(オウム目オウム科ヨウム族),学名:Psittacus erithacus
+コンゴウインコ,(オウム目オウム科コンゴウインコ属),学名:Ara
+キバタン,(オウム目オウム科オウム属),学名:Cacatua galerita
+ヒインコ,(オウム目インコ科セイガイインコ属) 学名:Trichoglossus borneus
+バンケン属,(カッコウ目カッコウ科バンケン属)
+ハチクイ科,(ブッポウソウ目ハチクイ科)
+サイチョウ科,(サイチョウ目サイチョウ科)
+ハチドリ科,(アマツバメ目ハチドリ科)
+キリハシ科,(キツツキ目キリハシ科)
+オオハシ科,(キツツキ目オオハシ科)
+マガモ,(カモ目カモ科マガモ属)
+ウミアイサ,(カモ目カモ科ウミアイサ属),学名:Mergus serrator
+ガチョウ,(カモ目カモ科マガン属),学名:Anser anser f. domestica
+コクチョウ,(カモ目カモ科ハクチョウ属),学名:Cygnus atratus
+アフリカゾウ,(ゾウ目ゾウ科アフリカゾウ属),学名:Loxodonta africana
+アリクイ科,(有毛目アリクイ科)
+カモノハシ,(単孔目カモノハシ科),学名:Ornithorhynchus anatinus
+カンガルー科,(双前歯目カンガルー科)
+コアラ,(双前歯目コアラ科),学名:Phascolarctos cinereus
+ウォンバット,(双前歯目ウォンバット科ウォンバット属),学名:Vombatus ursinus
+クラゲ,(刺胞動物門),学名:Scyphozoa
+イソギンチャク目,(刺胞動物門花虫網イソギンチャク目),学名:Actiniaria
+ハナガタサンゴ属,(イシサンゴ目オオトゲサンゴ科ハナガタサンゴ属)
+扁形動物門,(扁形動物門) 門: Platyhelminthes
+線虫,(線形動物門),門: Nematoda
+ホラガイ,(巻貝網ホラガイ科ホラガイ属),学名:Charonia tritonis
+カタツムリ,(マイマイ目マイマイ科)
+ナメクジ(マイマイ目ナメクジ科ナメクジ属)
+ウミウシ(裸鰓目),目: Nudibranchia
+ヒザラガイ(多板綱),綱: Polyplacophora
+オウムガイ(オウムガイ目オウムガイ科オウムガイ属),学名:Nautilus pompilius
+アメリカイチョウガニ(十脚目イチョウガ二科),学名:Metacarcinus magister
+ロッククラブ(十脚目イチョウガ二科イチョウガ二科),学名:Cancer irroratus
+シオマネキ(十脚目スナガニ科),学名:Tubuca arcuata
+タラバガニ(十脚目タラバガニ科タラバガニ属),学名:Paralithodes camtschaticus
+アメリカンロブスター(十脚目アカザエビ科ウミザリガニ属),学名:Homarus americanus
+イセエビ(十脚目イセエビ科イセエビ属),学名:Panulirus japonicus
+ザリガニ科,(十脚目ザリガニ科)
+ヤドカリ科(十脚目ヤドカリ科)
+ワラジムシ目(ワラジムシ目)
+シュバシコウ(コウノトリ目コウノトリ科コウノトリ属),学名:Ciconia ciconia
+ナベコウ(コウノトリ目コウノトリ科コウノトリ属),学名:Ciconia nigra
+ヘラサギ(ペリカン目トキ科ヘラサギ属),学名:Platalea leucorodia
+フラミンゴ科(フラミンゴ目フラミンゴ科)
+ヒメアカクロサギ(ペリカン目サギ科コサギ属),学名:Egretta caerulea
+ダイサギ(ペリカン目サギ科アオサギ属),学名:Ardea alba
+サンカノゴイ(ペリカン目サギ科サンカノゴイ属),学名:Botaurus stellaris
+ツル科(ツル目ツル科)
+ツルモドキ(ツル目ツルモドキ科ツルモドキ属),学名:Aramus guarauna
+セイケイ(ツル目クイナ科セイケイ属) 学名: Porphyrio porphyrio
+アメリカオオバン(ツル目クイナ科オオバン属) 学名: Fulica americana
+ノガン科(ノガン目ノガン科)
+キョウジョシギ(チドリ目シギ科キョウショシギ属) 学名: Arenaria interpres
+ハマシギ(チドリ目シギ科オバシギ属) 学名: Calidris alpina
+アカアシシギ(チドリ目シギ科クサシギ属) 学名: Tringa totanus
+オオハシシギ(チドリ目シギ科オオハシシギ属) 学名: Limnodromus scolopaceus
+ミヤコドリ(チドリ目ミヤコドリ科ミヤコドリ属) 学名: Haematopus ostralegus
+ペリカン科(ペリカン目ペリカン科)
+オウサマペンギン(ペンギン目ペンギン科オウサマペンギン属),学名:Aptenodytes patagonicus
+モリモーク属(ミズナギドリ目アホウドリ科モリモーク属)
+コククジラ(クジラ目コククジラ科コククジラ属) 学名: Eschrichtius robustus
+シャチ(クジラ目マイルカ科シャチ属) 学名: Orcinus orca
+ジュゴン(ジュゴン目ジュゴン科ジュゴン属) 学名: Dugong dugon
+アシカ科(ネコ目アシカ科)
+イエイヌ 品種:チワワ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:チン,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:マルチーズ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ペキニーズ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:シーズー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:キング・チャールズ・スパニエル,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:パピヨン,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ロシアン・トイ・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ローデシアン・リッジバック,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:アフガン・ハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:バセット・ハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ビーグル,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ブラッドハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ブルーティック・クーンハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ブラック・アンド・タン・クーンハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ツリーイング・ウォーカー・クーンハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:イングリッシュ・フォックスハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:レッドボーン・クーンハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ボルゾイ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:アイリッシュ・ウルフハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:イタリアン・グレイハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ウィペット,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:イビザン・ハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ノルウェジアン・エルクハウンド・グレー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:オッターハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:サルーキ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:スコティッシュ・ディアハウンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ワイマラナー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:スタッフォードシャー・ブル・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:アメリカン・ピット・ブル・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ベドリントン・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ボーダー・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ケリー・ブルー・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:アイリッシュ・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ノーフォーク・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ノーリッチ・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ヨークシャー・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ワイアー・フォックス・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:レークランド・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:シーリハム・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:エアデール・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ケアーン・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ジャック・ラッセル・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ダンディ・ディンモント・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ボストン・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ミニチュア・シュナウザー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ジャイアント・シュナウザー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:スタンダード・シュナウザー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:スコティッシュ・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:チベタン・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:シルキー・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ソフトコーテッド・ウィートン・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ウエスト・ハイランド・ホワイト・テリア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ラサ・アプソ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:フラットコーテッド・レトリーバー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:カーリーコーテッド・レトリーバー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ゴールデン・レトリバー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ラブラドール・レトリバー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:チェサピーク・ベイ・レトリーバー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ジャーマン・ショートヘアード・ポインター,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ショートヘアード・ハンガリアン・ビズラ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:イングリッシュ・セター,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:アイリッシュ・セッター,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ゴードン・セッター,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ブリタニー・スパニエル,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:クランバー・スパニエル,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:イングリッシュ・スプリンガー・スパニエル,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ウェルシュ・スプリンガー・スパニエル,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:イングリッシュ・コッカー・スパニエル,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:サセックス・スパニエル,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:アイリッシュ・ウォーター・スパニエル,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:クーバース,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:スキッパーキ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ベルジアン・シェパード・ドッグ・グローネンダール,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ベルジアン・シェパード・ドッグ・マリノア,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ブリアード,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ケルピー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:コモンドール,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:オールド・イングリッシュ・シープドッグ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:シェットランド・シープドッグ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:コリー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ボーダー・コリー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ブービエ・デ・フランダース,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ロットワイラー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ジャーマン・シェパード,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ドーベルマン,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ミニチュア・ピンシャー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:グレーター・スイス・マウンテン・ドッグ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:バーニーズ・マウンテン・ドッグ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:アッペンツェラー・キャトル・ドッグ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:エントレブッハー・キャトル・ドッグ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ボクサー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ブルマスティフ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:チベタン・マスティフ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:フレンチ・ブルドッグ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:グレート・デーン,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:セント・バーナード,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:カナディアン・エスキモー・ドッグ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:アラスカン・マラミュート,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:シベリアン・ハスキー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ダルメシアン,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:アーフェン・ピンシャー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:バセンジー,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:パグ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:レオンベルク,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ニューファンドランド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:グレート・ピレニーズ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:サモエド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ポメラニアン,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:チャウ・チャウ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:キースホンド,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ブリュッセル・グリフォン,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ウェルシュ・コーギー・ペンブローク,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ウェルシュ・コーギー・カーディガン,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:トイ・プードル,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:ミニチュア・プードル,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:スタンダード・プードル,(食肉目イヌ科イヌ属),学名:Canis familiaris
+イエイヌ 品種:メキシカン・ヘアレス・ドッグ,(食肉目イヌ科イヌ属),学名:Canis familiaris
+シンリンオオカミ,(食肉目イヌ科イヌ属),学名Canis lycaon
+アラスカオオカミ,(食肉目イヌ科イヌ属),学名Canis lupus ssp. occidentalis
+ヨーロッパオオカミ,(食肉目イヌ科イヌ属),学名Canis lupus ssp. lupus
+コヨーテ,(食肉目イヌ科イヌ属),学名Canis latrans
+ディンゴ,(食肉目イヌ科イヌ属),学名Canis familiaris ssp. dingo
+ドール,(食肉目イヌ科ドール属),学名Cuon alpinus
+リカオン,(食肉目イヌ科リカオン属),学名Lycaon pictus
+ハイエナ科,(食肉目ハイエナ科)
+アカギツネ,(食肉目イヌ科キツネ属) 学名:Vulpes vulpes
+キットギツネ,(食肉目イヌ科キツネ属) 学名:Vulpes macrotis
+ホッキョクギツネ,(食肉目イヌ科キツネ属) 学名:Vulpes lagopus
+ハイイロギツネ,(食肉目イヌ科ハイイロギツネ属) 学名:Urocyon cinereoargenteus
+イエネコ タビー柄,(食肉目ネコ科ネコ属) 学名:Felis catus
+ジャガーネコ,(食肉目ネコ科オセロット属) 学名:Leopardus tigrinus
+イエネコ 品種:ペルシャ,(食肉目ネコ科ネコ属) 学名:Felis catus
+イエネコ 品種:シャム,(食肉目ネコ科ネコ属) 学名:Felis catus
+イエネコ 品種:エジプシャンマウ,(食肉目ネコ科ネコ属) 学名:Felis catus
+ピューマ,(食肉目ネコ科ピューマ属),学名:Puma concolor
+オオヤマネコ,(食肉目ネコ科オオヤマネコ属),学名:Lynx lynx
+ヒョウ,(食肉目ネコ科ヒョウ属),学名:Panthera pardus
+ユキヒョウ,(食肉目ネコ科ヒョウ属),学名:Panthera uncia
+ジャガー,(食肉目ネコ科ヒョウ属),学名:Panthera uncia
+ライオン,(食肉目ネコ科ヒョウ属),学名:Panthera leo
+トラ,(食肉目ネコ科ヒョウ属),学名:Panthera tigris
+チーター,(食肉目ネコ科ヒョウ属),学名:Acinonyx jubatus
+ヒグマ,(食肉目クマ科クマ属),学名:Ursus arctos
+アメリカグマ,(食肉目クマ科クマ属),学名:Ursus americanus
+ホッキョクグマ,(食肉目クマ科クマ属),学名:Ursus maritimus
+ナマケグマ,(食肉目クマ科ナマケグマ属),学名:Melursus ursinus
+マングース科,(食肉目マングース科)
+ミーアキャット,(食肉目マングース科スリカータ属),学名:Suricata suricatta
+ハンミョウ科,(コウチュウ目ハンミョウ科)
+テントウムシ科,(コウチュウ目テントウムシ科)
+オサムシ科,(コウチュウ目オサムシ科)
+カミキリムシ科,(コウチュウ目カミキリムシ科)
+ハムシ科,(コウチュウ目ハムシ科)
+ダイコクコガネ亜科,(コウチュウ目コガネムシ科ダイコクコガネ亜科)
+カブトムシ,(コウチュウ目コガネムシ科カブトムシ属),学名:Trypoxylus dichotomus
+ゾウムシ科,(コウチュウ目ゾウムシ科)
+ハエ目,(ハエ目)
+ハチ目,(ハチ目)
+アリ科,(ハチ目アリ科)
+バッタ目,(バッタ目)
+コオロギ下目,(バッタ目コオロギ下目)
+ナナフシ目,(ナナフシ目)
+ゴキブリ目,(ゴキブリ目)
+カマキリ科,(カマキリ目カマキリ科)
+セミ科,(カメムシ目セミ科)
+ヨコバイ科,(カメムシ目ヨコバイ科)wood rabbithare
+アミメカゲロウ目,(アミメカゲロウ目)
+ギンヤンマ属,(トンボ目ヤンマ科ギンヤンマ属)
+イトトンボ亜目,(トンボ目イトトンボ亜目)
+アカタテハ属,(チョウ目タテハチョウ科タテハチョウ族アカタテハ属)
+チョウセンジャノメ,(チョウ目タテハチョウ科ジャノメチョウ族),学名:Aphantopus hyperantus
+オオカバマダラ,(チョウ目タテハチョウ科マダラチョウ属),学名:Danaus plexippus
+モンシロチョウ,(チョウ目シロチョウ科シロチョウ族モンシロチョウ属),学名:Pieris rapae
+モンキチョウ,(チョウ目シロチョウ科シロチョウ族モンキチョウ属),学名:Colias poliographus
+ベニシジミ属,(チョウ目シジミチョウ科ベニシジミ族ベニシジミ属)
+ヒトデ綱,(ヒトデ綱)
+ウニ綱,(ウニ綱)
+ナマコ綱,(ナマコ綱)
+ワタオウサギ属,(ウサギ目ウサギ科ワタオウサギ属)
+ノウサギ属,(ウサギ目ウサギ科ノウサギ属)
+アナウサギ,(ウサギ目ウサギ科アナウサギ属),学名:
+ハムスター,(ネズミ目キヌゲネズミ科キヌゲネズミ亜科)
+ハリネズミ属,(真無盲腸目ハリネズミ科ハリネズミ属)
+トウブキツネリス,(ネズミ目リス科リス族リス属),学名:Sciurus niger
+マーモット属,(ネズミ目リス科マーモット族マーモット属)
+ビーバー科,(ネズミ目ビーバー科)
+モルモット,(ネズミ目テンジクネズミ科テンジクネズミ属),学名:Cavia porcellus
+ウマ,(ウマ目ウマ科ウマ属),学名:Equus caballus
+ヤマシマウマ,(ウマ目ウマ科ウマ属),学名:Equus zebra
+ブタ,(ウシ目イノシシ科イノシシ族イノシシ属),学名:Sus scrofa ssp. domesticus
+イノシシ,(ウシ目イノシシ科イノシシ族イノシシ属),学名:Sus scrofa
+イボイノシシ属,(ウシ目イノシシ科イボイノシシ族イボイノシシ属)
+カバ,(ウシ目カバ科カバ属),学名:Hippopotamus amphibius
+ウシ,(ウシ目ウシ科ウシ属),学名:Bos taurus
+スイギュウ,(ウシ目ウシ科アジアスイギュウ属),学名:Bubalus bubalis
+バイソン属,(ウシ目ウシ科バイソン属)
+ヒツジ,(ウシ目ウシ科ヤギ族ヒツジ属),学名:Ovis aries
+オオツノヒツジ,(ウシ目ウシ科ヤギ族ヒツジ属),学名:Ovis canadensis
+アルプスアイベックス,(ウシ目ウシ科ヤギ族ヤギ属),学名:Capra ibex
+ハーテビースト,(ウシ目ウシ科ハーテビースト族ハーテビースト属),学名:Alcelaphus buselaphus
+インパラ,(ウシ目ウシ科インパラ族インパラ属),学名:Aepyceros melampus
+ガゼル属,(ウシ目ウシ科ブラックバック族ガゼル属),学名:Gazella
+ヒトコブラクダ,(ウシ目ラクダ科ラクダ属),学名:Camelus dromedarius
+ラマ,(ウシ目ラクダ科ラマ属),学名:Lama glama
+イタチ科,(ネコ目イタチ科)
+アメリカミンク,(ネコ目イタチ科ミンク属),学名:Neogale vison
+ヨーロッパケナガイタチ,(ネコ目イタチ科イタチ属),学名:Mustela putorius
+フェレット,(ネコ目イタチ科イタチ属),学名:Mustela furo
+カワウソ属,(ネコ目イタチ科カワウソ属)
+スカンク属,(ネコ目スカンク科スカンク属)
+アナグマ属,(ネコ目イタチ科アナグマ属)
+アルマジロ科,(被甲目アルマジロ科)
+ナマケモノ亜目,(有毛目ナマケモノ亜目)
+ボルネオオランウータン,(サル目ヒト科オランウータン属),学名:Pongo pygmaeus
+ニシゴリラ,(サル目ヒト科ゴリラ属),学名:Gorilla gorilla
+チンパンジー,(サル目ヒト科チンパンジー属),学名:Pan troglodytes
+シロテナガザル,(サル目ヒト科テナガザル属),学名:Hylobates lar
+フクロテナガザル,(サル目ヒト科フクロテナガザル属),学名:Symphalangus syndactylus
+オナガザル族,(サル目オナガザル科オナガザル族オナガザル属)
+パタスモンキー,(サル目オナガザル科オナガザル族パタスモンキー属),学名:Erythrocebus patas
+マントヒヒ,(サル目オナガザル科ヒヒ族ヒヒ属),学名:Papio hamadryas
+マカク属,(サル目オナガザル科ヒヒ属)
+ボウシラングール,(サル目オナガザル科ラングール属),学名:Trachypithecus pileatus
+コロブス属,(サル目オナガザル科コロブス属)
+テングザル,(サル目オナガザル科テングザル属),学名:Nasalis larvatus
+マーモセット属,(サル目マーモセット亜科マーモセット属)
+オマキザル属,(サル目オマキザル科オマキザル属)
+ホエザル属,(サル目クモザル科ホエザル属)
+ティティ属,(サル目サキ科ティティ属)
+ジョフロイクモザル,(サル目クモザル科クモザル属),学名:Ateles geoffroyi
+リスザル,(サル目オマキザル科リスザル属),学名:Saimiri sciureus
+ワオキツネザル,(サル目キツネザル科ワオキツネザル属),学名:Lemur catta
+インドリ,(サル目インドリ科インドリ属),学名:Indri indri
+アジアゾウ,(ゾウ目ゾウ科アジアゾウ属),学名:Elephas maximus
+アフリカゾウ属,(ゾウ目ゾウ科アフリカゾウ属)
+レッサーパンダ,(ネコ目レッサーパンダ科レッサーパンダ属),学名:Ailurus fulgens
+ジャイアントパンダ,(ネコ目クマ科ジャイアントパンダ属),学名:Ailuropoda melanoleuca
+ミナミオオスミヤキ,(サバ目クロタチカマス科ティルシテス属),学名:Thyrsites atun
+ウナギ属,(ウナギ目ウナギ科ウナギ属)
+シルバーサーモン,(サケ目サケ科サケ属),学名:Oncorhynchus kisutch
+ロック･ビューティー,(ニザダイ目キンチャクダイ科ホラカントゥス属),学名:Holacanthus tricolor
+カクレクマノミ,(ギンポ亜目スズメダイ科クマノミ属),学名:Amphiprion ocellaris
+チョウザメ,(チョウザメ目チョウザメ科チョウザメ属),学名:Acipenser medirostris
+ガー科,(ガー目ガー科)
+ミノカサゴ属,(スズキ目フサカサゴ科ミノカサゴ属)
+フグ科,(フグ目フグ科)
+abacus
+abaya
+academic gown, academic robe, judge's robe
+accordion, piano accordion, squeeze box
+acoustic guitar
+aircraft carrier, carrier, flattop, attack aircraft carrier
+airliner
+airship, dirigible
+altar
+ambulance
+amphibian, amphibious vehicle
+analog clock
+apiary, bee house
+apron
+ashcan, trash can, garbage can, wastebin, ash bin, ash-bin, ashbin, dustbin, trash barrel, trash bin
+assault rifle, assault gun
+backpack, back pack, knapsack, packsack, rucksack, haversack
+bakery, bakeshop, bakehouse
+balance beam, beam
+balloon
+ballpoint, ballpoint pen, ballpen, Biro
+Band Aid
+banjo
+bannister, banister, balustrade, balusters, handrail
+barbell
+barber chair
+barbershop
+barn
+barometer
+barrel, cask
+barrow, garden cart, lawn cart, wheelbarrow
+baseball
+basketball
+bassinet
+bassoon
+bathing cap, swimming cap
+bath towel
+bathtub, bathing tub, bath, tub
+beach wagon, station wagon, wagon, estate car, beach waggon, station waggon, waggon
+beacon, lighthouse, beacon light, pharos
+beaker
+bearskin, busby, shako
+beer bottle
+beer glass
+bell cote, bell cot
+bib
+bicycle-built-for-two, tandem bicycle, tandem
+bikini, two-piece
+binder, ring-binder
+binoculars, field glasses, opera glasses
+birdhouse
+boathouse
+bobsled, bobsleigh, bob
+bolo tie, bolo, bola tie, bola
+bonnet, poke bonnet
+bookcase
+bookshop, bookstore, bookstall
+bottlecap
+bow
+bow tie, bow-tie, bowtie
+brass, memorial tablet, plaque
+brassiere, bra, bandeau
+breakwater, groin, groyne, mole, bulwark, seawall, jetty
+breastplate, aegis, egis
+broom
+bucket, pail
+buckle
+bulletproof vest
+bullet train, bullet
+butcher shop, meat market
+cab, hack, taxi, taxicab
+caldron, cauldron
+candle, taper, wax light
+cannon
+canoe
+can opener, tin opener
+cardigan
+car mirror
+carousel, carrousel, merry-go-round, roundabout, whirligig
+carpenter's kit, tool kit
+carton
+car wheel
+cash machine, cash dispenser, automated teller machine, automatic teller machine, automated teller, automatic teller, ATM
+cassette
+cassette player
+castle
+catamaran
+CD player
+cello, violoncello
+cellular telephone, cellular phone, cellphone, cell, mobile phone
+chain
+chainlink fence
+chain mail, ring mail, mail, chain armor, chain armour, ring armor, ring armour
+chain saw, chainsaw
+chest
+chiffonier, commode
+chime, bell, gong
+china cabinet, china closet
+Christmas stocking
+church, church building
+cinema, movie theater, movie theatre, movie house, picture palace
+cleaver, meat cleaver, chopper
+cliff dwelling
+cloak
+clog, geta, patten, sabot
+cocktail shaker
+coffee mug
+coffeepot
+coil, spiral, volute, whorl, helix
+combination lock
+computer keyboard, keypad
+confectionery, confectionary, candy store
+container ship, containership, container vessel
+convertible
+corkscrew, bottle screw
+cornet, horn, trumpet, trump
+cowboy boot
+cowboy hat, ten-gallon hat
+cradle
+crane
+crash helmet
+crate
+crib, cot
+Crock Pot
+croquet ball
+crutch
+cuirass
+dam, dike, dyke
+desk
+desktop computer
+dial telephone, dial phone
+diaper, nappy, napkin
+digital clock
+digital watch
+dining table, board
+dishrag, dishcloth
+dishwasher, dish washer, dishwashing machine
+disk brake, disc brake
+dock, dockage, docking facility
+dogsled, dog sled, dog sleigh
+dome
+doormat, welcome mat
+drilling platform, offshore rig
+drum, membranophone, tympan
+drumstick
+dumbbell
+Dutch oven
+electric fan, blower
+electric guitar
+electric locomotive
+entertainment center
+envelope
+espresso maker
+face powder
+feather boa, boa
+file, file cabinet, filing cabinet
+fireboat
+fire engine, fire truck
+fire screen, fireguard
+flagpole, flagstaff
+flute, transverse flute
+folding chair
+football helmet
+forklift
+fountain
+fountain pen
+four-poster
+freight car
+French horn, horn
+frying pan, frypan, skillet
+fur coat
+garbage truck, dustcart
+gasmask, respirator, gas helmet
+gas pump, gasoline pump, petrol pump, island dispenser
+goblet
+go-kart
+golf ball
+golfcart, golf cart
+gondola
+gong, tam-tam
+gown
+grand piano, grand
+greenhouse, nursery, glasshouse
+grille, radiator grille
+grocery store, grocery, food market, market
+guillotine
+hair slide
+hair spray
+half track
+hammer
+hamper
+hand blower, blow dryer, blow drier, hair dryer, hair drier
+hand-held computer, hand-held microcomputer
+handkerchief, hankie, hanky, hankey
+hard disc, hard disk, fixed disk
+harmonica, mouth organ, harp, mouth harp
+harp
+harvester, reaper
+hatchet
+holster
+home theater, home theatre
+honeycomb
+hook, claw
+hoopskirt, crinoline
+horizontal bar, high bar
+horse cart, horse-cart
+hourglass
+iPod
+iron, smoothing iron
+jack-o'-lantern
+jean, blue jean, denim
+jeep, landrover
+jersey, T-shirt, tee shirt
+jigsaw puzzle
+jinrikisha, ricksha, rickshaw
+joystick
+kimono
+knee pad
+knot
+lab coat, laboratory coat
+ladle
+lampshade, lamp shade
+laptop, laptop computer
+lawn mower, mower
+lens cap, lens cover
+letter opener, paper knife, paperknife
+library
+lifeboat
+lighter, light, igniter, ignitor
+limousine, limo
+liner, ocean liner
+lipstick, lip rouge
+Loafer
+lotion
+loudspeaker, speaker, speaker unit, loudspeaker system, speaker system
+loupe, jeweler's loupe
+lumbermill, sawmill
+magnetic compass
+mailbag, postbag
+mailbox, letter box
+maillot
+maillot, tank suit
+manhole cover
+maraca
+marimba, xylophone
+mask
+matchstick
+maypole
+maze, labyrinth
+measuring cup
+medicine chest, medicine cabinet
+megalith, megalithic structure
+microphone, mike
+microwave, microwave oven
+military uniform
+milk can
+minibus
+miniskirt, mini
+minivan
+missile
+mitten
+mixing bowl
+mobile home, manufactured home
+Model T
+modem
+monastery
+monitor
+moped
+mortar
+mortarboard
+mosque
+mosquito net
+motor scooter, scooter
+mountain bike, all-terrain bike, off-roader
+mountain tent
+mouse, computer mouse
+mousetrap
+moving van
+muzzle
+nail
+neck brace
+necklace
+nipple
+notebook, notebook computer
+obelisk
+oboe, hautboy, hautbois
+ocarina, sweet potato
+odometer, hodometer, mileometer, milometer
+oil filter
+organ, pipe organ
+oscilloscope, scope, cathode-ray oscilloscope, CRO
+overskirt
+oxcart
+oxygen mask
+packet
+paddle, boat paddle
+paddlewheel, paddle wheel
+padlock
+paintbrush
+pajama, pyjama, pj's, jammies
+palace
+panpipe, pandean pipe, syrinx
+paper towel
+parachute, chute
+parallel bars, bars
+park bench
+parking meter
+passenger car, coach, carriage
+patio, terrace
+pay-phone, pay-station
+pedestal, plinth, footstall
+pencil box, pencil case
+pencil sharpener
+perfume, essence
+Petri dish
+photocopier
+pick, plectrum, plectron
+pickelhaube
+picket fence, paling
+pickup, pickup truck
+pier
+piggy bank, penny bank
+pill bottle
+pillow
+ping-pong ball
+pinwheel
+pirate, pirate ship
+pitcher, ewer
+plane, carpenter's plane, woodworking plane
+planetarium
+plastic bag
+plate rack
+plow, plough
+plunger, plumber's helper
+Polaroid camera, Polaroid Land camera
+pole
+police van, police wagon, paddy wagon, patrol wagon, wagon, black Maria
+poncho
+pool table, billiard table, snooker table
+pop bottle, soda bottle
+pot, flowerpot
+potter's wheel
+power drill
+prayer rug, prayer mat
+printer
+prison, prison house
+projectile, missile
+projector
+puck, hockey puck
+punching bag, punch bag, punching ball, punchball
+purse
+quill, quill pen
+quilt, comforter, comfort, puff
+racer, race car, racing car
+racket, racquet
+radiator
+radio, wireless
+radio telescope, radio reflector
+rain barrel
+recreational vehicle, RV, R.V.
+reel
+reflex camera
+refrigerator, icebox
+remote control, remote
+restaurant, eating house, eating place, eatery
+revolver, six-gun, six-shooter
+rifle
+rocking chair, rocker
+rotisserie
+rubber eraser, rubber, pencil eraser
+rugby ball
+rule, ruler
+running shoe
+safe
+safety pin
+saltshaker, salt shaker
+sandal
+sarong
+sax, saxophone
+scabbard
+scale, weighing machine
+school bus
+schooner
+scoreboard
+screen, CRT screen
+screw
+screwdriver
+seat belt, seatbelt
+sewing machine
+shield, buckler
+shoe shop, shoe-shop, shoe store
+shoji
+shopping basket
+shopping cart
+shovel
+shower cap
+shower curtain
+ski
+ski mask
+sleeping bag
+slide rule, slipstick
+sliding door
+slot, one-armed bandit
+snorkel
+snowmobile
+snowplow, snowplough
+soap dispenser
+soccer ball
+sock
+solar dish, solar collector, solar furnace
+sombrero
+soup bowl
+space bar
+space heater
+space shuttle
+spatula
+speedboat
+spider web, spider's web
+spindle
+sports car, sport car
+spotlight, spot
+stage
+steam locomotive
+steel arch bridge
+steel drum
+stethoscope
+stole
+stone wall
+stopwatch, stop watch
+stove
+strainer
+streetcar, tram, tramcar, trolley, trolley car
+stretcher
+studio couch, day bed
+stupa, tope
+submarine, pigboat, sub, U-boat
+suit, suit of clothes
+sundial
+sunglass
+sunglasses, dark glasses, shades
+sunscreen, sunblock, sun blocker
+suspension bridge
+swab, swob, mop
+sweatshirt
+swimming trunks, bathing trunks
+swing
+switch, electric switch, electrical switch
+syringe
+table lamp
+tank, army tank, armored combat vehicle, armoured combat vehicle
+tape player
+teapot
+teddy, teddy bear
+television, television system
+tennis ball
+thatch, thatched roof
+theater curtain, theatre curtain
+thimble
+thresher, thrasher, threshing machine
+throne
+tile roof
+toaster
+tobacco shop, tobacconist shop, tobacconist
+toilet seat
+torch
+totem pole
+tow truck, tow car, wrecker
+toyshop
+tractor
+trailer truck, tractor trailer, trucking rig, rig, articulated lorry, semi
+tray
+trench coat
+tricycle, trike, velocipede
+trimaran
+tripod
+triumphal arch
+trolleybus, trolley coach, trackless trolley
+trombone
+tub, vat
+turnstile
+typewriter keyboard
+umbrella
+unicycle, monocycle
+upright, upright piano
+vacuum, vacuum cleaner
+vase
+vault
+velvet
+vending machine
+vestment
+viaduct
+violin, fiddle
+volleyball
+waffle iron
+wall clock
+wallet, billfold, notecase, pocketbook
+wardrobe, closet, press
+warplane, military plane
+washbasin, handbasin, washbowl, lavabo, wash-hand basin
+washer, automatic washer, washing machine
+water bottle
+water jug
+water tower
+whiskey jug
+whistle
+wig
+window screen
+window shade
+Windsor tie
+wine bottle
+wing
+wok
+wooden spoon
+wool, woolen, woollen
+worm fence, snake fence, snake-rail fence, Virginia fence
+wreck
+yawl
+yurt
+web site, website, internet site, site
+comic book
+crossword puzzle, crossword
+street sign
+traffic light, traffic signal, stoplight
+book jacket, dust cover, dust jacket, dust wrapper
+menu
+plate
+guacamole
+consomme
+hot pot, hotpot
+trifle
+ice cream, icecream
+ice lolly, lolly, lollipop, popsicle
+French loaf
+bagel, beigel
+pretzel
+cheeseburger
+hotdog, hot dog, red hot
+mashed potato
+キャベツ,(アブラナ目アブラナ科アブラナ族アブラナ属),学名:Brassica oleracea var. capitata
+ブロッコリー,(アブラナ目アブラナ科アブラナ族アブラナ属),学名:Brassica oleracea var. italica
+ブロッコリー,(アブラナ目アブラナ科アブラナ族アブラナ属),学名:Brassica oleracea var. botrytis
+ズッキーニ,(ウリ目ウリ科カボチャ属),学名:Cucurbita pepo var. melopepo
+キンシウリ,(ウリ目ウリ科カボチャ属),学名:Cucurbita pepo
+ドングリカボチャ,(ウリ目ウリ科カボチャ属),学名:Cucurbita pepo var. turbinata
+バターナッツ・スクワッシュ,(ウリ目ウリ科カボチャ属),学名:Cucurbita moschata
+キュウリ,(ウリ目ウリ科キュウリ属),学名:Cucumis sativus
+チョウセンアザミ,(キク目キク科チョウセンアザミ属),学名:Cynara cardunculus var. scolymus
+ピーマン,(ナス目ナス科トウガラシ属),学名:Capsicum annuum
+カルドン,(キク目キク科チョウセンアザミ属),学名:Cynara cardunculus
+マッシュルーム,(ハラタケ目ハラタケ科ハラタケ属),学名:Agaricus bisporus
+セイヨウリンゴ,(バラ目バラ科リンゴ属),学名:Malus domestica
+オランダイチゴ,(バラ目バラ科オランダイチゴ属),学名:Fragaria × ananassa
+オレンジ,(ムクロジ目ミカン科ミカン属),学名:Citrus × aurantium
+レモン,(ムクロジ目ミカン科ミカン属),学名:Citrus × limon
+イチジク,(バラ目クワ科イチジク属),学名:Ficus carica
+パイナップル,(イネ目パイナップル科アナナス属),学名:Ananas comosus
+バナナ,(ショウガ目バショウ科バショウ属),学名:Musa × paradisiaca
+パラミツ,(バラ目クワ科パンノキ属),学名:Artocarpus heterophyllus
+カスタードアップル,(モクレン目バンレイシ科バンレイシ属),学名:Annona reticulata
+ザクロ,(フトモモ目ミソハギ科ザクロ属),学名:Punica granatum
+hay
+carbonara
+chocolate sauce, chocolate syrup
+dough
+meat loaf, meatloaf
+pizza, pizza pie
+potpie
+burrito
+red wine
+espresso
+cup
+eggnog
+alp
+bubble
+cliff, drop, drop-off
+サンゴ礁,(六放サンゴ亜綱)
+geyser
+lakeside, lakeshore
+promontory, headland, head, foreland
+sandbar, sand bar
+seashore, coast, seacoast, sea-coast
+valley, vale
+volcano
+ballplayer, baseball player
+groom, bridegroom
+scuba diver
+セイヨウアブラナ,(アブラナ目アブラナ科アブラナ族アブラナ属),学名:Brassica napus
+ヒナギク,(キク目キク科シオン族ヒナギク属),学名:Bellis perennis
+キバナアツモリソウ,(キジカクシ目ラン科アツモリソウ属),学名:Cypripedium yatabeanum
+トウモロコシ,(イネ目イネ科トウモロコシ属),学名:Zea mays
+ドングリ,(ブナ目ブナ科)
+ローズヒップ,(バラ目バラ科バラ属)　_学名:Rosa canina
+クリ,(ブナ目ブナ科クリ属)_学名:Castanea crenata
+ホウキタケ属,(ラッパタケ目ラッパタケ科ホウキタケ属)
+ハラタケ属,(ハラタケ目ハラタケ科ハラタケ属)
+シャグマアミガサタケ属,(チャワンタケ目フクロシトネタケ科シャグマアミガサタケ属)
+スッポンタケ属,(スッポンタケ目スッポンタケ科スッポンタケ属)
+ツチグリ属,(イグチ目ツチグリ科ツチグリ属)
+マイタケ,(タマチョレイタケ目トンビマイタケ科マイタケ属),学名:Grifola frondosa
+イグチ科,(イグチ目イグチ科)
+イネ,(イネ目イネ科イネ属),学名:Oryza sativa
+toilet tissue, toilet paper, bathroom tissue

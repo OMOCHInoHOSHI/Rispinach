@@ -8,7 +8,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.Box
-
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 
 
 //パーミッションハンドラを使用してカメラの権限を要求するためのアクティビティリザルトランチャーを作成
@@ -55,7 +58,18 @@ fun CameraScreen_2(flg: Int): Int{
         isGranted = granted
     }
     if(isGranted){  //True
-        Box{
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    // 背後のタッチイベントを無効化
+                    awaitPointerEventScope {
+                        while (true) {
+                            awaitPointerEvent()
+                        }
+                    }
+                }
+        ){
             //Text(text = "カメラの権限を取得できました")
             println("カメラの権限取得")
             //作成したプレビューカメラコンポーザブルでビューを表示

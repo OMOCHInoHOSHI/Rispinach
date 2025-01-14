@@ -137,6 +137,19 @@ data class CameraState (
             }
         )
     }
+
+    // カメラを停止するためのメソッド
+    fun stopCamera() {
+        cameraProviderFuture.addListener({
+            val cameraProvider = cameraProviderFuture.get()
+            try {
+                cameraProvider.unbindAll()
+                Log.d("CameraState", "Camera unbound successfully.")
+            } catch (e: Exception) {
+                Log.e("CameraState", "Error unbinding camera", e)
+            }
+        }, ContextCompat.getMainExecutor(context))
+    }
 }
 
 
