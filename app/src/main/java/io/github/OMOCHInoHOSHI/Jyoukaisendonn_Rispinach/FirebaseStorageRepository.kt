@@ -1,0 +1,47 @@
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Log
+import com.google.firebase.storage.FirebaseStorage
+import io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach.ImageData
+
+// Firebase Storage から画像を取得する関数
+fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
+    // Firebase Storage のインスタンスを取得
+    val storage = FirebaseStorage.getInstance()
+    // "images" フォルダの参照を取得
+    val storageRef = storage.reference.child("images")
+    // 画像データを格納するリストを作成
+    val imageList = mutableListOf<ImageData>()
+
+    // "images" フォルダ内の全てのアイテムをリストアップ
+    storageRef.listAll().addOnSuccessListener { listResult ->
+        // 各アイテムに対して処理を行う
+        listResult.items.forEach { item ->
+            // アイテムのメタデータを取得
+            item.metadata.addOnSuccessListener { metadata ->
+                // メタデータから speciesName を取得（存在しない場合は "不明" とする）
+                val speciesName = metadata.getCustomMetadata("speciesName") ?: "不明"
+                // アイテムのバイトデータを取得
+                item.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
+                    // バイトデータを Bitmap に変換
+                    val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                    // ImageData オブジェクトをリストに追加
+                    imageList.add(ImageData(speciesName, bitmap))
+                    // 全てのアイテムの処理が完了したらコールバックを呼び出す
+                    if (imageList.size == listResult.items.size) {
+                        onDataReceived(imageList)
+                    }
+                }.addOnFailureListener { exception ->
+                    // 画像のダウンロードに失敗した場合のエラーログ
+                    Log.e("FirebaseStorage", "Failed to download image", exception)
+                }
+            }.addOnFailureListener { exception ->
+                // メタデータの取得に失敗した場合のエラーログ
+                Log.e("FirebaseStorage", "Failed to get metadata", exception)
+            }
+        }
+    }.addOnFailureListener { exception ->
+        // 画像リストの取得に失敗した場合のエラーログ
+        Log.e("FirebaseStorage", "Failed to list images", exception)
+    }
+}
