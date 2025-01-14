@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.DataType
@@ -42,6 +43,8 @@ fun PostScreen(bitmap: Bitmap?) {
     var location by rememberSaveable { mutableStateOf("") }
     // 発見日付の状態を保持する変数
     var discoveryDate by rememberSaveable { mutableStateOf("") }
+    // 日付が押されたかのフラグ
+    var date_flg by rememberSaveable { mutableStateOf(false) }
     // 生物名が入力されたかどうかを保持する変数
     var speciesNameSet by remember { mutableStateOf(false) }
     // コルーチンスコープを作成
@@ -178,23 +181,52 @@ fun PostScreen(bitmap: Bitmap?) {
             )
 
             // 発見日付入力フィールドの設定
-            OutlinedTextField(
+//            OutlinedTextField(
+//                value = discoveryDate,
+//                onValueChange = { discoveryDate = it },
+//                placeholder = { Text("発見日付") },
+//                modifier = Modifier.fillMaxWidth()
+//                    .clickable { date_flg = true },
+//                leadingIcon = {
+//                    Icon(
+//                        imageVector = Icons.Default.DateRange,
+//                        contentDescription = null,
+//                        tint = MaterialTheme.colorScheme.outline
+//                    )
+//                },
+//
+//                shape = RoundedCornerShape(8.dp),
+//                colors = OutlinedTextFieldDefaults.colors(
+//                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+//                )
+//            )
+            // 発見日付入力フィールドの設定
+            SelectOutlineTextField(
                 value = discoveryDate,
                 onValueChange = { discoveryDate = it },
-                placeholder = { Text("発見日付") },
-                modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.DateRange,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.outline
-                    )
-                },
-                shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                )
+                onClick = { date_flg = true },
             )
+
+
+            // 日付カレンダーを表示-------------------------------------------------------
+            val focusManager = LocalFocusManager.current
+            if(date_flg){
+                DatePickerModal(
+                    // 選択時の処理
+                    onDateSelected = {
+                        discoveryDate = convertMillisToDate(it)
+                        date_flg = false
+                        focusManager.clearFocus()
+                    },
+                    // 未選択時の処理
+                    onDismiss = {
+                        date_flg = false
+                        focusManager.clearFocus()
+                    },
+                )
+
+            }
+            // 日付カレンダーを表示E-------------------------------------------------------
         }
     }
 }
