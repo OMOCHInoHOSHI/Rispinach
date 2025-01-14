@@ -89,6 +89,7 @@ dependencies {
     //map
     implementation ("com.google.maps.android:maps-compose:6.1.0")
     implementation ("com.google.android.gms:play-services-maps:19.0.0")
+    implementation(libs.firebase.auth.ktx)
 
     //カメラライブラリS---------------------------------------------------------
     val cameraxVersion = "1.3.4"    //変数

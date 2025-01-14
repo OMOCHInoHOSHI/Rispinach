@@ -9,7 +9,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -25,8 +24,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.painterResource as painterResource1
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -36,7 +33,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach.Posts
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource as painterResource1
 
 data class ImageData(val name:String,val id:Int)
 
@@ -171,7 +169,8 @@ fun Home()
                         ) {
                             //Posts(pictureName[index], lsName)
                             println(pictureName[index].name)
-                            Posts(pictureName[index].id,pictureName[index].name,pictureName[index].name/*仮置き*/)
+                            LoginScreen()
+                            //Posts(pictureName[index].id,pictureName[index].name,pictureName[index].name/*仮置き*/)
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_share_24, text = "Share")
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_link_24, text = "Get link")
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_edit_24, text = "Edit name")
