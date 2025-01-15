@@ -242,51 +242,6 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                 goMap=false
                 DismissibleDrawerEnabled=true
             }
-            if(!goMap) {
-                TopAppBar(
-                    modifier = Modifier.onGloballyPositioned { coordinates ->
-                        topBarHeight =
-                            with(localDensity) { coordinates.size.height.toDp() /* 高さをdpで取得*/ }
-                    },
-                    title = {
-                        Text(text = "アプリのタイトル")
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            //modifier = Modifier.padding(start = 30.dp, top = 20.dp, end = 20.dp),
-                            onClick = {
-                                println("a")
-                                //DismissibleDrawerEnabled=true
-                                drawerState = DrawerState(initialValue = DrawerValue.Open)
-                                //drawerState = DrawerState(initialValue = DrawerValue.Open)
-                            },
-                            enabled = !goMap,
-                        )
-                        {
-                            Icon(
-                                imageVector = Icons.Filled.Menu,
-                                contentDescription = null,
-                                //tint = Color.White,
-                                modifier = Modifier
-                                    .height(60.dp)
-                                    .width(60.dp)
-                                //.border(2.dp, Color.White, RoundedCornerShape(20.dp))
-                            )
-
-                        }
-                    },
-
-//                    colors = TopAppBarColors(containerColor = Color.Green)
-
-//                backgroundColor = MaterialTheme.colors.primary,
-//                contentColor = Color.White
-
-                )
-            }
-            else
-            {
-                topBarHeight=0.dp
-            }
             ModalNavigationDrawer(
                 drawerState = drawerState,
                 gesturesEnabled = DismissibleDrawerEnabled,
@@ -399,6 +354,52 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                     //ドロワーメニューのアイコン----------------------------------------
                 }
             }
+            if(!goMap) {
+                TopAppBar(
+                    modifier = Modifier.onGloballyPositioned { coordinates ->
+                        topBarHeight =
+                            with(localDensity) { coordinates.size.height.toDp() /* 高さをdpで取得*/ }
+                    },
+                    title = {
+                        Text(text = "アプリのタイトル")
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            //modifier = Modifier.padding(start = 30.dp, top = 20.dp, end = 20.dp),
+                            onClick = {
+                                println("a")
+                                //DismissibleDrawerEnabled=true
+                                drawerState = DrawerState(initialValue = DrawerValue.Open)
+                                //drawerState = DrawerState(initialValue = DrawerValue.Open)
+                            },
+                            enabled = !goMap,
+                        )
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = null,
+                                //tint = Color.White,
+                                modifier = Modifier
+                                    .height(60.dp)
+                                    .width(60.dp)
+                                //.border(2.dp, Color.White, RoundedCornerShape(20.dp))
+                            )
+
+                        }
+                    },
+
+//                    colors = TopAppBarColors(containerColor = Color.Green)
+
+//                backgroundColor = MaterialTheme.colors.primary,
+//                contentColor = Color.White
+
+                )
+            }
+            else
+            {
+                topBarHeight=0.dp
+            }
+
 
         },
         //ドロワーメニュー----------------------------------------------------------------------
