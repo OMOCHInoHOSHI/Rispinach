@@ -16,7 +16,7 @@ fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
     // "images" フォルダ内の全てのアイテムをリストアップ
     storageRef.listAll().addOnSuccessListener { listResult ->
         // 各アイテムに対して処理を行う
-        listResult.items.forEach { item ->
+        listResult.items.forEachIndexed { index, item ->
             // アイテムのメタデータを取得
             item.metadata.addOnSuccessListener { metadata ->
                 // メタデータから speciesName を取得（存在しない場合は "不明" とする）
@@ -25,8 +25,8 @@ fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
                 item.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
                     // バイトデータを Bitmap に変換
                     val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                    // ImageData オブジェクトをリストに追加
-                    imageList.add(ImageData(speciesName, bitmap))
+                    // ImageData2 オブジェクトをリストに追加
+                    imageList.add(ImageData(bitmap, speciesName, index + 1))
                     // 全てのアイテムの処理が完了したらコールバックを呼び出す
                     if (imageList.size == listResult.items.size) {
                         onDataReceived(imageList)

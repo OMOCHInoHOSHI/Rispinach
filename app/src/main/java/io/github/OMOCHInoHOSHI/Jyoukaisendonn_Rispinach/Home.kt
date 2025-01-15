@@ -40,7 +40,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import fetchImagesFromFirebaseStorage
 
-data class ImageData(val name:String, val id: Bitmap)
+data class ImageData(val bitmap: Bitmap, val name: String, val id: Int)
 
 //enum class ImageItems(
 //    val id: String,
@@ -136,7 +136,7 @@ fun Home()
                 Image(
                     //painter = painterResource1(pictureName[index]), contentDescription = "test",
                     //painter = painterResource1(pictureName[index]), contentDescription = "test",
-                    bitmap = item.id.asImageBitmap(),       // 画像を表示するためのBitmap
+                    bitmap = item.bitmap.asImageBitmap(),       // 画像を表示するためのBitmap
                     contentScale = ContentScale.Crop,
                     //painter = painterResource1(pictureName[index].id),コメントアウト(中村)
                     contentDescription = pictureName[index].name,
@@ -188,7 +188,7 @@ fun Home()
                         ) {
                             //Posts(pictureName[index], lsName)
                             println(pictureName[index].name)
-                            Posts(pictureName[index].id, pictureName[index].name, pictureName[index].name /* 仮置き */)
+                            Posts(pictureName[index].bitmap, pictureName[index].name, pictureName[index].id /* 仮置き */)
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_share_24, text = "Share")
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_link_24, text = "Get link")
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_edit_24, text = "Edit name")
