@@ -151,18 +151,12 @@ data class CameraState (
     private  val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
     //  撮影した写真を保存するファイルを表す変数 後で初期化される
     private lateinit var photoFile: File
-    // 撮影した写真のURIを保持する
-    private var imageUri by mutableStateOf<Uri?>(null)
-
-    // 撮影結果を受け取る
-//    if (success) {
-//        imageUri = Uri.fromFile(photoFile)
-//    }
-
-    // 撮影した画像を一時保存する関数S---------------------------------------------------------
     // MutableStateを定義
     var capturedBitmap by mutableStateOf<Bitmap?>(null)
+    // 撮影した写真のURIを保持する
+    var savedUri by mutableStateOf<Uri?>(null)
 
+    // 撮影した画像を一時保存する関数S---------------------------------------------------------
     fun takePhoto2() {
         // ファイル名を作成
         val fileName = SimpleDateFormat(
@@ -192,12 +186,12 @@ data class CameraState (
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     // 保存された画像のURIを取得
-                    val savedUri = output.savedUri
+                    savedUri = output.savedUri
 
                     // 成功した場合、tempFile に画像が保存される
                     Log.d("Camera", "Image saved successfully: ${tempFile.absolutePath}")
-                    val msg = "成功: $savedUri"
-                    Toast.makeText(context,msg,Toast.LENGTH_SHORT).show()
+//                    val msg = "成功: $savedUri"
+//                    Toast.makeText(context,msg,Toast.LENGTH_SHORT).show()
 
                     // bitmapに変換
                     try {
@@ -220,7 +214,19 @@ data class CameraState (
     // 撮影した画像を一時保存する関数S---------------------------------------------------------
     // 撮影した画像を一時保存するE--------------------------------------------------------------------------
 
-
+    // 一時保存したbitmapを投稿S--------------------------------------------------------------------------
+    @Composable
+    fun bitmap_Camera(){
+        if (capturedBitmap != null){
+            // 画像の回転情報を考慮して正しい向きに回転させる
+            val rotatedBitmap =
+                savedUri?.let { rotateBitmapIfRequired(LocalContext.current, capturedBitmap!!, it) }
+            // 投稿準備画面
+            PostScreen(rotatedBitmap)
+            println("なげる")
+        }
+    }
+    // 一時保存したbitmapを投稿E--------------------------------------------------------------------------
 
     // カメラを停止するためのメソッド
     fun stopCamera() {
