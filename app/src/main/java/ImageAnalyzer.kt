@@ -20,7 +20,7 @@ import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import org.tensorflow.lite.DataType
-
+/*
 class ImageAnalyzer(context: Context) {
     // TensorFlow Liteのインタープリター（モデルを実行するためのクラス）
     private val interpreter: Interpreter
@@ -290,3 +290,5 @@ fun ResNetPage(bitmaps: Bitmap) {
         }
     }
 }
+
+ */

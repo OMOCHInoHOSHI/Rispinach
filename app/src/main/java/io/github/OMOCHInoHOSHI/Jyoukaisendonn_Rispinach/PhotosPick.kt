@@ -1,6 +1,6 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
-import ResNetPage
+//import ResNetPage
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
@@ -76,6 +76,7 @@ fun photosPick2(onNothingSelected: () -> Unit,){
             println("bitmap取得")
             // 画像の回転情報を考慮して正しい向きに回転させる
             val rotatedBitmap = rotateBitmapIfRequired(LocalContext.current, bitmap, pickedImageUri)
+
             PostScreen(rotatedBitmap)
             // bitmap判定
             //ResNetPage(rotatedBitmap)

@@ -2,6 +2,7 @@ package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 //import androidx.compose.ui.draw.EmptyBuildDrawCacheParams.size
 //import kotlin.collections.EmptyList.size
+import android.graphics.Bitmap
 import android.provider.ContactsContract.CommonDataKinds.Photo
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
@@ -9,7 +10,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -23,6 +23,7 @@ import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
@@ -35,10 +36,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach.Posts
+import fetchImagesFromFirebaseStorage
 
-data class ImageData(val name:String,val id:Int)
+data class ImageData(val name:String, val id: Bitmap)
 
 //enum class ImageItems(
 //    val id: String,
@@ -61,6 +63,7 @@ fun Home()
         skipPartiallyExpanded = skipPartiallyExpanded
     )
     //var n="R.drawable.test1"
+    /*コメントアウト(中村)
     var pictureName=rememberSaveable { mutableListOf(
         ImageData("test1",R.drawable.test1),
         ImageData("test1",R.drawable.test1),
@@ -73,10 +76,22 @@ fun Home()
         ImageData("test1",R.drawable.test1),
         ImageData("test1",R.drawable.test1),
         ImageData("test1",R.drawable.test1) )}
+     */
     //var pictureName=rememberSaveable { mutableListOf(n.toInt(),R.drawable.tizu_kakkokari1 )}
     //var pictureName=R.drawable.test1
     var lsName=""
     //var open=openBottomSheet
+
+    // Firebase Storageから取得した画像データを保持するリスト
+    var pictureName by rememberSaveable { mutableStateOf(listOf<ImageData>()) }
+
+    // Firebase Storageからデータを読み込む
+    LaunchedEffect(Unit) {
+        fetchImagesFromFirebaseStorage { images ->
+            pictureName = images
+        }
+    }
+
     Column(
         modifier = Modifier
     )
@@ -121,8 +136,10 @@ fun Home()
                 Image(
                     //painter = painterResource1(pictureName[index]), contentDescription = "test",
                     //painter = painterResource1(pictureName[index]), contentDescription = "test",
+                    bitmap = item.id.asImageBitmap(),       // 画像を表示するためのBitmap
                     contentScale = ContentScale.Crop,
-                    painter = painterResource1(pictureName[index].id), contentDescription = pictureName[index].name,
+                    //painter = painterResource1(pictureName[index].id),コメントアウト(中村)
+                    contentDescription = pictureName[index].name,
                     modifier = Modifier
                         .size(128.dp)
                         .clickable
@@ -171,7 +188,7 @@ fun Home()
                         ) {
                             //Posts(pictureName[index], lsName)
                             println(pictureName[index].name)
-                            Posts(pictureName[index].id,pictureName[index].name,pictureName[index].name/*仮置き*/)
+                            Posts(pictureName[index].id, pictureName[index].name, pictureName[index].name /* 仮置き */)
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_share_24, text = "Share")
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_link_24, text = "Get link")
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_edit_24, text = "Edit name")

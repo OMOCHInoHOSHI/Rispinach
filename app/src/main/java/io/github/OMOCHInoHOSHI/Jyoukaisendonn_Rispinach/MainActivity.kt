@@ -1,6 +1,6 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
-import ResNetPage
+//import ResNetPage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -106,8 +106,22 @@ class MainActivity : ComponentActivity() {
                 }
                 if (camera_flg == 1) {
 //                        CameraScreen()
-                    camera_flg = CameraScreen_2(camera_flg)
-                    camera_flg = CameraScreen_2(camera_flg)
+//                    camera_flg = CameraScreen_2(camera_flg)
+
+                    DatePickerModal(
+                        onDateSelected = { selectedDateMillis ->
+                            // 選択された日付の処理
+                            if (selectedDateMillis != null) {
+                                // 選択された日付を使って何か処理を行う
+                                println("選択された日付: $selectedDateMillis")
+                            }
+                        },
+                        onDismiss = {
+                            // ダイアログが閉じられた際の処理
+                            println("日付ピッカーが閉じられました")
+                        }
+                    )
+
 //                    ResNetPage() // ResNet_page関数を呼び出す
 //                        camera_flg=0
                 }

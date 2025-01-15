@@ -1,5 +1,6 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,17 +15,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Posts(pName: Int, lName: String, cName: String) {
+fun Posts(pName: Bitmap, lName: String, cName: String) {
     val scope = rememberCoroutineScope()
     var openBottomSheet by remember { mutableStateOf(false) }
     val bottomSheetState = rememberModalBottomSheetState()
@@ -37,7 +44,8 @@ fun Posts(pName: Int, lName: String, cName: String) {
                 contentAlignment = Alignment.TopCenter
             ) {
                 Image(
-                    painter = painterResource(id = pName),
+                    bitmap = pName.asImageBitmap(),     // プロフィール画像を表示するためのBitmap
+                    //painter = painterResource(id = pName),コメントアウト(中村)
                     contentDescription = "プロフィール画像",
                     modifier = Modifier
                         .fillMaxWidth()
@@ -96,26 +104,51 @@ fun Posts(pName: Int, lName: String, cName: String) {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text("場所:", style = MaterialTheme.typography.titleMedium)
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = cName,
-                                textDecoration = TextDecoration.Underline,
-                                color = Color.Blue,
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.clickable { /* 必要に応じてクリック処理を追加 */ }
-                            )
+
+                            //場所は一旦コメントアウト
+
+//                            Text("場所:", style = MaterialTheme.typography.titleMedium)
+//                            Spacer(modifier = Modifier.height(8.dp))
+//                            Text(
+//                                text = cName,
+//                                textDecoration = TextDecoration.Underline,
+//                                color = Color.Blue,
+//                                style = MaterialTheme.typography.bodyLarge,
+//                                modifier = Modifier.clickable { /* 必要に応じてクリック処理を追加 */ }
+//                            )
 
                             //通報場所
-                            Text("通報:", style = MaterialTheme.typography.titleMedium)
+                            Text("通報", style = MaterialTheme.typography.titleMedium)
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = cName,
-                                textDecoration = TextDecoration.Underline,
-                                color = Color.Blue,
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.clickable { /* 必要に応じてクリック処理を追加 */ }
+                                buildAnnotatedString()
+                                {
+                                    withLink(
+                                        LinkAnnotation.Url(
+                                            "https://www.env.go.jp/nature/intro/reo.html",
+                                            TextLinkStyles(
+                                                style = SpanStyle(
+                                                    color = Color.Blue,
+                                                    textDecoration = TextDecoration.Underline
+                                                )
+                                            )
+                                        )
+                                    )
+                                    {
+                                        append("地方環境事務所等一覧")
+                                    }
+                                }
                             )
+
+//                            Text("通報:", style = MaterialTheme.typography.titleMedium)
+//                            Spacer(modifier = Modifier.height(8.dp))
+//                            Text(
+//                                text = cName,
+//                                textDecoration = TextDecoration.Underline,
+//                                color = Color.Blue,
+//                                style = MaterialTheme.typography.bodyLarge,
+//                                modifier = Modifier.clickable { /* 必要に応じてクリック処理を追加 */ }
+//                            )
                         }
                     }
                 }
