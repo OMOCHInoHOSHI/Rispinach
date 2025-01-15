@@ -25,6 +25,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -34,7 +35,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -87,13 +87,14 @@ enum class MainScreenTab(
 fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 {
     SideEffect { Log.d("compose-log", "MainScreen") }
-    var drawerState by remember { mutableStateOf(DrawerState(initialValue = DrawerValue.Closed)) }
+    var drawerState = remember { DrawerState(initialValue = DrawerValue.Closed) }
     val nestedNavController = rememberNavController()
     val navBackStackEntry by nestedNavController.currentBackStackEntryAsState()
     //val navBackStackEntry by rememberSaveable { mutableStateOf(nestedNavController.currentBackStackEntryAsState()) }
     val currentTab = navBackStackEntry?.destination?.route
     val localDensity = LocalDensity.current
     var bottomBarHeight by remember { mutableStateOf(0.dp) }
+    var topBarHeight by remember { mutableStateOf(0.dp) }
     var btmEnabled by rememberSaveable { mutableStateOf(true) }
     var selectButton=currentTab
     var DismissibleDrawerEnabled=true
@@ -165,7 +166,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //                            .clickable {
 //
 //                            }
-                            ,
+                        ,
                         icon = { Icon(item.icon, contentDescription = item.label) },
                         label = { Text(item.label) },
                         onClick = dropUnlessResumed()
@@ -241,6 +242,51 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                 goMap=false
                 DismissibleDrawerEnabled=true
             }
+            if(!goMap) {
+                TopAppBar(
+                    modifier = Modifier.onGloballyPositioned { coordinates ->
+                        topBarHeight =
+                            with(localDensity) { coordinates.size.height.toDp() /* 高さをdpで取得*/ }
+                    },
+                    title = {
+                        Text(text = "アプリのタイトル")
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            //modifier = Modifier.padding(start = 30.dp, top = 20.dp, end = 20.dp),
+                            onClick = {
+                                println("a")
+                                //DismissibleDrawerEnabled=true
+                                drawerState = DrawerState(initialValue = DrawerValue.Open)
+                                //drawerState = DrawerState(initialValue = DrawerValue.Open)
+                            },
+                            enabled = !goMap,
+                        )
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = null,
+                                //tint = Color.White,
+                                modifier = Modifier
+                                    .height(60.dp)
+                                    .width(60.dp)
+                                //.border(2.dp, Color.White, RoundedCornerShape(20.dp))
+                            )
+
+                        }
+                    },
+
+//                    colors = TopAppBarColors(containerColor = Color.Green)
+
+//                backgroundColor = MaterialTheme.colors.primary,
+//                contentColor = Color.White
+
+                )
+            }
+            else
+            {
+                topBarHeight=0.dp
+            }
             ModalNavigationDrawer(
                 drawerState = drawerState,
                 gesturesEnabled = DismissibleDrawerEnabled,
@@ -249,7 +295,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                         modifier = Modifier.width(200.dp)
                     )
                     {
-
+                        println(drawerState)
                         SideEffect { Log.d("compose-log", "ModalNavigationDrawer") }
                         Text(text = "ナビゲーションドロワー")
                         MainScreenTab.entries.forEachIndexed { index, item ->
@@ -310,7 +356,8 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                     modifier = Modifier
                         .fillMaxSize()
                         .systemBarsPadding()
-                        .padding(bottom = bottomBarHeight)
+                        .padding(top=topBarHeight,bottom = bottomBarHeight)
+
                 )
                 {
                     SideEffect { Log.d("compose-log", "Box2") }
@@ -321,39 +368,42 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                     )
                     {
                         //if(n==true) {
-                            //デバッグ用
+                        //デバッグ用
                         println("check")
 
                         screenMode()
                         //}
                     }
                     //ドロワーメニューのアイコン----------------------------------------
-                    IconButton(
-                        enabled = !goMap,
-                        modifier = Modifier.padding(start = 30.dp, top = 20.dp, end = 20.dp),
-                        onClick = {
-                            //DismissibleDrawerEnabled=true
-                            drawerState = DrawerState(initialValue = DrawerValue.Open)
-                        }
-                    )
-                    {
-                        if(!goMap)
-                        {
-                            Icon(
-                                imageVector = Icons.Filled.Menu,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier
-                                    .height(60.dp)
-                                    .width(60.dp)
-                            )
-                        }
-                    }
+//                    IconButton(
+//                        enabled = !goMap,
+//                        modifier = Modifier.padding(start = 30.dp, top = 20.dp, end = 20.dp),
+//                        onClick = {
+//                            //DismissibleDrawerEnabled=true
+//                            drawerState = DrawerState(initialValue = DrawerValue.Open)
+//                        }
+//                    )
+//                    {
+//                        if(!goMap)
+//                        {
+//                            Icon(
+//                                imageVector = Icons.Filled.Menu,
+//                                contentDescription = null,
+//                                tint = Color.White,
+//                                modifier = Modifier
+//                                    .height(60.dp)
+//                                    .width(60.dp)
+//                            )
+//                        }
+//                    }
                     //ドロワーメニューのアイコン----------------------------------------
                 }
             }
+
         },
         //ドロワーメニュー----------------------------------------------------------------------
+
+
 
     )
     {
@@ -372,6 +422,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //            }
         }
     }
+
 }
 
 fun NavGraphBuilder.mainScreen()

@@ -1,56 +1,46 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
-import ResNetPage
+//import com.example.hs11.ui.theme.HS11Theme
+
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
-import androidx.compose.material.icons.rounded.PhotoCamera
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-//import com.example.hs11.ui.theme.HS11Theme
+import com.chaquo.python.Python
+import com.chaquo.python.android.AndroidPlatform
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.chaquo.python.Python     // Python
-import com.chaquo.python.android.AndroidPlatform        // Chaquopy
 import io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach.ui.theme.RispinachTheme
-
-import androidx.compose.foundation.layout.* // layout関連をまとめてimport
-import androidx.compose.material.icons.rounded.* // roundedアイコンをまとめてimport
-import androidx.compose.material3.* // Material3コンポーネントをまとめてimport
-import androidx.compose.runtime.* // runtime関連をまとめてimport
-import androidx.compose.ui.* // ui関連をまとめてimport
-
-import android.util.Log
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.ui.Alignment
-import com.google.android.gms.maps.CameraUpdateFactory
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -93,24 +83,24 @@ class MainActivity : ComponentActivity() {
                 }
 
                 //カメラボタンでカメラ起動S----------------------------------------------------
-                var camera_flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
-                FilledTonalButton(
-                    onClick = { camera_flg = 1 },
-                    modifier = Modifier.size(80.dp).padding(1.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.PhotoCamera, // カメラのアイコンに変更
-                        contentDescription = "カメラ起動",
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
-                    )
-                }
-                if (camera_flg == 1) {
-//                        CameraScreen()
-                    camera_flg = CameraScreen_2(camera_flg)
-                    camera_flg = CameraScreen_2(camera_flg)
-//                    ResNetPage() // ResNet_page関数を呼び出す
-//                        camera_flg=0
-                }
+//                var camera_flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
+//                FilledTonalButton(
+//                    onClick = { camera_flg = 1 },
+//                    modifier = Modifier.size(80.dp).padding(1.dp)
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Rounded.PhotoCamera, // カメラのアイコンに変更
+//                        contentDescription = "カメラ起動",
+//                        modifier = Modifier.size(ButtonDefaults.IconSize)
+//                    )
+//                }
+//                if (camera_flg == 1) {
+////                        CameraScreen()
+//                    camera_flg = CameraScreen_2(camera_flg)
+//                    camera_flg = CameraScreen_2(camera_flg)
+////                    ResNetPage() // ResNet_page関数を呼び出す
+////                        camera_flg=0
+//                }
                 //カメラボタンでカメラ起動E----------------------------------------------------
             }
 
