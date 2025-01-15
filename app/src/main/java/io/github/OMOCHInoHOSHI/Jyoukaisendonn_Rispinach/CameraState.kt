@@ -4,6 +4,9 @@ package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.ImageCapture
@@ -11,12 +14,18 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.google.common.util.concurrent.ListenableFuture
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -67,76 +76,151 @@ data class CameraState (
         return  previewView
     }
 
-    //写真保存、インテントを使い、写真を別アプリに共有する機能
+//    //写真保存、インテントを使い、写真を別アプリに共有する機能
+//    private  val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+//    fun takePhoto(){
+//        //現在日時からファイルを作成し、ゲームに格納
+//        val name = SimpleDateFormat(
+//            FILENAME_FORMAT,
+//            Locale.US
+//        ).format(System.currentTimeMillis())
+//
+//        val contentValues = ContentValues().apply {//データを格納するために使用するクラス
+//            put(
+//                //DISPLAY_NAMEがファイル名に
+//                android.provider.MediaStore.MediaColumns.DISPLAY_NAME,
+//                name
+//            )
+//            put(
+//                //MIMEタイプ
+//                android.provider.MediaStore.MediaColumns.MIME_TYPE,
+//                "image/jpeg"
+//            )
+//            put(
+//                //保存先の相対パスを渡す
+//                android.provider.MediaStore.MediaColumns.RELATIVE_PATH,
+//                //フォルダ名
+//                "Pictures/Rispinach-Image"
+//            )
+//        }
+//
+//        //どのように出力したいか
+//        val outputOptions = ImageCapture.OutputFileOptions.Builder(
+//            context.contentResolver,
+//            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//            contentValues
+//        ).build()
+//
+//        //出力をメディアストアに保存するため、メディアストアのエントリーを追加
+//        //ImageCaptureクラスインスタンスであるImageCaptureオブジェクトのtakePictureを呼び出して撮影
+//        imageCapture.takePicture(
+//            outputOptions,
+//            ContextCompat.getMainExecutor(context),
+//            //エグゼキュータ(Executor)と画像が保存される時のためのコールバックを渡す
+//            object :ImageCapture.OnImageSavedCallback{
+//                //画像キャプチャの失敗や保存の失敗の場合、エラーメッセージ
+//                override fun onError(exc: ImageCaptureException){
+//                    val msg = "失敗:: ${exc.message}"
+//                    //Toastは簡単なメッセージを表示させるUIコンポーネント
+//                    Toast.makeText(context,msg,Toast.LENGTH_SHORT).show()
+//                    Log.e("Camera",msg,exc)
+//                }
+//                //成功で呼び出される
+//                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+//                    val msg = "JPEGで保存: ${output.savedUri}"
+//                    Toast.makeText(context,msg,Toast.LENGTH_SHORT).show()
+//                    Log.d("Camera",msg)
+//
+//                    //ほかのアプリケーションに送信
+////                    Intent(Intent.ACTION_SEND).also { share ->
+////                        share.type = "image/*"
+////                        share.putExtra(Intent.EXTRA_STREAM,output.savedUri)
+////                        context.startActivity(
+////                            Intent.createChooser(
+////                                share,
+////                                "Share to"
+////                            )
+////                        )
+////                    }
+//                }
+//            }
+//        )
+//    }
+
+    // 撮影した画像を一時保存するS--------------------------------------------------------------------------
     private  val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-    fun takePhoto(){
-        //現在日時からファイルを作成し、ゲームに格納
-        val name = SimpleDateFormat(
+    //  撮影した写真を保存するファイルを表す変数 後で初期化される
+    private lateinit var photoFile: File
+    // 撮影した写真のURIを保持する
+    private var imageUri by mutableStateOf<Uri?>(null)
+
+    // 撮影結果を受け取る
+//    if (success) {
+//        imageUri = Uri.fromFile(photoFile)
+//    }
+
+    // 撮影した画像を一時保存する関数S---------------------------------------------------------
+    // MutableStateを定義
+    var capturedBitmap by mutableStateOf<Bitmap?>(null)
+
+    fun takePhoto2() {
+        // ファイル名を作成
+        val fileName = SimpleDateFormat(
             FILENAME_FORMAT,
             Locale.US
         ).format(System.currentTimeMillis())
 
-        val contentValues = ContentValues().apply {//データを格納するために使用するクラス
-            put(
-                //DISPLAY_NAMEがファイル名に
-                android.provider.MediaStore.MediaColumns.DISPLAY_NAME,
-                name
-            )
-            put(
-                //MIMEタイプ
-                android.provider.MediaStore.MediaColumns.MIME_TYPE,
-                "image/jpeg"
-            )
-            put(
-                //保存先の相対パスを渡す
-                android.provider.MediaStore.MediaColumns.RELATIVE_PATH,
-                //フォルダ名
-                "Pictures/Rispinach-Image"
-            )
-        }
+        // 一時ファイルのパスを生成
+        val tempFile = File(context.cacheDir, "$fileName.jpg")
 
-        //どのように出力したいか
+        // 出力オプションを設定
         val outputOptions = ImageCapture.OutputFileOptions.Builder(
-            context.contentResolver,
-            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            contentValues
+            tempFile
         ).build()
 
-        //出力をメディアストアに保存するため、メディアストアのエントリーを追加
-        //ImageCaptureクラスインスタンスであるImageCaptureオブジェクトのtakePictureを呼び出して撮影
+        // 写真を撮影
         imageCapture.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(context),
-            //エグゼキュータ(Executor)と画像が保存される時のためのコールバックを渡す
-            object :ImageCapture.OnImageSavedCallback{
-                //画像キャプチャの失敗や保存の失敗の場合、エラーメッセージ
-                override fun onError(exc: ImageCaptureException){
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onError(exc: ImageCaptureException) {
+                    // エラー処理
+                    Log.e("Camera", "Failed to save image: ${exc.message}")
                     val msg = "失敗:: ${exc.message}"
-                    //Toastは簡単なメッセージを表示させるUIコンポーネント
                     Toast.makeText(context,msg,Toast.LENGTH_SHORT).show()
-                    Log.e("Camera",msg,exc)
                 }
-                //成功で呼び出される
-                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val msg = "JPEGで保存: ${output.savedUri}"
-                    Toast.makeText(context,msg,Toast.LENGTH_SHORT).show()
-                    Log.d("Camera",msg)
 
-                    //ほかのアプリケーションに送信
-//                    Intent(Intent.ACTION_SEND).also { share ->
-//                        share.type = "image/*"
-//                        share.putExtra(Intent.EXTRA_STREAM,output.savedUri)
-//                        context.startActivity(
-//                            Intent.createChooser(
-//                                share,
-//                                "Share to"
-//                            )
-//                        )
-//                    }
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    // 保存された画像のURIを取得
+                    val savedUri = output.savedUri
+
+                    // 成功した場合、tempFile に画像が保存される
+                    Log.d("Camera", "Image saved successfully: ${tempFile.absolutePath}")
+                    val msg = "成功: $savedUri"
+                    Toast.makeText(context,msg,Toast.LENGTH_SHORT).show()
+
+                    // bitmapに変換
+                    try {
+                        // tempFile から Bitmap を読み込む
+                        capturedBitmap = BitmapFactory.decodeFile(tempFile.absolutePath)
+
+                        // Bitmap の操作が必要ならここで処理する
+                        Log.d("Camera", "Bitmap created successfully")
+
+
+                    } catch (e: Exception) {
+                        Log.e("Camera", "Failed to convert file to Bitmap: ${e.message}")
+                        Toast.makeText(context, "Bitmap変換失敗: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+
                 }
             }
         )
     }
+    // 撮影した画像を一時保存する関数S---------------------------------------------------------
+    // 撮影した画像を一時保存するE--------------------------------------------------------------------------
+
+
 
     // カメラを停止するためのメソッド
     fun stopCamera() {

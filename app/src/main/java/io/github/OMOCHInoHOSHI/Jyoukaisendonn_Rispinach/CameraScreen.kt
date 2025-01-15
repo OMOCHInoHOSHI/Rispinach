@@ -78,7 +78,7 @@ fun CameraScreen_2(flg: Int): Int{
             }
             //撮影用のボタンを配置
             TakePhoto {
-                cameraState.takePhoto()
+                cameraState.takePhoto2()
             }
         }
     }else{
