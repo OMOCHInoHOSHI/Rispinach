@@ -1,6 +1,5 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
-//import com.google.android.gms.auth.api.signin.GoogleSignIn
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -28,73 +27,82 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-
-//val auth = FirebaseAuth.getInstance()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LoginScreen(/*auth: FirebaseAuth*/)
-{
+fun LoginScreen() {
+    // Firebase の初期化 (すでにどこかで呼ばれていれば不要)
+    FirebaseApp.initializeApp(LocalContext.current)
+
+    // FirebaseAuth インスタンス
+    val auth = remember { FirebaseAuth.getInstance() }
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
-    // Google サインインの設定
-//    val googleSignInClient = remember {
-//        GoogleSignIn.getClient(
-//            context,
-//            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestIdToken("YOUR_CLIENT_ID.apps.googleusercontent.com")  // Firebase Console から取得
-//                .requestEmail()
-//                .build()
-//        )
-//    }
+    // GoogleSignInClient
+    val googleSignInClient = remember {
+        GoogleSignIn.getClient(
+            context,
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("1:796232278012:web:e07084ff3d13d8e4a6dc79")
+                .requestEmail()
+                .build()
+        )
+    }
 
-    // Google サインイン結果のコールバック
-    val googleSignInResult =
-        rememberUpdatedState { task: Task<GoogleSignInAccount> ->
-            try {
-                val account = task.getResult(ApiException::class.java)
-                account?.let {
-                    val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-//                    auth.signInWithCredential(credential)
-//                        .addOnCompleteListener { authTask ->
-//                            if (authTask.isSuccessful) {
-//                                Toast.makeText(context, "ログイン成功", Toast.LENGTH_SHORT).show()
-//                            } else {
-//                                Toast.makeText(context, "認証に失敗しました", Toast.LENGTH_SHORT).show()
-//                            }
-//                        }
-                }
-            } catch (e: ApiException) {
-                Toast.makeText(context, "認証に失敗しました", Toast.LENGTH_SHORT).show()
+    // Googleサインイン結果処理
+    val googleSignInResult = rememberUpdatedState { task: Task<GoogleSignInAccount> ->
+        try {
+            val account = task.getResult(ApiException::class.java)
+            account?.let {
+                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                auth.signInWithCredential(credential)
+                    .addOnCompleteListener { authTask ->
+                        if (authTask.isSuccessful) {
+                            Toast.makeText(context, "Googleログイン成功", Toast.LENGTH_SHORT).show()
+                            // 画面遷移やDB登録など
+                            // val user = auth.currentUser
+                        } else {
+                            Toast.makeText(context, "Google認証に失敗しました", Toast.LENGTH_SHORT).show()
+                        }
+                    }
             }
+        } catch (e: ApiException) {
+            Toast.makeText(context, "Google認証に失敗: ${e.message}", Toast.LENGTH_SHORT).show()
         }
+    }
 
-    // Google サインインの結果を受け取るコールバック
+    // GoogleサインインIntentの結果受け取り
     val googleSignInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { result ->
-            //val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            //googleSignInResult.value(task)
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            googleSignInResult.value(task)
         }
     )
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Googleログイン") })
+            TopAppBar(title = { Text(text = "Firebase Authentication") })
         },
         content = {
             Column(
@@ -104,7 +112,7 @@ fun LoginScreen(/*auth: FirebaseAuth*/)
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // メールアドレス入力
+                // Email入力
                 TextField(
                     value = email,
                     onValueChange = { email = it },
@@ -118,7 +126,7 @@ fun LoginScreen(/*auth: FirebaseAuth*/)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // パスワード入力
+                // Password入力
                 TextField(
                     value = password,
                     onValueChange = { password = it },
@@ -133,43 +141,65 @@ fun LoginScreen(/*auth: FirebaseAuth*/)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // ログインボタン
+                // ログインボタン (既存ユーザー用)
                 Button(
                     onClick = {
                         isLoading = true
-                        // Firebase Authentication によるメール・パスワードでのログイン処理
-//                        auth.signInWithEmailAndPassword(email, password)
-//                            .addOnCompleteListener { task ->
-//                                isLoading = false
-//                                if (task.isSuccessful) {
-//                                    Toast.makeText(context, "ログイン成功", Toast.LENGTH_SHORT).show()
-//                                } else {
-//                                    Toast.makeText(context, "認証に失敗しました", Toast.LENGTH_SHORT).show()
-//                                }
-//                            }
+                        auth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { task ->
+                                isLoading = false
+                                if (task.isSuccessful) {
+                                    Toast.makeText(context, "ログイン成功", Toast.LENGTH_SHORT).show()
+                                    // val user = auth.currentUser
+                                } else {
+                                    Toast.makeText(context, "ログイン失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = email.isNotEmpty() && password.isNotEmpty() && !isLoading
                 ) {
-                    Text("Login", fontSize = 18.sp)
+                    Text("Login (既存ユーザー)", fontSize = 18.sp)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Google サインインボタン
-//                Button(
-//                    onClick = {
-//                        val signInIntent = googleSignInClient.signInIntent
-//                        googleSignInLauncher.launch(signInIntent)
-//                    },
-//                    modifier = Modifier.fillMaxWidth(),
-//                    colors = ButtonDefaults.buttonColors(contentColor = Color.Green/*backgroundColor = Color.Green*/)
-//                ) {
-//                    Text("Sign in with Google", fontSize = 18.sp, color = Color.White)
-//                }
+                // サインアップボタン (新規ユーザー登録)
+                Button(
+                    onClick = {
+                        isLoading = true
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { task ->
+                                isLoading = false
+                                if (task.isSuccessful) {
+                                    Toast.makeText(context, "ユーザー登録成功", Toast.LENGTH_SHORT).show()
+                                    // val newUser = auth.currentUser
+                                } else {
+                                    Toast.makeText(context, "登録失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = email.isNotEmpty() && password.isNotEmpty() && !isLoading
+                ) {
+                    Text("SignUp (新規登録)", fontSize = 18.sp)
+                }
 
-                // ローディングインジケータ
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Googleログインボタン
+                Button(
+                    onClick = {
+                        val signInIntent = googleSignInClient.signInIntent
+                        googleSignInLauncher.launch(signInIntent)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Sign in with Google", fontSize = 18.sp, color = Color.White)
+                }
+
                 if (isLoading) {
+                    Spacer(modifier = Modifier.height(16.dp))
                     CircularProgressIndicator()
                 }
             }
@@ -177,16 +207,40 @@ fun LoginScreen(/*auth: FirebaseAuth*/)
     )
 }
 
-//fun signInWithGoogle(idToken: String) {
-//    val credential = GoogleAuthProvider.getCredential(idToken, null)
-//    auth.signInWithCredential(credential)
-//        .addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                // サインイン成功
-//                val user = auth.currentUser
-//                // UI 更新など
-//            } else {
-//                // サインイン失敗
-//            }
-//        }
-//}
+/**
+ * 例: Firestore や Realtime Database にユーザー情報を保存する場合の関数。
+ * 実際に使う時は必要なパラメータを調整し、マルチラインコメントを正しく閉じること。
+ */
+
+/*
+fun saveUserDataToDB(uid: String?, email: String?) {
+    if (uid == null || email == null) return
+
+    // --- Firestore例 ---
+    // val db = Firebase.firestore
+    // val userMap = mapOf(
+    //     "email" to email,
+    //     "registeredAt" to System.currentTimeMillis()
+    // )
+    // db.collection("users")
+    //     .document(uid)
+    //     .set(userMap)
+    //     .addOnSuccessListener {
+    //         Log.d("Firestore", "User data saved successfully.")
+    //     }
+    //     .addOnFailureListener {
+    //         Log.e("Firestore", "Error saving user data: ${it.message}")
+    //     }
+
+    // --- Realtime Database例 ---
+    // val rtdb = Firebase.database.reference
+    // val userRef = rtdb.child("users").child(uid)
+    // userRef.setValue(userMap)
+    //     .addOnSuccessListener {
+    //         Log.d("RTDB", "User data saved successfully.")
+    //     }
+    //     .addOnFailureListener {
+    //         Log.e("RTDB", "Error saving user data: ${it.message}")
+    //     }
+}
+*/
