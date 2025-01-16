@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -120,12 +123,17 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
     )
     {
         //地図枠(仮)
-        Box()
+        Box(Modifier.fillMaxWidth().height(400.dp))
         {
-            Image(
-                modifier = Modifier.padding(start = 0.dp, top = 0.dp,end=0.dp, bottom = 225.dp),
-                painter = painterResource1(R.drawable.tizu_kakkokari1), contentDescription = "test"
-            )
+//            Image(
+//                modifier = Modifier.padding(start = 0.dp, top = 0.dp,end=0.dp, bottom = 225.dp),
+//                painter = painterResource1(R.drawable.tizu_kakkokari1), contentDescription = "test"
+//            )
+            MapContent()
+            SideEffect { Log.d("compose-log", "Map") }
+            //デバッグ用
+            Text("main/map")
+            println("map")
         }
 
         // くるくる表示S-----------------------------------------------

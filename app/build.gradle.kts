@@ -149,4 +149,7 @@ dependencies {
     // Firebaseの依存関係を追加E---------------------------------------------------------------------
 
 
+    //Geocodingの依存関係
+    implementation("com.squareup.okhttp3:okhttp:4.10.0") // 最新バージョンを確認してください
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4") // 最新バージョンを確認してください
 }
