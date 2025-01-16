@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
@@ -39,7 +40,7 @@ import com.google.firebase.FirebaseApp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PostScreen(bitmap: Bitmap?) {
+fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) {
     // 投稿タイトルの状態を保持する変数
     var title by rememberSaveable { mutableStateOf("") }
     // 生物名の状態を保持する変数
@@ -74,7 +75,11 @@ fun PostScreen(bitmap: Bitmap?) {
         floatingActionButton = {
             // 投稿ボタンの設定
             FloatingActionButton(
-                onClick = { TransmitData(bitmap, title.ifEmpty { "無題" }, speciesName.ifEmpty { "不明" }, location.ifEmpty { "不明" }, discoveryDate.ifEmpty { "不明" }) },
+                onClick = {
+                    // カメラの表示状態を非表示に変更
+                    cameraViewModel.setShowCamera(false)
+                    // データ送信
+                    TransmitData(bitmap, title.ifEmpty { "無題" }, speciesName.ifEmpty { "不明" }, location.ifEmpty { "不明" }, discoveryDate.ifEmpty { "不明" }) },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
