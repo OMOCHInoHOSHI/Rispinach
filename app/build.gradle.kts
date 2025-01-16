@@ -91,6 +91,7 @@ dependencies {
     //map
     implementation("com.google.maps.android:maps-compose:6.1.0")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
+    //implementation(libs.firebase.auth.common)//重複している可能性があるため一旦削除してます
 
     //カメラライブラリS---------------------------------------------------------
     val cameraxVersion = "1.3.4"    //変数
@@ -142,6 +143,10 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-core:16.0.8")
-    // Firebaseの依存関係を追加E----------------------------------------------------------------------
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    // Firebaseの依存関係を追加E---------------------------------------------------------------------
+
 
 }
