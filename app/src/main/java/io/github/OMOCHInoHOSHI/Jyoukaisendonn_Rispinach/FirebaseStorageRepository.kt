@@ -1,4 +1,3 @@
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
@@ -16,17 +15,19 @@ fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
     // "images" フォルダ内の全てのアイテムをリストアップ
     storageRef.listAll().addOnSuccessListener { listResult ->
         // 各アイテムに対して処理を行う
-        listResult.items.forEach { item ->
+        listResult.items.forEachIndexed { index, item ->
             // アイテムのメタデータを取得
             item.metadata.addOnSuccessListener { metadata ->
-                // メタデータから speciesName を取得（存在しない場合は "不明" とする）
+                // メタデータから speciesName, location, discoveryDate を取得（存在しない場合は "不明" とする）
                 val speciesName = metadata.getCustomMetadata("speciesName") ?: "不明"
+                val location = metadata.getCustomMetadata("location") ?: "不明"
+                val discoveryDate = metadata.getCustomMetadata("discoveryDate") ?: "不明"
                 // アイテムのバイトデータを取得
                 item.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
                     // バイトデータを Bitmap に変換
                     val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                     // ImageData オブジェクトをリストに追加
-                    imageList.add(ImageData(speciesName, bitmap))
+                    imageList.add(ImageData(bitmap, speciesName, location, discoveryDate, index + 1))
                     // 全てのアイテムの処理が完了したらコールバックを呼び出す
                     if (imageList.size == listResult.items.size) {
                         onDataReceived(imageList)

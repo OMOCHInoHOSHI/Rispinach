@@ -74,7 +74,7 @@ fun PostScreen(bitmap: Bitmap?) {
         floatingActionButton = {
             // 投稿ボタンの設定
             FloatingActionButton(
-                onClick = { TransmitData(bitmap, title.ifEmpty { "無題" }, speciesName.ifEmpty { "不明" }) }, // 投稿ボタンがクリックされたときに TransmitData 関数を呼び出す
+                onClick = { TransmitData(bitmap, title.ifEmpty { "無題" }, speciesName.ifEmpty { "不明" }, location.ifEmpty { "不明" }, discoveryDate.ifEmpty { "不明" }) },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
@@ -354,7 +354,7 @@ class ImageAnalyzer(context: Context) {
 }
 
 // 投稿データの送信
-fun TransmitData(bitmap: Bitmap?, title: String, speciesName: String) {
+fun TransmitData(bitmap: Bitmap?, title: String, speciesName: String, location: String, discoveryDate: String) {
     if (bitmap == null) {
         Log.e("TransmitData", "Bitmap is null")
         return
@@ -376,6 +376,8 @@ fun TransmitData(bitmap: Bitmap?, title: String, speciesName: String) {
     val metadata = com.google.firebase.storage.StorageMetadata.Builder()
         .setCustomMetadata("title", title.ifEmpty { "無題" }) // タイトルが空の場合は「無題」とする
         .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" }) // 生物名が空の場合は「不明」とする
+        .setCustomMetadata("location", location.ifEmpty { "不明" }) // 発見場所が空の場合は「不明」とする
+        .setCustomMetadata("discoveryDate", discoveryDate.ifEmpty { "不明" }) // 発見日付が空の場合は「不明」とする
         .build()
     Log.d("TransmitData", "metadata")
 

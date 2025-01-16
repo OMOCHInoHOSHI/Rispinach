@@ -41,10 +41,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import fetchImagesFromFirebaseStorage
+import kotlinx.coroutines.launch
 
-data class ImageData(val name:String, val id: Bitmap)
+data class ImageData(val bitmap: Bitmap, val name: String, val location: String, val discoveryDate: String, val id: Int)
 
+class ImageViewModel : ViewModel() {
+    var pictureName by mutableStateOf(listOf<ImageData>())
+        private set
+
+    fun fetchImages() {
+        viewModelScope.launch {
+            fetchImagesFromFirebaseStorage { images ->
+                pictureName = images
+            }
+        }
+    }
+}
 //enum class ImageItems(
 //    val id: String,
 //    val image: Image
@@ -54,7 +70,7 @@ data class ImageData(val name:String, val id: Bitmap)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home()
+fun Home(imageViewModel: ImageViewModel = viewModel())
 {
     SideEffect { Log.d("compose-log", "Home") }
     //val itemsIndexedList = rememberSaveable { mutableListOf("A", "B", "C", "D", "E")}
@@ -85,14 +101,9 @@ fun Home()
     var lsName=""
     //var open=openBottomSheet
 
-    // Firebase Storageから取得した画像データを保持するリスト
-    var pictureName by rememberSaveable { mutableStateOf(listOf<ImageData>()) }
-
     // Firebase Storageからデータを読み込む
     LaunchedEffect(Unit) {
-        fetchImagesFromFirebaseStorage { images ->
-            pictureName = images
-        }
+        imageViewModel.fetchImages()
     }
 
     Column(
@@ -127,7 +138,7 @@ fun Home()
 //                    PhotoItem(pName)
 //                }
 //            }
-            itemsIndexed(pictureName/*itemsIndexedList*/)
+            itemsIndexed(imageViewModel.pictureName/*itemsIndexedList*/)
             { index, item ->
                 //var checked by rememberSaveable(index) { mutableStateOf(false)}
                 var checked: MyDto by rememberSaveable(index,stateSaver = MyDtoSaver) { mutableStateOf(
@@ -144,16 +155,16 @@ fun Home()
                 Image(
                     //painter = painterResource1(pictureName[index]), contentDescription = "test",
                     //painter = painterResource1(pictureName[index]), contentDescription = "test",
-                    bitmap = item.id.asImageBitmap(),       // 画像を表示するためのBitmap
+                    bitmap = item.bitmap.asImageBitmap(),       // 画像を表示するためのBitmap
                     contentScale = ContentScale.Crop,
                     //painter = painterResource1(pictureName[index].id),コメントアウト(中村)
-                    contentDescription = pictureName[index].name,
+                    contentDescription = imageViewModel.pictureName[index].name,
                     modifier = Modifier
                         .size(128.dp)
                         .clickable
                         {
                             //lsName=itemsIndexedList[index]
-                            println(/*itemsIndexedList*/pictureName[index].name)
+                            println(/*itemsIndexedList*/imageViewModel.pictureName[index].name)
                             openBottomSheet = true
                         },
                 )
@@ -195,8 +206,9 @@ fun Home()
                                 //.imePadding()//.padding(start = 16.dp, bottom = 24.dp)
                         ) {
                             //Posts(pictureName[index], lsName)
-                            println(pictureName[index].name)
-                            Posts(pictureName[index].id, pictureName[index].name, pictureName[index].name /* 仮置き */)
+                            println(imageViewModel.pictureName[index].name)
+                            Posts(imageViewModel.pictureName[index].bitmap, imageViewModel.pictureName[index].name, imageViewModel.pictureName[index].id)        // 画像情報、生物名、idを送る場合
+                            //Posts(pictureName[index].bitmap, pictureName[index].name, pictureName[index].location, pictureName[index].discoveryDate, pictureName[index].id)       // 全てのデータを送る場合
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_share_24, text = "Share")
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_link_24, text = "Get link")
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_edit_24, text = "Edit name")
