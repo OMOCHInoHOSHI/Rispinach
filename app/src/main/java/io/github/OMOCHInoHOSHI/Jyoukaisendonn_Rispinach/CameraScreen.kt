@@ -78,8 +78,10 @@ fun CameraScreen_2(flg: Int): Int{
             }
             //撮影用のボタンを配置
             TakePhoto {
-                cameraState.takePhoto()
+                cameraState.takePhoto2()
             }
+            // 投稿準備画面に撮影した画像を渡す
+            cameraState.bitmap_Camera()
         }
     }else{
         Text(text = "カメラの権限がありません")
