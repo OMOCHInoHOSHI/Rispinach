@@ -19,14 +19,14 @@ android {
     // Pythonにより追加
     flavorDimensions += "pyVersion"
     productFlavors {
-        create("py312") { dimension = "pyVersion" }
+        create("py38") { dimension = "pyVersion" }
     }
 
     defaultConfig {
 
         // Pythonにより追加
         ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64")
+            abiFilters += listOf("arm64-v8a", "x86_64", "armeabi-v7a", "x86")
         }
 
         applicationId = "io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach"
@@ -78,10 +78,10 @@ android {
 // Pythonにより追加
 chaquopy {
     defaultConfig {
-        version = "3.12"
+        version = "3.8"
     }
     productFlavors {
-        getByName("py312") { version = "3.12" }
+        getByName("py38") { version = "3.8" }
     }
     sourceSets { }
 }

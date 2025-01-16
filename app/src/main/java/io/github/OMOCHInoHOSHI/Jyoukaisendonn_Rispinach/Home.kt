@@ -10,16 +10,21 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -34,6 +39,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -78,6 +84,8 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = skipPartiallyExpanded
     )
+    // ロード中フラグ
+    var isLoading by rememberSaveable { mutableStateOf(true) }
     //var n="R.drawable.test1"
     /*コメントアウト(中村)
     var pictureName=rememberSaveable { mutableListOf(
@@ -100,6 +108,10 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
 
     // Firebase Storageからデータを読み込む
     LaunchedEffect(Unit) {
+        fetchImagesFromFirebaseStorage { images ->
+            pictureName = images
+            isLoading = false // ロード完了後にフラグをfalseにする
+        }
         imageViewModel.fetchImages()
     }
 
@@ -115,6 +127,22 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
                 painter = painterResource1(R.drawable.tizu_kakkokari1), contentDescription = "test"
             )
         }
+
+        // くるくる表示S-----------------------------------------------
+        if(isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center // 中央揃え
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(64.dp), // サイズを指定
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+            }
+        }
+        // くるくる表示E-----------------------------------------------
 
         //投稿(仮)
         LazyVerticalGrid(
