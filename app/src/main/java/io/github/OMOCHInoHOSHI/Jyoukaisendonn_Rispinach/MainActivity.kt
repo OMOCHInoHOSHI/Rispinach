@@ -158,13 +158,13 @@ fun DRAWER(
 }
 
 @Composable
-fun MapContent() {
+fun MapContent() {//マップの表示内容
     // 地名と緯度経度の対応付け
     val locations = mapOf(
-        "東京" to LatLng(35.689501, 139.691722), // 東京都庁
-        "大阪" to LatLng(34.6937, 135.5023),   // 大阪府庁
-        "京都" to LatLng(35.0116, 135.7681),   // 京都市役所
-        "福岡" to LatLng(33.5890, 130.4020)    // 福岡市役所
+        "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
+        "東京" to LatLng(35.689501, 139.691722),  // 東京都庁
+        "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
+        "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
     )
     val defaultPosition = locations["東京"]!! // 東京都庁
     val cameraPositionState = rememberCameraPositionState {
