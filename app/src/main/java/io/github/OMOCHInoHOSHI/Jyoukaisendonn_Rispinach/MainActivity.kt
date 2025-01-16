@@ -52,11 +52,14 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.ui.Alignment
 import com.google.android.gms.maps.CameraUpdateFactory
 import kotlinx.coroutines.launch
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // Pythonにより追加
         val py = Python.getInstance()
         val module = py.getModule("jikken")
@@ -67,67 +70,54 @@ class MainActivity : ComponentActivity() {
 
         //enableEdgeToEdge()
         setContent {
+
             RispinachTheme {
-                // Chaquopyを初期化
-                if (!Python.isStarted()) {
-                    Python.start(AndroidPlatform(this))
+                val navController = rememberNavController()
+
+                // 全画面をScaffoldでラップ
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                ) { innerPadding ->
+                    // Surface で背景色などを設定
+                    Surface(
+                        color = MaterialTheme.colorScheme.background,
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        // NavHostを1つだけ定義し、startDestinationを "LoginScreen" に
+                        NavHost(
+                            navController = navController,
+                            startDestination = "LoginScreen"
+                        ) {
+                            // 1) ログイン画面
+                            composable("LoginScreen") {
+                                LoginScreen(
+                                    onLoginSuccess = {
+                                        // ログイン成功時 -> Home画面へ
+                                        navController.navigate("HomeScreen") {
+                                            popUpTo("LoginScreen") { inclusive = true }
+                                        }
+                                    },
+                                    onSignUpSuccess = {
+                                        //新規登録成功時 -> Home画面へ
+                                        navController.navigate("HomeScreen") {
+                                           popUpTo("LoginScreen") { inclusive = true }
+                                        }
+                                    }
+                                )
+                            }
+
+                            // 2) Home画面
+                            composable("HomeScreen") {
+                                DRAWER(
+                                    navController = navController,  // ← 必須で渡す
+                                    startDestination = "main"
+                                )
+                            }
+
+                        }
+                    }
                 }
-
-//                ResNetPage() // ResNet_page関数を呼び出す
-
             }
-
-            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                val a = innerPadding
-//                    Greeting(
-//                        name = "print_py",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
-
-                Surface(
-                    color = MaterialTheme.colorScheme.background
-                )
-                {
-                    SideEffect { Log.d("compose-log", "Surface") }
-                    DRAWER()
-                }
-
-//                //カメラボタンでカメラ起動S----------------------------------------------------
-//                var camera_flg by remember { mutableIntStateOf(0) } // flg の状態を管理する
-//                FilledTonalButton(
-//                    onClick = { camera_flg = 1 },
-//                    modifier = Modifier.size(80.dp).padding(1.dp)
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Rounded.PhotoCamera, // カメラのアイコンに変更
-//                        contentDescription = "カメラ起動",
-//                        modifier = Modifier.size(ButtonDefaults.IconSize)
-//                    )
-//                }
-//                if (camera_flg == 1) {
-////                        CameraScreen()
-////                    camera_flg = CameraScreen_2(camera_flg)
-//
-//                    DatePickerModal(
-//                        onDateSelected = { selectedDateMillis ->
-//                            // 選択された日付の処理
-//                            if (selectedDateMillis != null) {
-//                                // 選択された日付を使って何か処理を行う
-//                                println("選択された日付: $selectedDateMillis")
-//                            }
-//                        },
-//                        onDismiss = {
-//                            // ダイアログが閉じられた際の処理
-//                            println("日付ピッカーが閉じられました")
-//                        }
-//                    )
-//
-////                    ResNetPage() // ResNet_page関数を呼び出す
-////                        camera_flg=0
-//                }
-                //カメラボタンでカメラ起動E----------------------------------------------------
-            }
-
         }
 
     }
@@ -138,21 +128,17 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DRAWER(
-    modifier: Modifier = Modifier
-        .padding(top = 20.dp, start = 30.dp),
-    navController: NavHostController = rememberNavController(),
-    startDestination: String = "main" // mainに変更
+    modifier: Modifier = Modifier.padding(top = 20.dp, start = 30.dp),
+    navController: NavHostController,     // ← デフォルト消した
+    startDestination: String = "main"
 ) {
     SideEffect { Log.d("compose-log", "DRAWER") }
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-    )
-    {
+        modifier = Modifier.fillMaxSize()
+    ) {
         SideEffect { Log.d("compose-log", "Box") }
-        NavHost(navController = navController, startDestination = startDestination)
-        {
-            mainScreen() // 先程の拡張関数 mainScreenを呼び出す
+        NavHost(navController = navController, startDestination = startDestination) {
+            mainScreen()
         }
     }
 }
