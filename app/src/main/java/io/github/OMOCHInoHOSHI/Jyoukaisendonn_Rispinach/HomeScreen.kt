@@ -3,6 +3,7 @@ package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +28,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
@@ -46,6 +48,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -111,6 +115,9 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
     //currentTab=="main/home"
     //var x=null
     //WindowInsets.run { x?.let { navigationBars.getBottom(it) } }
+
+    StartupScreen()
+
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -458,10 +465,60 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
             //ドロワーメニューのアイコン----------------------------------------
         }
     }
+}
+
+
+@Composable
+fun StartupScreen() {
+    // ダイアログ表示の状態を管理
+    val showDialog = remember { mutableStateOf(true) }
+
+    // ダイアログが表示されている間は、他のUIは非表示
+    if (showDialog.value) {
+        StartupDialog(
+            onDismiss = { showDialog.value = false }
+        )
+    }
+
+    // 他の画面のコンテンツはここに追加することができます。
+}
+
+@Composable
+fun StartupDialog(onDismiss: () -> Unit) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false) // 幅を制限しない
+    )
+    {
+        Surface(
+//            modifier = Modifier.padding(20.dp),
+//            shape = CircleShape,
+//            color = Color.White
+        )
+            {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+                modifier = Modifier.fillMaxSize().padding(20.dp)
+            ) {
+                // ダイアログに表示するテキスト
+
+                LoginScreen()
 
 
 
+//                    Text(
+//                        text = "アプリが起動しました！",
+//                        modifier = Modifier.padding(bottom = 16.dp)
+//                    )
 
+                // ダイアログを閉じるボタン
+//                Button(onClick = onDismiss) {
+//                    Text(text = "閉じる")
+//                }
+            }
+        }
+    }
 }
 
 fun NavGraphBuilder.mainScreen()
