@@ -30,10 +30,14 @@ fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
                     val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                     // ImageData オブジェクトをリストに追加
                     imageList.add(ImageData(bitmap, title, speciesName, location, discoveryDate, index + 1))
-                    // 全てのアイテムの処理が完了したらコールバックを呼び出す
+                    // 全てのアイテムの処理が完了したら、ソートして、コールバックを呼び出す
                     if (imageList.size == listResult.items.size) {
                         Log.d("FirebaseStorage", "FirebaseStorage_End")
-                        onDataReceived(imageList)
+
+                        val sortedImageList = imageList.sortedByDescending  { it.id }       // 降順にソート
+                        // val sortedImageList = imageList.sortedBy { it.id }       // 昇順にソート
+
+                        onDataReceived(sortedImageList)
                     }
                 }.addOnFailureListener { exception ->
                     // 画像のダウンロードに失敗した場合のエラーログ
