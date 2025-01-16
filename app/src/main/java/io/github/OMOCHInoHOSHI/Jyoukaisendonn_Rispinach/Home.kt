@@ -123,7 +123,7 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
     )
     {
         //地図枠(仮)
-        Box(Modifier.fillMaxWidth().height(400.dp))
+        Box(Modifier.fillMaxWidth().height(300.dp))
         {
 //            Image(
 //                modifier = Modifier.padding(start = 0.dp, top = 0.dp,end=0.dp, bottom = 225.dp),
