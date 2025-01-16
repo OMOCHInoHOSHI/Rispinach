@@ -158,7 +158,7 @@ fun DRAWER(
 }
 
 @Composable
-fun MapContent() {
+fun MapContent() {//マップの表示内容
     // 地名と緯度経度の対応付け
     val locations = mapOf(
         "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
