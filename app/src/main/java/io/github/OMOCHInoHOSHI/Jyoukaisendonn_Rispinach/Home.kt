@@ -109,7 +109,7 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
     // Firebase Storageからデータを読み込む
     LaunchedEffect(Unit) {
         fetchImagesFromFirebaseStorage { images ->
-            pictureName = images
+//            pictureName = images
             isLoading = false // ロード完了後にフラグをfalseにする
         }
         imageViewModel.fetchImages()
