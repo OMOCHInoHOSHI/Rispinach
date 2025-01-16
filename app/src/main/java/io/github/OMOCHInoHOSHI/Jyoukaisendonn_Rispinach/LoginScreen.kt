@@ -70,7 +70,10 @@ fun LoginScreen(
                 auth.signInWithCredential(credential).addOnCompleteListener { authTask ->
                     if (authTask.isSuccessful) {
                         Toast.makeText(context, "Googleログイン成功", Toast.LENGTH_SHORT).show()
-                        // navController.navigate("HomeScreen")  ← これを使いたいなら navController が必要
+                        // HomeScreenへ遷移する場合:
+                        navController.navigate("HomeScreen") {
+                            popUpTo("LoginScreen") { inclusive = true }
+                        }
                     } else {
                         Toast.makeText(context, "Google認証に失敗しました", Toast.LENGTH_SHORT).show()
                     }
@@ -98,7 +101,9 @@ fun LoginScreen(
                 isLoading = false
                 if (task.isSuccessful) {
                     Toast.makeText(context, "ログイン成功", Toast.LENGTH_SHORT).show()
-                    navController.navigate("HomeScreen")  // ← navControllerでHomeへ
+                    navController.navigate("HomeScreen") {
+                        popUpTo("LoginScreen") { inclusive = true }
+                    }
                     onLoginSuccess()
                 } else {
                     Toast.makeText(context, "ログイン失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
@@ -114,7 +119,9 @@ fun LoginScreen(
                 isLoading = false
                 if (task.isSuccessful) {
                     Toast.makeText(context, "ユーザー登録成功", Toast.LENGTH_SHORT).show()
-                    navController.navigate("HomeScreen") // ← navControllerでHomeへ
+                    navController.navigate("HomeScreen") {
+                        popUpTo("LoginScreen") { inclusive = true }
+                    }
                     onSignUpSuccess()
                 } else {
                     Toast.makeText(context, "登録失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
@@ -124,7 +131,9 @@ fun LoginScreen(
 
     // UI
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Firebase Authentication") }) },
+        topBar = {
+            TopAppBar(title = { Text("Firebase Authentication") })
+        },
         content = {
             Column(
                 modifier = Modifier
@@ -158,7 +167,7 @@ fun LoginScreen(
                 )
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // ログインボタン
+                // ログイン
                 Button(
                     onClick = { login() },
                     modifier = Modifier.fillMaxWidth(),
@@ -168,7 +177,7 @@ fun LoginScreen(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // 新規登録ボタン
+                // 新規登録
                 Button(
                     onClick = { signUp() },
                     modifier = Modifier.fillMaxWidth(),

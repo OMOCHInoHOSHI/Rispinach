@@ -238,7 +238,7 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
 //                            Posts(imageViewModel.pictureName[index].bitmap, imageViewModel.pictureName[index].name, imageViewModel.pictureName[index].id)        // 画像情報、生物名、idを送る場合
                             //Posts(pictureName[index].bitmap, pictureName[index].name, pictureName[index].location, pictureName[index].discoveryDate, pictureName[index].id)       // 全てのデータを送る場合
 //                            println(pictureName[index].name)
-                            LoginScreen()
+                            //LoginScreen()
                             //Posts(pictureName[index].id, pictureName[index].name, pictureName[index].name /* 仮置き */)
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_share_24, text = "Share")
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_link_24, text = "Get link")

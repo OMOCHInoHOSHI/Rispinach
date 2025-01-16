@@ -91,6 +91,7 @@ class MainActivity : ComponentActivity() {
                             // 1) ログイン画面
                             composable("LoginScreen") {
                                 LoginScreen(
+                                    navController=navController,
                                     onLoginSuccess = {
                                         // ログイン成功時 -> Home画面へ
                                         navController.navigate("HomeScreen") {
@@ -110,7 +111,7 @@ class MainActivity : ComponentActivity() {
                             composable("HomeScreen") {
                                 DRAWER(
                                     navController = navController,  // ← 必須で渡す
-                                    startDestination = "main"
+                                    //startDestination = "main"
                                 )
                             }
 
