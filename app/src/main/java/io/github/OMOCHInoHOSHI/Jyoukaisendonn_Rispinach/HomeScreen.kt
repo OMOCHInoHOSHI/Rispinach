@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
@@ -22,10 +24,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -34,7 +38,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -175,7 +181,10 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
             modifier = Modifier,
             //ナビゲーションバー--------------------------------------------------------------------
             bottomBar = {
-                NavigationBar()
+                NavigationBar(
+                    contentColor = Color.White,
+                    containerColor = Color.Black
+                )
                 {
                     SideEffect { Log.d("compose-log", "NavigationBar") }
                     MainScreenTab.entries.forEachIndexed { index, item ->
@@ -205,6 +214,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //                    }
 
                         NavigationBarItem(
+                            colors= NavigationBarItemColors(Color.Gray,Color.Gray,Color.LightGray,Color.White,Color.White,Color.DarkGray,Color.DarkGray),
                             modifier = Modifier
                                 .onGloballyPositioned { coordinates ->
                                     bottomBarHeight = with(localDensity) { coordinates.size.height.toDp() /* 高さをdpで取得*/ }
@@ -292,7 +302,6 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                             delay(3000)
                         }
                     }
-
                 }
             },
             //ナビゲーションバー--------------------------------------------------------------------
@@ -312,12 +321,25 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 
                 if(!goMap) {
                     TopAppBar(
-                        modifier = Modifier.onGloballyPositioned { coordinates ->
+                        modifier = Modifier
+                            .onGloballyPositioned { coordinates ->
                             topBarHeight =
                                 with(localDensity) { coordinates.size.height.toDp() /* 高さをdpで取得*/ }
                         },
                         title = {
-                            Text(text = "アプリのタイトル")
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            )
+                            {
+                                Text(
+                                    text = "Rispinach",
+                                    modifier = Modifier
+                                        .offset(x=-28.dp)
+                                )
+                            }
+
                         },
 
                         navigationIcon = {
@@ -346,10 +368,10 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                             }
                         },
 
+                        colors=TopAppBarColors(Color.Black,Color.White,Color.White,Color.White,Color.White)
 
 
-
-//                    colors = TopAppBarColors(containerColor = Color.Green)
+                    //colors = TopAppBarColors(containerColor = Color.Black)
 
 //                backgroundColor = MaterialTheme.colors.primary,
 //                contentColor = Color.White
