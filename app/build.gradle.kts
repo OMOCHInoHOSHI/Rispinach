@@ -19,14 +19,14 @@ android {
     // Pythonにより追加
     flavorDimensions += "pyVersion"
     productFlavors {
-        create("py312") { dimension = "pyVersion" }
+        create("py38") { dimension = "pyVersion" }
     }
 
     defaultConfig {
 
         // Pythonにより追加
         ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64")
+            abiFilters += listOf("arm64-v8a", "x86_64", "armeabi-v7a", "x86")
         }
 
         applicationId = "io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach"
@@ -78,10 +78,10 @@ android {
 // Pythonにより追加
 chaquopy {
     defaultConfig {
-        version = "3.12"
+        version = "3.8"
     }
     productFlavors {
-        getByName("py312") { version = "3.12" }
+        getByName("py38") { version = "3.8" }
     }
     sourceSets { }
 }
@@ -91,6 +91,7 @@ dependencies {
     //map
     implementation("com.google.maps.android:maps-compose:6.1.0")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
+    //implementation(libs.firebase.auth.common)//重複している可能性があるため一旦削除してます
 
     //カメラライブラリS---------------------------------------------------------
     val cameraxVersion = "1.3.4"    //変数
@@ -142,7 +143,11 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-core:16.0.8")
-    // Firebaseの依存関係を追加E----------------------------------------------------------------------
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    // Firebaseの依存関係を追加E---------------------------------------------------------------------
+
 
     //Geocodingの依存関係
     implementation("com.squareup.okhttp3:okhttp:4.10.0") // 最新バージョンを確認してください
