@@ -440,15 +440,23 @@ fun TransmitData(
         .build()
     Log.d("TransmitData", "metadata")
 
+    // アップロード中のフラグ
+    var isUploading = false
+    // アップロード開始
+    isUploading = true
+    Toast.makeText(context, "アップロード中です...", Toast.LENGTH_SHORT).show()
+
     // Firebase Storage にアップロード
     val uploadTask = imagesRef.putBytes(data, metadata)
     uploadTask.addOnFailureListener { exception ->
         Log.e("TransmitData", "Upload failed", exception)
         // アップロード失敗時にToastメッセージを表示
         Toast.makeText(context, "アップロードに失敗しました: ${exception.message}", Toast.LENGTH_SHORT).show()
+        isUploading = false
     }.addOnSuccessListener { taskSnapshot ->
         Log.d("TransmitData", "Upload successful")
         // アップロード成功時にToastメッセージを表示
         Toast.makeText(context, "アップロードが成功しました！", Toast.LENGTH_SHORT).show()
+        isUploading = false
     }
 }
