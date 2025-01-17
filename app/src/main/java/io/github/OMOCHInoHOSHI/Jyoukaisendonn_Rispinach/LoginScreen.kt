@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -32,7 +33,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -110,18 +110,23 @@ fun LoginScreen(): Boolean {
     Scaffold(
         topBar = {
             TopAppBar(
-
+                modifier = Modifier
+                    .padding(top=155.dp)
+                    .fillMaxWidth(),
                 title = {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(),
+
                         contentAlignment=Alignment.Center
                     )
                     {
                         Text(
+                            modifier = Modifier
+                                .offset(x=-15.dp),
                             text = "ようこそRispinachへ",
                             fontSize = 30.sp,
-                            textAlign= TextAlign.Center
+                            //textAlign= TextAlign.Center
                         )
                     }
                         },
