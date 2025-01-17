@@ -156,8 +156,10 @@ fun LoginScreen(): Boolean {
                                 if (task.isSuccessful) {
                                     Toast.makeText(context, "ログイン成功", Toast.LENGTH_SHORT).show()
                                     // val user = auth.currentUser
+                                    signSuccess=true
                                 } else {
                                     Toast.makeText(context, "ログイン失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                                    signSuccess=false
                                 }
                             }
                     },
@@ -179,8 +181,10 @@ fun LoginScreen(): Boolean {
                                 if (task.isSuccessful) {
                                     Toast.makeText(context, "ユーザー登録成功", Toast.LENGTH_SHORT).show()
                                     // val newUser = auth.currentUser
+                                    signSuccess=true
                                 } else {
                                     Toast.makeText(context, "登録失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                                    signSuccess=false
                                 }
                             }
                     },
