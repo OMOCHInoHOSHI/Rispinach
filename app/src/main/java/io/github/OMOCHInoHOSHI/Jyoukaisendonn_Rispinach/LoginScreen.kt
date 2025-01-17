@@ -19,7 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -112,7 +111,7 @@ fun LoginScreen(): Boolean {
                 modifier = Modifier
                     .fillMaxWidth(),
                 title = { Text(text = "ようこそRispinachへ") },
-                colors= TopAppBarColors(Color.Black,Color.White,Color.White,Color.White,Color.White)
+                //colors= TopAppBarColors(Color.Black,Color.White,Color.White,Color.White,Color.White)
             )
         },
         content = {
@@ -210,7 +209,7 @@ fun LoginScreen(): Boolean {
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Sign in with Google", fontSize = 18.sp, color = Color.White)
+                    Text("Google アカウントでログイン", fontSize = 18.sp, color = Color.White)
                 }
 
                 if (isLoading) {
