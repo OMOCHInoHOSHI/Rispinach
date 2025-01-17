@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Camera
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Map
@@ -88,6 +89,13 @@ enum class MainScreenTab(
         label = "Map",
         idx=2,
         //enabled = true
+    ),
+    MyPage(
+    id = "main/mypage",
+    icon = Icons.Outlined.AccountCircle,
+    label = "MyPage",
+    idx=3
+    //enabled = true
     )
 }
 
@@ -190,7 +198,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
             bottomBar = {
                 NavigationBar(
                     contentColor = Color.White,
-                    containerColor = Color.Black
+                    containerColor = Color.Black //BottomBarの背景色
                 )
                 {
                     SideEffect { Log.d("compose-log", "NavigationBar") }
@@ -375,7 +383,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                             }
                         },
 
-                        colors=TopAppBarColors(Color.Black,Color.White,Color.White,Color.White,Color.White)
+                        colors=TopAppBarColors(Color.Black/*TopBar背景色*/,Color.White,Color.White,Color.White,Color.White)
 
 
                     //colors = TopAppBarColors(containerColor = Color.Black)
