@@ -92,6 +92,8 @@ dependencies {
     implementation("com.google.maps.android:maps-compose:6.1.0")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
     //implementation(libs.firebase.auth.common)//重複している可能性があるため一旦削除してます
+    // Fused Location 位置情報を取得するAPI
+    implementation (libs.play.services.location)
 
     //カメラライブラリS---------------------------------------------------------
     val cameraxVersion = "1.3.4"    //変数
