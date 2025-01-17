@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -108,9 +110,21 @@ fun LoginScreen(): Boolean {
     Scaffold(
         topBar = {
             TopAppBar(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                title = { Text(text = "ようこそRispinachへ") },
+
+                title = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        contentAlignment=Alignment.Center
+                    )
+                    {
+                        Text(
+                            text = "ようこそRispinachへ",
+                            fontSize = 30.sp,
+                            textAlign= TextAlign.Center
+                        )
+                    }
+                        },
                 //colors= TopAppBarColors(Color.Black,Color.White,Color.White,Color.White,Color.White)
             )
         },
