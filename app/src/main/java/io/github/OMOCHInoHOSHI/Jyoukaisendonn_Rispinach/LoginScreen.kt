@@ -5,11 +5,13 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -45,7 +47,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LoginScreen() {
+fun LoginScreen(): Boolean {
     // Firebase の初期化 (すでにどこかで呼ばれていれば不要)
     FirebaseApp.initializeApp(LocalContext.current)
 
@@ -57,6 +59,8 @@ fun LoginScreen() {
     var isLoading by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+
+    var signSuccess by remember { mutableStateOf(false) }
 
     // GoogleSignInClient
     val googleSignInClient = remember {
@@ -81,13 +85,16 @@ fun LoginScreen() {
                             Toast.makeText(context, "Googleログイン成功", Toast.LENGTH_SHORT).show()
                             // 画面遷移やDB登録など
                             // val user = auth.currentUser
+                            signSuccess=true
                         } else {
                             Toast.makeText(context, "Google認証に失敗しました", Toast.LENGTH_SHORT).show()
+                            signSuccess=false
                         }
                     }
             }
         } catch (e: ApiException) {
             Toast.makeText(context, "Google認証に失敗: ${e.message}", Toast.LENGTH_SHORT).show()
+            signSuccess=false
         }
     }
 
@@ -102,7 +109,29 @@ fun LoginScreen() {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = "Firebase Authentication") })
+            TopAppBar(
+                modifier = Modifier
+                    .padding(top=155.dp)
+                    .fillMaxWidth(),
+                title = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+
+                        contentAlignment=Alignment.Center
+                    )
+                    {
+                        Text(
+                            modifier = Modifier
+                                .offset(x=-15.dp),
+                            text = "ようこそRispinachへ",
+                            fontSize = 30.sp,
+                            //textAlign= TextAlign.Center
+                        )
+                    }
+                        },
+                //colors= TopAppBarColors(Color.Black,Color.White,Color.White,Color.White,Color.White)
+            )
         },
         content = {
             Column(
@@ -116,8 +145,8 @@ fun LoginScreen() {
                 TextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Email") },
-                    placeholder = { Text("Enter your email") },
+                    label = { Text("メールアドレス") },
+                    placeholder = { Text("メールアドレス") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Next
@@ -130,8 +159,8 @@ fun LoginScreen() {
                 TextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Password") },
-                    placeholder = { Text("Enter your password") },
+                    label = { Text("パスワード") },
+                    placeholder = { Text("パスワード") },
                     modifier = Modifier.fillMaxWidth(),
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -151,15 +180,17 @@ fun LoginScreen() {
                                 if (task.isSuccessful) {
                                     Toast.makeText(context, "ログイン成功", Toast.LENGTH_SHORT).show()
                                     // val user = auth.currentUser
+                                    signSuccess=true
                                 } else {
                                     Toast.makeText(context, "ログイン失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                                    signSuccess=false
                                 }
                             }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = email.isNotEmpty() && password.isNotEmpty() && !isLoading
                 ) {
-                    Text("Login (既存ユーザー)", fontSize = 18.sp)
+                    Text("ログインする", fontSize = 18.sp)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -174,15 +205,17 @@ fun LoginScreen() {
                                 if (task.isSuccessful) {
                                     Toast.makeText(context, "ユーザー登録成功", Toast.LENGTH_SHORT).show()
                                     // val newUser = auth.currentUser
+                                    signSuccess=true
                                 } else {
                                     Toast.makeText(context, "登録失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                                    signSuccess=false
                                 }
                             }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = email.isNotEmpty() && password.isNotEmpty() && !isLoading
                 ) {
-                    Text("SignUp (新規登録)", fontSize = 18.sp)
+                    Text("新規登録", fontSize = 18.sp)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -195,7 +228,7 @@ fun LoginScreen() {
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Sign in with Google", fontSize = 18.sp, color = Color.White)
+                    Text("Google アカウントでログイン", fontSize = 18.sp, color = Color.White)
                 }
 
                 if (isLoading) {
@@ -205,6 +238,8 @@ fun LoginScreen() {
             }
         }
     )
+
+    return signSuccess
 }
 
 /**
