@@ -334,30 +334,41 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                     DismissibleDrawerEnabled=true
                 }
 
-                if(!goMap) {
-                    TopAppBar(
-                        modifier = Modifier
-                            .onGloballyPositioned { coordinates ->
-                            topBarHeight =
-                                with(localDensity) { coordinates.size.height.toDp() /* 高さをdpで取得*/ }
-                        },
-                        title = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            )
+//                if(!goMap) {
+                TopAppBar(
+                    modifier = Modifier
+                        .onGloballyPositioned { coordinates ->
+                        topBarHeight =
+                            with(localDensity) { coordinates.size.height.toDp() /* 高さをdpで取得*/ }
+                    },
+                    title = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        )
+                        {
+                            if(!goMap) {
+                                Text(
+                                    text = "Rispinach",
+                                    modifier = Modifier
+                                        .offset(x = -28.dp)
+                                )
+                            }
+                            else
                             {
                                 Text(
                                     text = "Rispinach",
                                     modifier = Modifier
-                                        .offset(x=-28.dp)
+                                        .offset(x = -12.dp)
                                 )
                             }
+                        }
 
-                        },
+                    },
 
-                        navigationIcon = {
+                    navigationIcon = {
+                        if(!goMap) {
                             IconButton(
                                 //modifier = Modifier.padding(start = 30.dp, top = 20.dp, end = 20.dp),
                                 onClick = {
@@ -381,25 +392,26 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                 )
 
                             }
-                        },
+                        }
+                    },
 
-                        colors=TopAppBarColors(Color.Black/*TopBar背景色*/,Color.White,Color.White,Color.White,Color.White)
+                    colors=TopAppBarColors(Color.Black/*TopBar背景色*/,Color.White,Color.White,Color.White,Color.White)
 
 
-                    //colors = TopAppBarColors(containerColor = Color.Black)
+                //colors = TopAppBarColors(containerColor = Color.Black)
 
 //                backgroundColor = MaterialTheme.colors.primary,
 //                contentColor = Color.White
 
-                    )
+                )
 
 
 
-                }
-                else
-                {
-                    topBarHeight=0.dp
-                }
+//                }
+//                else
+//                {
+//                    topBarHeight=0.dp
+//                }
 
 
             },
@@ -495,7 +507,11 @@ fun StartupScreen() {
 fun StartupDialog(onDismiss: () -> Unit) {
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false) // 幅を制限しない
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false, // 幅を制限しない
+            //dismissOnBackPress = false,  // Backボタンを押してもDialogを消さない
+            //dismissOnClickOutside = false // Dialogの外を押してもDialogを消さない
+        )
     )
     {
         Surface(
@@ -558,6 +574,10 @@ fun NavGraphBuilder.screenMode()
     composable("main/map")
     {
         Map()
+    }
+    composable("main/mypage")
+    {
+        MyPage()
     }
 }
 //各画面の処理------------------------------------------------
