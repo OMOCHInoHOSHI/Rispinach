@@ -129,7 +129,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
             {
                 println(drawerState)
                 SideEffect { Log.d("compose-log", "ModalNavigationDrawer") }
-                Text(text = "ナビゲーションドロワー")
+//                Text(text = "ナビゲーションドロワー")
                 MainScreenTab.entries.forEachIndexed { index, item ->
                     if(selectButton=="main/camera")
                     {

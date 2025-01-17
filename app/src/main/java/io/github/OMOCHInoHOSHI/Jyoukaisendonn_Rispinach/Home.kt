@@ -133,7 +133,7 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
             MapContent()
             SideEffect { Log.d("compose-log", "Map") }
             //デバッグ用
-            Text("main/map")
+//            Text("main/map")
             println("map")
         }
 
