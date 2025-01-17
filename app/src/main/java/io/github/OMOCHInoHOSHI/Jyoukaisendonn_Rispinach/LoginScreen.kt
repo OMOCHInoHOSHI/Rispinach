@@ -111,7 +111,7 @@ fun LoginScreen(): Boolean {
         topBar = {
             TopAppBar(
                 modifier = Modifier
-                    .padding(top=155.dp)
+                    .padding(top=110.dp)
                     .fillMaxWidth(),
                 title = {
                     Box(
