@@ -11,6 +11,6 @@ fun Map()
     MapContent()
     SideEffect { Log.d("compose-log", "Map") }
     //デバッグ用
-    Text("main/map")
+//    Text("main/map")
     println("map")
 }

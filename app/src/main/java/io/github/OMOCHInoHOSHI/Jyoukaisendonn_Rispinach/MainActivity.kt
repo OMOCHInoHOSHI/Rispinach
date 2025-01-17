@@ -168,7 +168,7 @@ fun MapContent() {//マップの表示内容
     )
     val defaultPosition = locations["東京"]!! // 東京都庁
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(defaultPosition, 8f)
+        position = CameraPosition.fromLatLngZoom(defaultPosition, 13f)
     }
 
     // CoroutineScopeをrememberで保持
