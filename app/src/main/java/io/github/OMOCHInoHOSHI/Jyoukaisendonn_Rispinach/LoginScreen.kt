@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -107,7 +108,12 @@ fun LoginScreen(): Boolean {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = "Firebase Authentication") })
+            TopAppBar(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                title = { Text(text = "ようこそRispinachへ") },
+                colors= TopAppBarColors(Color.Black,Color.White,Color.White,Color.White,Color.White)
+            )
         },
         content = {
             Column(
@@ -121,8 +127,8 @@ fun LoginScreen(): Boolean {
                 TextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Email") },
-                    placeholder = { Text("Enter your email") },
+                    label = { Text("メールアドレス") },
+                    placeholder = { Text("メールアドレス") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Next
@@ -135,8 +141,8 @@ fun LoginScreen(): Boolean {
                 TextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Password") },
-                    placeholder = { Text("Enter your password") },
+                    label = { Text("パスワード") },
+                    placeholder = { Text("パスワード") },
                     modifier = Modifier.fillMaxWidth(),
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -166,7 +172,7 @@ fun LoginScreen(): Boolean {
                     modifier = Modifier.fillMaxWidth(),
                     enabled = email.isNotEmpty() && password.isNotEmpty() && !isLoading
                 ) {
-                    Text("Login (既存ユーザー)", fontSize = 18.sp)
+                    Text("ログインする", fontSize = 18.sp)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -191,7 +197,7 @@ fun LoginScreen(): Boolean {
                     modifier = Modifier.fillMaxWidth(),
                     enabled = email.isNotEmpty() && password.isNotEmpty() && !isLoading
                 ) {
-                    Text("SignUp (新規登録)", fontSize = 18.sp)
+                    Text("新規登録", fontSize = 18.sp)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
