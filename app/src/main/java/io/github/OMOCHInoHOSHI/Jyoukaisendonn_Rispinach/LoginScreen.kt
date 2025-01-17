@@ -45,7 +45,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LoginScreen() {
+fun LoginScreen(): Boolean {
     // Firebase の初期化 (すでにどこかで呼ばれていれば不要)
     FirebaseApp.initializeApp(LocalContext.current)
 
@@ -57,6 +57,8 @@ fun LoginScreen() {
     var isLoading by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+
+    var signSuccess by remember { mutableStateOf(false) }
 
     // GoogleSignInClient
     val googleSignInClient = remember {
@@ -81,13 +83,16 @@ fun LoginScreen() {
                             Toast.makeText(context, "Googleログイン成功", Toast.LENGTH_SHORT).show()
                             // 画面遷移やDB登録など
                             // val user = auth.currentUser
+                            signSuccess=true
                         } else {
                             Toast.makeText(context, "Google認証に失敗しました", Toast.LENGTH_SHORT).show()
+                            signSuccess=false
                         }
                     }
             }
         } catch (e: ApiException) {
             Toast.makeText(context, "Google認証に失敗: ${e.message}", Toast.LENGTH_SHORT).show()
+            signSuccess=false
         }
     }
 
@@ -205,6 +210,8 @@ fun LoginScreen() {
             }
         }
     )
+
+    return signSuccess
 }
 
 /**

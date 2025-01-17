@@ -503,7 +503,10 @@ fun StartupDialog(onDismiss: () -> Unit) {
             ) {
                 // ダイアログに表示するテキスト
 
-                LoginScreen()
+                if(LoginScreen())
+                {
+                    onDismiss()
+                }
 
 
 
