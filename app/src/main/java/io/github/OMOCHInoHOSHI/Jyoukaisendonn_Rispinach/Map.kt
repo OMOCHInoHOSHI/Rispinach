@@ -8,7 +8,8 @@ import androidx.compose.runtime.SideEffect
 @Composable
 fun Map()
 {
-    MapContent()
+    //MapContent()      // コメントアウト(中村)
+    MapMarkers()        // マーカー付き地図
     SideEffect { Log.d("compose-log", "Map") }
     //デバッグ用
     Text("main/map")
