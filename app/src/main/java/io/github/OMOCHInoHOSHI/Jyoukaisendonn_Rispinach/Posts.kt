@@ -182,10 +182,10 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
 //                            fontSize = 30.sp,
 //                        )
 //                    }
-                        Conversation(
-                            messages = SampleData.conversationSample,
-                            modifier = Modifier.weight(1f)
-                        )
+//                        Conversation(
+//                            messages = SampleData.conversationSample,
+//                            modifier = Modifier.weight(1f)
+//                        )
                         var text by rememberSaveable { mutableStateOf("") }
 
                         Box(
