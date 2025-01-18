@@ -145,7 +145,7 @@ dependencies {
     implementation("com.google.firebase:firebase-core:16.0.8")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
-
+    implementation ("com.google.firebase:firebase-database-ktx:20.1.0")
     // Firebaseの依存関係を追加E---------------------------------------------------------------------
 
 
