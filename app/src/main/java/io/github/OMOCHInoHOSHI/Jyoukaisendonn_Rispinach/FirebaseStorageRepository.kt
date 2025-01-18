@@ -24,12 +24,14 @@ fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
                 val speciesName = metadata.getCustomMetadata("speciesName") ?: "不明"
                 val location = metadata.getCustomMetadata("location") ?: "不明"
                 val discoveryDate = metadata.getCustomMetadata("discoveryDate") ?: "不明"
+                val Dkey = metadata.getCustomMetadata("R_T_D_Key") ?: "不明"
+                //Log.d("FirebaseStorage", "$speciesName, $Dkey")       // DKeyの確認用
                 // アイテムのバイトデータを取得
                 item.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
                     // バイトデータを Bitmap に変換
                     val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                     // ImageData オブジェクトをリストに追加
-                    imageList.add(ImageData(bitmap, title, speciesName, location, discoveryDate, index + 1))
+                    imageList.add(ImageData(bitmap, title, speciesName, location, discoveryDate, index + 1, Dkey))
                     // 全てのアイテムの処理が完了したら、ソートして、コールバックを呼び出す
                     if (imageList.size == listResult.items.size) {
                         Log.d("FirebaseStorage", "FirebaseStorage_End")

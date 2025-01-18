@@ -33,13 +33,13 @@
 オガエル,(無尾目オガエル科オガエル属),学名:Ascaphus truei
 アカウミガメ,(カメ目ウミガメ科アカウミガメ属),学名:Caretta caretta
 オサガメ,(カメ目オサガメ科オサガメ属),学名:Dermochelys coriacea
-ドロガメ属(カメ目ドロガメ科ドロガメ属)
+ドロガメ属,(カメ目ドロガメ科ドロガメ属)
 キスイガメ,(カメ目ヌマガメ科キスイガメ属),学名:Malaclemys terrapin
-ハコガメ属(カメ目イシガメ科ハコガメ属)
+ハコガメ属,(カメ目イシガメ科ハコガメ属)
 バンドトカゲモドキ(学名: Coleonyx variegatus)
-グリーンイグアナ(学名: Iguana iguana)
-グリーンアノール(学名: Anolis carolinensis)
-ハシリトカゲ属(有鱗目テグートカゲ科ハシリトカゲ属)
+グリーンイグアナ,(学名: Iguana iguana)
+グリーンアノール,(学名: Anolis carolinensis)
+ハシリトカゲ属,(有鱗目テグートカゲ科ハシリトカゲ属)
 ニジトカゲ,(有鱗目アガマ科アガマ属),学名:Agama agama
 エリマキトカゲ,(有鱗目アガマ科エリマキトカゲ属),学名:Chlamydosaurus kingiialligator lizard
 アシナシトカゲ科,(有隣目アシナシトカゲ科)

@@ -59,7 +59,8 @@ data class ImageData(
     val name: String,
     val location: String,
     val discoveryDate: String,
-    val id: Int
+    val id: Int,
+    val Dkey: String
 )
 
 // Firebadeの情報を共有(pictureNameに投稿情報を格納)
