@@ -137,7 +137,8 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
 //                modifier = Modifier.padding(start = 0.dp, top = 0.dp,end=0.dp, bottom = 225.dp),
 //                painter = painterResource1(R.drawable.tizu_kakkokari1), contentDescription = "test"
 //            )
-            MapContent()
+            //MapContent()      // コメントアウト(中村)
+            MapMarkers()        // マーカー付き地図
             SideEffect { Log.d("compose-log", "Map") }
             //デバッグ用
 //            Text("main/map")

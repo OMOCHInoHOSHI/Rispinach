@@ -157,6 +157,7 @@ fun DRAWER(
     }
 }
 
+/*
 @Composable
 fun MapContent() {//マップの表示内容
     // 地名と緯度経度の対応付け
@@ -221,6 +222,7 @@ fun MapContent() {//マップの表示内容
         }
     }
 }
+*/
 
 //@Preview(showBackground = true)
 //@Composable
