@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
         val module = py.getModule("jikken")
         val tex1 = module.callAttr("hello_world")
         println(tex1)
-
+        Realtime_Database_Write_Message()
         //enableEdgeToEdge()    //スマホの端を無くす
 
         //enableEdgeToEdge()

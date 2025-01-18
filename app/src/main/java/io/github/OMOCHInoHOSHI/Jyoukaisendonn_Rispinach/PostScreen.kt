@@ -38,6 +38,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 import com.google.firebase.FirebaseApp
+import com.google.firebase.database.FirebaseDatabase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,6 +67,12 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
     FirebaseApp.initializeApp(context)
     Log.d("TransmitData", "Firebase initialized")
 
+    // リアルタイムデータベースのキーを取得
+    val database = FirebaseDatabase.getInstance()
+    val myRef = database.getReference("users")
+    val r_t_d_key = getNewKeyFromRealtimeDatabase(myRef)
+    println("key = $r_t_d_key")
+
     // 表示する前にビットマップをリサイズ
     val resizedBitmap = bitmap?.let { resizeBitmap(it, 224, 224) }
 
@@ -90,7 +97,8 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                         speciesName.ifEmpty { "不明" },
                         location.ifEmpty { "不明" },
                         discoveryDate.ifEmpty { "不明" },
-                        context
+                        context,
+                        r_t_d_key
                     )
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -437,7 +445,8 @@ fun TransmitData(
     speciesName: String,
     location: String,
     discoveryDate: String,
-    context: Context
+    context: Context,
+    r_t_d_Key: String
 ) {
     if (bitmap == null) {
         Log.e("TransmitData", "Bitmap is null")
@@ -462,6 +471,7 @@ fun TransmitData(
         .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" }) // 生物名が空の場合は「不明」とする
         .setCustomMetadata("location", location.ifEmpty { "不明" }) // 発見場所が空の場合は「不明」とする
         .setCustomMetadata("discoveryDate", discoveryDate.ifEmpty { "不明" }) // 発見日付が空の場合は「不明」とする
+        .setCustomMetadata("R_T_D_Key", r_t_d_Key.ifEmpty { "R_T_D_Key取得失敗" }) // リアルタイムデータベースキーを取得
         .build()
     Log.d("TransmitData", "metadata")
 
