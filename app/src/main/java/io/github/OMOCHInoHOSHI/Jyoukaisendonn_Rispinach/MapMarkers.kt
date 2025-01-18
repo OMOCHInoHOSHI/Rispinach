@@ -99,7 +99,7 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
     return markers
 }
 
-// マップにマーカーを表示する関数
+// マーカー付きマップを表示する関数
 @Composable
 fun MapMarkers(imageViewModel: ImageViewModel = viewModel()) {
     Log.i("GoogleMap", "GoogleMap_Start")
@@ -127,7 +127,7 @@ fun MapMarkers(imageViewModel: ImageViewModel = viewModel()) {
         "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
     )
     val defaultPosition = locations["東京"]!! // 東京都庁
-    val defaultZoom = 8f
+    val defaultZoom = 13f
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(defaultPosition, defaultZoom)
     }
