@@ -101,30 +101,50 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Bottom
-                )
+                Column(modifier = Modifier.fillMaxSize())
                 {
-//                    Conversation(
-//                        messages = SampleData.conversationSample,
-//                        modifier = Modifier.weight(1f)
-//                    )
-                    var text by rememberSaveable { mutableStateOf("") }
-
-                    Box(
-                        modifier = Modifier,
-                        contentAlignment = Alignment.CenterEnd
+                    //投稿時コメント(仮)
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",//表示と折り返しのテスト
+                        fontSize = 30.sp,
+                    )
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Bottom
                     )
                     {
-                        MessageInput(
-                            text = text,
-                            onTextChange = { text = it }
+//                    Box(
+//                        modifier = Modifier,
+//                        contentAlignment = Alignment.TopStart
+//                    )
+//                    {
+//                        Text(
+//                            text = "test",
+//                            fontSize = 30.sp,
+//                        )
+//                    }
+//                        Conversation(
+//                            messages = SampleData.conversationSample,
+//                            modifier = Modifier.weight(1f)
+//                        )
+                        var text by rememberSaveable { mutableStateOf("") }
+
+                        Box(
+                            modifier = Modifier,
+                            contentAlignment = Alignment.CenterEnd
                         )
-                    }
+                        {
+                            MessageInput(
+                                text = text,
+                                onTextChange = { text = it }
+                            )
+                        }
 //                    Column {
 //
 //                    }
+                    }
                 }
                 if (openBottomSheet) {
                     ModalBottomSheet(

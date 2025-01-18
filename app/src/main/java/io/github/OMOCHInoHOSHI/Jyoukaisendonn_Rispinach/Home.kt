@@ -48,7 +48,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import fetchImagesFromFirebaseStorage
 import kotlinx.coroutines.launch
 
-data class ImageData(val bitmap: Bitmap, val title: String, val name: String, val location: String, val discoveryDate: String, val id: Int)
+data class ImageData(
+    val bitmap: Bitmap,
+    val title: String,
+    val name: String,
+    val location: String,
+    val discoveryDate: String,
+    val id: Int
+)
 
 // Firebadeの情報を共有(pictureNameに投稿情報を格納)
 class ImageViewModel : ViewModel() {
