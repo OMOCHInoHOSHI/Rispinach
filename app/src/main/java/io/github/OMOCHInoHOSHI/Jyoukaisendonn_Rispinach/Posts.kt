@@ -1,8 +1,11 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 import android.graphics.Bitmap
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,12 +17,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -40,6 +45,7 @@ import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +56,11 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
     val scope = rememberCoroutineScope()
     var openBottomSheet by remember { mutableStateOf(false) }
     val bottomSheetState = rememberModalBottomSheetState()
+
+    var isExpanded by remember { mutableStateOf(false) }
+    val surfaceColor by animateColorAsState(
+        if (isExpanded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+    )
 
     Scaffold(
         modifier = Modifier,
@@ -101,15 +112,61 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                Column(modifier = Modifier.fillMaxSize())
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+
+                )
                 {
-                    //投稿時コメント(仮)
-                    Text(
+                    Box(
                         modifier = Modifier
-                            .fillMaxWidth(),
-                        text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",//表示と折り返しのテスト
-                        fontSize = 30.sp,
+                        .clickable { isExpanded = !isExpanded },
                     )
+                    {
+                        //投稿時コメント(仮)
+                        Surface(
+                            //shape = MaterialTheme.shapes.medium,
+                            shadowElevation = 10.dp,
+                            //color = surfaceColor,
+                            modifier = Modifier
+                                .animateContentSize()
+                                .padding(1.dp)
+                        ) {
+                            Text(
+                                //表示と折り返しのテスト
+                                text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                                modifier = Modifier
+                                    .padding(all = 4.dp)
+                                    .fillMaxWidth(),
+                                fontSize = 30.sp,
+                                maxLines = if (isExpanded) Int.MAX_VALUE else 2,
+                                style = MaterialTheme.typography.bodyLarge,
+                                overflow = TextOverflow.Ellipsis, // 非表示部分を省略記号に
+
+                                )
+                            // Boxの底辺に線を追加
+                            Divider(
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter) // 底辺に配置
+                                    .fillMaxWidth(), // 横幅いっぱいに線を引く
+                                thickness = 2.dp, // 線の太さ
+                                color = Color.Black // 線の色
+                            )
+                            Divider(
+                                modifier = Modifier
+                                    .align(Alignment.TopCenter)
+                                    .fillMaxWidth(), // 横幅いっぱいに線を引く
+                                thickness = 2.dp, // 線の太さ
+                                color = Color.Black // 線の色
+                            )
+                        }
+                    }
+//                    Text(
+//                        modifier = Modifier
+//                            .fillMaxWidth(),
+//                        text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",//表示と折り返しのテスト
+//                        fontSize = 30.sp,
+//                    )
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Bottom
