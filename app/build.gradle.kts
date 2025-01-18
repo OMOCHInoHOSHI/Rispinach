@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -43,6 +45,13 @@ android {
         // map追記
         val mapsApiKey = rootProject.properties["MAPS_API_KEY"] as? String ?: ""
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
+
+        // local.properties ファイルからプロパティを読み込む
+        val localProperties = Properties()
+        localProperties.load(rootProject.file("local.properties").inputStream())
+
+        // build.gradle ファイルに API キーを追加
+        buildConfigField("String", "MAPS_API_KEY", "\"${localProperties.getProperty("MAPS_API_KEY")}\"")
     }
 
     buildTypes {
@@ -64,6 +73,7 @@ android {
     buildFeatures {
         compose = true
         mlModelBinding = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -152,4 +162,5 @@ dependencies {
     //Geocodingの依存関係
     implementation("com.squareup.okhttp3:okhttp:4.10.0") // 最新バージョンを確認してください
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4") // 最新バージョンを確認してください
+    implementation ("com.google.maps:google-maps-services:0.18.0") // 追加
 }
