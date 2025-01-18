@@ -71,7 +71,7 @@
 マザトウムシ,(ザトウムシ目マザトウムシ科),学名:Phalangium opilio
 サソリ目,(サソリ目)
 キマダラコガネグモ,(クモ目コガネグモ科コガネグモ属),学名:Argiope aurantia
-ニワオニグモ,(クモ目コガネグモ科オニグモ属),学名:Araneus cavaticus
+シダグモ,(クモ目コガネグモ科オニグモ属),学名:Araneus cavaticus
 ニワオニグモ,(クモ目コガネグモ科オニグモ属),学名:Araneus diadematus
 クロゴケグモ,(クモ目ヒメグモ科),学名:Latrodectus mactans
 オオツチグモ科,(クモ目オオツチグモ科)

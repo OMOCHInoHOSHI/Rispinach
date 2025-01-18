@@ -66,6 +66,9 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
     FirebaseApp.initializeApp(context)
     Log.d("TransmitData", "Firebase initialized")
 
+    // 表示する前にビットマップをリサイズ
+    val resizedBitmap = bitmap?.let { resizeBitmap(it, 224, 224) }
+
     Scaffold(
         topBar = {
             // トップバーの設定
@@ -117,7 +120,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                bitmap?.let {
+                resizedBitmap?.let {
                     Image(
                         bitmap = it.asImageBitmap(),
                         contentDescription = null,
@@ -166,7 +169,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                             modifier = Modifier.clickable {
                                 Log.d("PostScreen_image", "Icon clicked") // クリック時のログ
 
-                                bitmap?.let { bmp ->
+                                resizedBitmap?.let { bmp ->
                                     coroutineScope.launch {
                                         val result = imageAnalyzer.analyzePhoto(bmp) // 画像解析
 
@@ -310,6 +313,7 @@ class ImageAnalyzer(context: Context) {
             // 画像の解析の開始を確認
             Log.d("ImageAnalyzer", "analyzePhoto_Start")
 
+            /*
             // モデルの入力サイズ
             val targetWidth = 224
             val targetHeight = 224
@@ -329,11 +333,14 @@ class ImageAnalyzer(context: Context) {
             val top = (targetHeight - resizedBitmap.height) / 2
             canvas.drawBitmap(resizedBitmap, left.toFloat(), top.toFloat(), null)
 
+             */
+
             Log.d("ImageAnalyzer", "analyzePhoto_1")
 
             // リソースの解放
             val tensorImage = TensorImage(DataType.FLOAT32)
-            tensorImage.load(finalBitmap)
+            //tensorImage.load(finalBitmap)
+            tensorImage.load(bitmap)
             Log.d("ImageAnalyzer", "analyzePhoto_1")
 
             // バッファの形式を確認
@@ -366,6 +373,24 @@ class ImageAnalyzer(context: Context) {
             "Error analyzing photo"
         }
     }
+}
+
+// 画像のリサイズ
+fun resizeBitmap(bitmap: Bitmap, targetWidth: Int, targetHeight: Int): Bitmap {
+    val aspectRatio = bitmap.width.toFloat() / bitmap.height.toFloat()
+    val resizedBitmap = if (bitmap.width > bitmap.height) {
+        Bitmap.createScaledBitmap(bitmap, targetWidth, (targetWidth / aspectRatio).toInt(), true)
+    } else {
+        Bitmap.createScaledBitmap(bitmap, (targetHeight * aspectRatio).toInt(), targetHeight, true)
+    }
+
+    val finalBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888)
+    val canvas = android.graphics.Canvas(finalBitmap)
+    val left = (targetWidth - resizedBitmap.width) / 2
+    val top = (targetHeight - resizedBitmap.height) / 2
+    canvas.drawBitmap(resizedBitmap, left.toFloat(), top.toFloat(), null)
+
+    return finalBitmap
 }
 
 // 投稿データの送信
