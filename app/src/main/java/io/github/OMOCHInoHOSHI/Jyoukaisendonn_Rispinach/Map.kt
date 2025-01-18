@@ -12,6 +12,6 @@ fun Map()
     MapMarkers()        // マーカー付き地図
     SideEffect { Log.d("compose-log", "Map") }
     //デバッグ用
-    Text("main/map")
+//    Text("main/map")
     println("map")
 }
