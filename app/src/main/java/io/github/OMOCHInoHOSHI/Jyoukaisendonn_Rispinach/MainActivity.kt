@@ -58,10 +58,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Pythonにより追加
-        val py = Python.getInstance()
-        val module = py.getModule("jikken")
-        val tex1 = module.callAttr("hello_world")
-        println(tex1)
+//        val py = Python.getInstance()
+//        val module = py.getModule("jikken")
+//        val tex1 = module.callAttr("hello_world")
+//        println(tex1)
 
         //enableEdgeToEdge()    //スマホの端を無くす
 
@@ -69,9 +69,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             RispinachTheme {
                 // Chaquopyを初期化
-                if (!Python.isStarted()) {
-                    Python.start(AndroidPlatform(this))
-                }
+//                if (!Python.isStarted()) {
+//                    Python.start(AndroidPlatform(this))
+//                }
 
 //                ResNetPage() // ResNet_page関数を呼び出す
 

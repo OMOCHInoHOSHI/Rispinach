@@ -38,6 +38,10 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 import com.google.firebase.FirebaseApp
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ServerValue
+import com.google.firebase.database.ktx.database
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -401,7 +405,27 @@ fun TransmitData(bitmap: Bitmap?, title: String, speciesName: String, location: 
     uploadTask.addOnFailureListener { exception ->
         Log.e("TransmitData", "Upload failed", exception)
     }.addOnSuccessListener { taskSnapshot ->
-        Log.d("TransmitData", "Upload successful")
+        // 画像URLを取得
+        taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { imageURL ->
+            // 投稿IDを生成（push()を使って一意なIDを生成）
+            val postsRef = Firebase.database.reference.child("posts")
+            val newPostRef = postsRef.push()  // 一意な投稿IDを生成
+            val postId = newPostRef.key  // 新しく生成されたIDを取得
+
+            // 投稿メタデータをRealtime Databaseに保存
+            val postData = mapOf(
+                "imageURL" to imageURL.toString(),
+                "title" to title,
+                "speciesName" to speciesName,
+                "location" to location,
+                "discoveryDate" to discoveryDate,
+                "timestamp" to ServerValue.TIMESTAMP
+            )
+            newPostRef.setValue(postData)
+
+            // 投稿IDを保存（コメントを投稿IDに紐づけるために使います）
+            Log.d("TransmitData", "Post uploaded with ID: $postId")
+        }
     }
 }
 
