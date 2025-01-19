@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -187,15 +188,19 @@ fun MessageInput(text: String, onTextChange: (String) -> Unit, postId: String, m
 }
 
 fun postComment(postId: String, message: String) {
-    val user = "ペルソナユーザ"  // 現在のユーザーIDを使用
+    val user = FirebaseAuth.getInstance().currentUser
+    val userEmail = user?.email ?: "Unknown User"  // ユーザーがサインインしていない場合はデフォルト値を設定
+
+    // コメントデータにユーザーのメールアドレスを追加
     val commentData = mapOf(
-        "user" to user,
-        "body" to message,  // bodyにコメントを格納
-        "timestamp" to ServerValue.TIMESTAMP
+        "user" to userEmail,  // ユーザーのメールアドレス
+        "message" to message,  // コメントの内容
+        "timestamp" to ServerValue.TIMESTAMP  // タイムスタンプ
     )
 
     val commentsRef = Firebase.database.reference.child("posts").child(postId).child("comments")
     commentsRef.push().setValue(commentData)  // コメントを追加
 }
+
 
 
