@@ -58,6 +58,8 @@ import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -259,23 +261,30 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
             if (showMap) {
                 Spacer(modifier = Modifier.height(4.dp))
                 // 地図表示
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp) // 地図の高さを指定
+                Dialog(
+                    onDismissRequest = { var showPopup = false },
+                    properties = DialogProperties(usePlatformDefaultWidth = false) // 幅を制限しない
                 ) {
-                    LocatePosition(
-                        onAddressChanged = { address ->
-                            markerAddress = address
-                        },
-                        onCloseMap = {
-                            location = markerAddress
-                            showMap = false
-                        }
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+//                            .fillMaxWidth()
+//                            .height(300.dp) // 地図の高さを指定
+                    ) {
+                        LocatePosition(
+                            onAddressChanged = { address ->
+                                markerAddress = address
+                            },
+                            onCloseMap = {
+                                location = markerAddress
+                                showMap = false
+                            }
+                        )
+                    }
                 }
                 // 地図の後に隙間を追加
-                Spacer(modifier = Modifier.height(10.dp))
+//                Spacer(modifier = Modifier.height(10.dp))
+
             }
 
             // 発見日付入力フィールドの設定
