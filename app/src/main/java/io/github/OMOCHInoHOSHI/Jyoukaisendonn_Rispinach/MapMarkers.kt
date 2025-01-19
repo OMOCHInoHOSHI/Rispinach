@@ -141,10 +141,11 @@ fun MapMarkers(imageViewModel: ImageViewModel = viewModel()) {
     val locations = mapOf(
         "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
         "東京" to LatLng(35.689501, 139.691722),  // 東京都庁
+        "名古屋" to LatLng(35.180202, 136.906144),  // 名古屋県庁
         "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
         "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
     )
-    val defaultPosition = locations["東京"]!! // 東京都庁
+    val defaultPosition = locations["大阪"]!! // 大阪府庁
     val defaultZoom = 13f
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(defaultPosition, defaultZoom)
