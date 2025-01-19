@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -40,9 +41,7 @@ import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-data class Message(val user: String="", val body: String="", val timestamp: Long = 0L)
-
-//data class Message(val user: String, val body: String, val timestamp: Long)(橋本)
+data class Message(val user: String = "", val body: String = "", val timestamp: Long = 0L)
 
 @Composable
 fun Conversation(postId: String, modifier: Modifier = Modifier) {
@@ -57,7 +56,7 @@ fun Conversation(postId: String, modifier: Modifier = Modifier) {
                 val message = snapshot.getValue(Message::class.java)
                 Log.d("FirebaseData", "Received message: $message")  // ログを追加
                 message?.let {
-                    messages = listOf(it) + messages
+                    messages = messages + it
                 }
             }
 
@@ -99,8 +98,18 @@ fun Conversation(postId: String, modifier: Modifier = Modifier) {
 //        onTextChange = { text = it },
 //        postId = postId  // 投稿IDを渡す
 //    )
-}
 
+    Box(
+        modifier = Modifier,
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        MessageInput(
+            text = text,
+            onTextChange = { text = it },
+            postId = postId  // 投稿IDを渡す
+        )
+    }
+}
 
 @Composable
 fun MessageCard(msg: Message) {
@@ -131,7 +140,7 @@ fun MessageCard(msg: Message) {
                     .padding(1.dp)
             ) {
                 Text(
-                    text = msg.body,
+                    text = msg.body.ifEmpty { "コメントがありません" }, // コメントがない場合のデフォルトメッセージ
                     modifier = Modifier.padding(all = 4.dp),
                     maxLines = if (isExpanded) Int.MAX_VALUE else 1,
                     style = MaterialTheme.typography.bodyMedium
@@ -143,7 +152,10 @@ fun MessageCard(msg: Message) {
 
 @Composable
 fun MessageInput(text: String, onTextChange: (String) -> Unit, postId: String, modifier: Modifier = Modifier) {
-    Row {
+    Row(
+        modifier = modifier
+            .padding(8.dp)  // 必要なパディング
+    ) {
         OutlinedTextField(
             value = text,
             onValueChange = onTextChange,  // onTextChangeを渡す
@@ -187,3 +199,4 @@ fun postComment(postId: String, message: String) {
     val commentsRef = Firebase.database.reference.child("posts").child(postId).child("comments")
     commentsRef.push().setValue(commentData)  // コメントを追加
 }
+

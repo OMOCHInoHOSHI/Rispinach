@@ -111,16 +111,16 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
 
                     var text by rememberSaveable { mutableStateOf("") }
 
-                    Box(
-                        modifier = Modifier,
-                        contentAlignment = Alignment.CenterEnd
-                    ) {
-                        MessageInput(
-                            text = text,
-                            onTextChange = { text = it },
-                            postId = idName.toString()
-                        )
-                    }
+//                    Box(
+//                        modifier = Modifier,
+//                        contentAlignment = Alignment.CenterEnd
+//                    ) {
+//                        MessageInput(
+//                            text = text,
+//                            onTextChange = { text = it },
+//                            postId = idName.toString()
+//                        )
+//                    }
                 }
                 if (openBottomSheet) {
                     ModalBottomSheet(
