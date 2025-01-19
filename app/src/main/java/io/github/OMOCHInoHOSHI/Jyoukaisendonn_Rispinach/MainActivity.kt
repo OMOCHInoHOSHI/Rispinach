@@ -78,9 +78,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             RispinachTheme {
                 // Chaquopyを初期化
-                if (!Python.isStarted()) {
-                    Python.start(AndroidPlatform(this))
-                }
+//                if (!Python.isStarted()) {
+//                    Python.start(AndroidPlatform(this))
+//                }
 
 //                ResNetPage() // ResNet_page関数を呼び出す
 

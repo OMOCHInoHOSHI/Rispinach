@@ -38,11 +38,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -70,8 +68,7 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                 contentAlignment = Alignment.TopCenter
             ) {
                 Image(
-                    bitmap = pName.asImageBitmap(),     // プロフィール画像を表示するためのBitmap
-                    //painter = painterResource(id = pName),コメントアウト(中村)
+                    bitmap = pName.asImageBitmap(), // プロフィール画像を表示するためのBitmap
                     contentDescription = "プロフィール画像",
                     modifier = Modifier
                         .fillMaxWidth()
@@ -82,11 +79,15 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                         .align(Alignment.BottomStart)
                         .padding(8.dp)
                 ) {
-                    OutlinedText(
+                    Text(
                         text = "名前: $lName",
-                        stroke = Stroke(width = 4.0f),
-                        textStyle = TextStyle(fontSize = 20.sp),
-                        strokeColor = Color.White
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontSize = 20.sp,
+                            color = Color.White
+                        ),
+                        modifier = Modifier
+                            .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
+                            .padding(8.dp)
                     )
                 }
                 Box(
@@ -187,22 +188,55 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
 //                            modifier = Modifier.weight(1f)
 //                        )
                         var text by rememberSaveable { mutableStateOf("") }
+                Conversation(postId = idName.toString())
 
-                        Box(
-                            modifier = Modifier,
-                            contentAlignment = Alignment.CenterEnd
+
+                    Box(
+                        modifier = Modifier,
+                        contentAlignment = Alignment.CenterEnd
+                    )
+                    {
+                        MessageInput(
+                            text = text,
+                            onTextChange = { text = it },
+                            postId =idName.toString()
                         )
-                        {
-                            MessageInput(
-                                text = text,
-                                onTextChange = { text = it }
-                            )
-                        }
+                    }
+//                        Box(
+//                            modifier = Modifier,
+//                            contentAlignment = Alignment.CenterEnd
+//                        )
+//                        {
+//                            MessageInput(
+//                                text = text,
+//                                onTextChange = { text = it },
+//                                postId =idName.toString()
+//                            )
+//                        }
 //                    Column {
+//                Column(
+//                    modifier = Modifier.fillMaxSize(),
+//                    verticalArrangement = Arrangement.Bottom
+//                ) {
+//                    //チャット表示ここでいいはず
+//                    //Conversation(postId = idName.toString())
 //
 //                    }
                     }
                 }
+//                    var text by rememberSaveable { mutableStateOf("") }
+//
+////                    Box(
+////                        modifier = Modifier,
+////                        contentAlignment = Alignment.CenterEnd
+////                    ) {
+////                        MessageInput(
+////                            text = text,
+////                            onTextChange = { text = it },
+////                            postId = idName.toString()
+////                        )
+////                    }
+//                }
                 if (openBottomSheet) {
                     ModalBottomSheet(
                         onDismissRequest = { openBottomSheet = false },
@@ -210,25 +244,11 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-
-                            //場所は一旦コメントアウト
-
-//                            Text("場所:", style = MaterialTheme.typography.titleMedium)
-//                            Spacer(modifier = Modifier.height(8.dp))
-//                            Text(
-//                                text = cName,
-//                                textDecoration = TextDecoration.Underline,
-//                                color = Color.Blue,
-//                                style = MaterialTheme.typography.bodyLarge,
-//                                modifier = Modifier.clickable { /* 必要に応じてクリック処理を追加 */ }
-//                            )
-
-                            //通報場所
                             Text("通報", style = MaterialTheme.typography.titleMedium)
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                buildAnnotatedString()
-                                {
+                                buildAnnotatedString() {
+                                    append("地方環境事務所等一覧")
                                     withLink(
                                         LinkAnnotation.Url(
                                             "https://www.env.go.jp/nature/intro/reo.html",
@@ -239,22 +259,12 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                                                 )
                                             )
                                         )
-                                    )
-                                    {
+                                    ) {
                                         append("地方環境事務所等一覧")
                                     }
-                                }
+                                },
+                                color = Color.Blue
                             )
-
-//                            Text("通報:", style = MaterialTheme.typography.titleMedium)
-//                            Spacer(modifier = Modifier.height(8.dp))
-//                            Text(
-//                                text = cName,
-//                                textDecoration = TextDecoration.Underline,
-//                                color = Color.Blue,
-//                                style = MaterialTheme.typography.bodyLarge,
-//                                modifier = Modifier.clickable { /* 必要に応じてクリック処理を追加 */ }
-//                            )
                         }
                     }
                 }
@@ -262,3 +272,4 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
         }
     )
 }
+
