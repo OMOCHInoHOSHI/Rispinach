@@ -6,7 +6,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -106,7 +105,11 @@ fun Conversation(postId: String, modifier: Modifier = Modifier) {
     }
 
     // コメントリストの表示
-    LazyColumn(modifier = modifier.padding(bottom = 80.dp)) {
+    LazyColumn(
+        modifier = modifier//.padding(bottom = 80.dp)
+            .height(555.dp)
+    )
+    {
         items(messages) { message ->
             MessageCard(message)
         }
