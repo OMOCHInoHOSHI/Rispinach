@@ -58,7 +58,7 @@ fun Conversation(postId: String, modifier: Modifier = Modifier) {
                 val message = snapshot.getValue(Message::class.java)
                 Log.d("FirebaseData", "Received message: $message")  // ログを追加
                 message?.let {
-                    messages = messages + it
+                    messages = messages + it // 正しくメッセージをリストに追加
                 }
             }
 
@@ -88,8 +88,7 @@ fun Conversation(postId: String, modifier: Modifier = Modifier) {
     }
 
     // コメントリストの表示
-    LazyColumn(modifier = modifier
-        .padding(bottom = 80.dp)) {
+    LazyColumn(modifier = modifier.padding(bottom = 80.dp)) {
         items(messages) { message ->
             MessageCard(message)
         }
@@ -98,28 +97,14 @@ fun Conversation(postId: String, modifier: Modifier = Modifier) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
-
         verticalArrangement = Arrangement.Bottom
-    )
-    {
-
+    ) {
         // メッセージ入力フォーム
-//    MessageInput(
-//        text = text,
-//        onTextChange = { text = it },
-//        postId = postId  // 投稿IDを渡す
-//    )
-
-        Box(
-            modifier = Modifier,
-            contentAlignment = Alignment.CenterEnd
-        ) {
-            MessageInput(
-                text = text,
-                onTextChange = { text = it },
-                postId = postId  // 投稿IDを渡す
-            )
-        }
+        MessageInput(
+            text = text,
+            onTextChange = { text = it },
+            postId = postId  // 投稿IDを渡す
+        )
     }
 }
 
@@ -151,8 +136,9 @@ fun MessageCard(msg: Message) {
                     .animateContentSize()
                     .padding(1.dp)
             ) {
+                // bodyが空の場合は "コメントがありません" を表示
                 Text(
-                    text = msg.body.ifEmpty { "コメントがありません" }, // コメントがない場合のデフォルトメッセージ
+                    text = if (msg.body.isNotEmpty()) msg.body else "コメントがありません",
                     modifier = Modifier.padding(all = 4.dp),
                     maxLines = if (isExpanded) Int.MAX_VALUE else 1,
                     style = MaterialTheme.typography.bodyMedium
@@ -204,11 +190,12 @@ fun postComment(postId: String, message: String) {
     val user = "user123"  // 現在のユーザーIDを使用
     val commentData = mapOf(
         "user" to user,
-        "message" to message,
+        "body" to message,  // bodyにコメントを格納
         "timestamp" to ServerValue.TIMESTAMP
     )
 
     val commentsRef = Firebase.database.reference.child("posts").child(postId).child("comments")
     commentsRef.push().setValue(commentData)  // コメントを追加
 }
+
 
