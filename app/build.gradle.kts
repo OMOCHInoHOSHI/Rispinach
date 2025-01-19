@@ -5,13 +5,16 @@ plugins {
     alias(libs.plugins.kotlin.android)
 
     // Pythonの導入により追加
-    //id("com.chaquo.python")
+    id("com.chaquo.python")
 
     // MapsSDK
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 
     // Firebaseプラグインの追加
     id("com.google.gms.google-services")
+
+    //2.0.0追加した
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0" // this version matches your Kotlin version
 }
 
 android {
@@ -137,14 +140,15 @@ dependencies {
     // tensorflow-liteの依存関係を追加E----------------------------------------------------------------------
 
     // Firebaseの依存関係を追加S----------------------------------------------------------------------
-    implementation(platform("com.google.firebase:firebase-bom:31.0.2"))
+    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
-    implementation("com.google.firebase:firebase-core:16.0.8")
+    implementation("com.google.firebase:firebase-core:21.1.1")
     implementation("com.google.firebase:firebase-auth-ktx")
-    implementation ("com.google.firebase:firebase-database-ktx:20.1.0")
-    implementation("com.google.firebase:firebase-app-ktx:20.1.0")
-
+    implementation ("com.google.firebase:firebase-database-ktx:21.0.0")
+    //implementation("com.google.firebase:firebase-app-ktx:20.1.0")
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
     // Firebaseの依存関係を追加E---------------------------------------------------------------------
 

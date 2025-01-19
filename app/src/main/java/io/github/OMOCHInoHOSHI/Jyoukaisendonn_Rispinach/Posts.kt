@@ -119,7 +119,8 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                     {
                         MessageInput(
                             text = text,
-                            onTextChange = { text = it }
+                            onTextChange = { text = it },
+                            postId =idName.toString()
                         )
                     }
 //                    Column {
