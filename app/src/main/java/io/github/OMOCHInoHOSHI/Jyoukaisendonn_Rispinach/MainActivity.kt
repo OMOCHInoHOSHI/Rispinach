@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
         val module = py.getModule("jikken")
         val tex1 = module.callAttr("hello_world")
         println(tex1)
-
+        Realtime_Database_Write_Message()
         //enableEdgeToEdge()    //スマホの端を無くす
 
         // 位置情報を取得の許可
@@ -166,6 +166,7 @@ fun DRAWER(
     }
 }
 
+/*
 @Composable
 fun MapContent() {//マップの表示内容
 
@@ -247,6 +248,7 @@ fun MapContent() {//マップの表示内容
         }
     }
 }
+*/
 
 //@Preview(showBackground = true)
 //@Composable
