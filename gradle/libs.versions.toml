@@ -22,6 +22,8 @@ navigationCompose = "2.8.5"
 cameraCore = "1.4.1"
 firebaseAuthKtx = "23.1.0"
 firebaseAuthCommon = "9.8.0"
+compiler = "3.2.0-alpha11"
+runtimeLivedata = "1.7.6"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraxVersion" }
@@ -58,6 +60,8 @@ litert-support-api = { group = "com.google.ai.edge.litert", name = "litert-suppo
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 firebase-auth-common = { group = "com.google.firebase", name = "firebase-auth-common", version.ref = "firebaseAuthCommon" }
+androidx-compiler = { group = "androidx.databinding", name = "compiler", version.ref = "compiler" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

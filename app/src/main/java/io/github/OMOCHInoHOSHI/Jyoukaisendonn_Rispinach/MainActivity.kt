@@ -1,6 +1,7 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 //import ResNetPage
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -48,8 +49,11 @@ import androidx.compose.runtime.* // runtime関連をまとめてimport
 import androidx.compose.ui.* // ui関連をまとめてimport
 
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import kotlinx.coroutines.launch
 
@@ -64,6 +68,10 @@ class MainActivity : ComponentActivity() {
         println(tex1)
 
         //enableEdgeToEdge()    //スマホの端を無くす
+
+        // 位置情報を取得の許可
+        val location = LocationViewModel(context = this)
+        location.requestLocationPermission(activity = this)
 
         //enableEdgeToEdge()
         setContent {
@@ -159,6 +167,11 @@ fun DRAWER(
 
 @Composable
 fun MapContent() {//マップの表示内容
+
+    val location = LocationViewModel(context = LocalContext.current)
+    location.fusedLocation()
+    println("MapContentロケーション$location.fusedLocation()")
+
     // 地名と緯度経度の対応付け
     val locations = mapOf(
         "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
