@@ -275,11 +275,11 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
     }
 }
 
-//@Composable
-fun HomeMap()
-{
-
-}
+////@Composable
+//fun HomeMap()
+//{
+//
+//}
 
 class MyDto(val data: Boolean)
     val MyDtoSaver = listSaver<MyDto, Any>(

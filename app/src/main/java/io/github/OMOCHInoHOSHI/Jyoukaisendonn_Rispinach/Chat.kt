@@ -1,6 +1,7 @@
 //Chat.kt
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -39,25 +40,73 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 
+data class Message(val user: String, val body: String, val timestamp: Long = 0L)
+
+//data class Message(val user: String, val body: String, val timestamp: Long)(橋本)
 
 @Composable
-fun Conversation(messages: List<Message>, postId: String, modifier: Modifier = Modifier) {
-    LazyColumn(
-        modifier = modifier.padding(bottom = 1.dp) // 必要に応じてパディングを調整
-    ) {
+fun Conversation(postId: String, modifier: Modifier = Modifier) {
+    var messages by remember { mutableStateOf<List<Message>>(emptyList()) }
+    var text by rememberSaveable { mutableStateOf("") }  // 入力されたメッセージを保持
+
+    // Firebase Realtime Database からコメントをリアルタイムで取得
+    LaunchedEffect(postId) {
+        val database = Firebase.database.reference.child("posts").child(postId).child("comments")
+        database.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val message = snapshot.getValue(Message::class.java)
+                Log.d("FirebaseData", "Received message: $message")  // ログを追加
+                message?.let {
+                    messages = listOf(it) + messages
+                }
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val updatedMessage = snapshot.getValue(Message::class.java)
+                updatedMessage?.let {
+                    messages = messages.map { message ->
+                        if (message.timestamp == updatedMessage.timestamp) {
+                            updatedMessage // 更新されたメッセージをリストに反映
+                        } else {
+                            message
+                        }
+                    }
+                }
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                val removedMessage = snapshot.getValue(Message::class.java)
+                removedMessage?.let {
+                    messages = messages.filterNot { message -> message.timestamp == removedMessage.timestamp }
+                }
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
+    // コメントリストの表示
+    LazyColumn(modifier = modifier.padding(bottom = 1.dp)) {
         items(messages) { message ->
             MessageCard(message)
         }
     }
 
-    // メッセージ入力フォームの表示
+    // メッセージ入力フォーム
     MessageInput(
-        text = "",  // コメントのテキスト
-        onTextChange = {},  // テキスト変更時の処理
+        text = text,
+        onTextChange = { text = it },
         postId = postId  // 投稿IDを渡す
     )
 }
+
 
 @Composable
 fun MessageCard(msg: Message) {
@@ -74,7 +123,7 @@ fun MessageCard(msg: Message) {
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
-                text = msg.author,
+                text = msg.user,
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.titleSmall
             )
@@ -99,16 +148,11 @@ fun MessageCard(msg: Message) {
 }
 
 @Composable
-fun MessageInput(
-    text: String,
-    onTextChange: (String) -> Unit,
-    postId: String,  // 投稿IDを追加
-    modifier: Modifier = Modifier
-) {
+fun MessageInput(text: String, onTextChange: (String) -> Unit, postId: String, modifier: Modifier = Modifier) {
     Row {
         OutlinedTextField(
             value = text,
-            onValueChange = onTextChange,
+            onValueChange = onTextChange,  // onTextChangeを渡す
             modifier = modifier
                 .width(300.dp)
                 .padding(8.dp),
@@ -139,8 +183,6 @@ fun MessageInput(
 }
 
 fun postComment(postId: String, message: String) {
-
-
     val user = "user123"  // 現在のユーザーIDを使用
     val commentData = mapOf(
         "user" to user,
@@ -150,30 +192,4 @@ fun postComment(postId: String, message: String) {
 
     val commentsRef = Firebase.database.reference.child("posts").child(postId).child("comments")
     commentsRef.push().setValue(commentData)  // コメントを追加
-}
-
-@Composable
-fun OutlinedText(
-    text: String,
-    modifier: Modifier = Modifier,
-    textStyle: TextStyle = TextStyle.Default,
-    stroke: Stroke = Stroke(),
-    strokeColor: Color = Color.Transparent,
-) {
-    var textLayoutResult: TextLayoutResult? by remember { mutableStateOf(null) }
-    BasicText(
-        text = text,
-        style = textStyle,
-        onTextLayout = { textLayoutResult = it },
-        modifier = modifier
-            .padding(4.dp)
-            .drawBehind {
-                textLayoutResult?.let {
-                    drawText(
-                        textLayoutResult = it,
-                        color = strokeColor,
-                    )
-                }
-            }
-    )
 }

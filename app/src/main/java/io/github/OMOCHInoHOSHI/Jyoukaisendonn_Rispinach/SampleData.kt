@@ -4,7 +4,7 @@ package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 /**
  * メッセージデータクラス
  */
-data class Message(val author: String, val body: String)
+//data class Message(val author: String, val body: String)
 
 /**
  * サンプルデータを提供するオブジェクト
