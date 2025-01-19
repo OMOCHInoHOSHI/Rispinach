@@ -239,7 +239,7 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
                                 //.imePadding()//.padding(start = 16.dp, bottom = 24.dp)
                         ) {
                             println(imageViewModel.pictureName[index].name)
-                            Posts(imageViewModel.pictureName[index].bitmap, imageViewModel.pictureName[index].name, imageViewModel.pictureName[index].id)        // 画像情報、生物名、idを送る場合
+                            Posts(imageViewModel.pictureName[index].bitmap, imageViewModel.pictureName[index].name, imageViewModel.pictureName[index].title, imageViewModel.pictureName[index].location, imageViewModel.pictureName[index].discoveryDate, imageViewModel.pictureName[index].id)        // 画像情報、生物名、idを送る場合
 
                             //LoginScreen()
                             //Posts(pictureName[index], lsName)
