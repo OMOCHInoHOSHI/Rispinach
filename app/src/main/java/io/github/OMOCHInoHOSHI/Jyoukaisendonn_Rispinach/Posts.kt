@@ -38,9 +38,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,7 +52,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Posts(pName: Bitmap, lName: String, idName: Int) {
+fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discoveryDate: String, idName: Int) {
     val scope = rememberCoroutineScope()
     var openBottomSheet by remember { mutableStateOf(false) }
     val bottomSheetState = rememberModalBottomSheetState()
@@ -79,16 +81,15 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                         .align(Alignment.BottomStart)
                         .padding(8.dp)
                 ) {
-                    Text(
+                    OutlinedText(
                         text = "名前: $lName",
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontSize = 20.sp,
-                            color = Color.White
-                        ),
-                        modifier = Modifier
-                            .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
-                            .padding(8.dp)
-                    )
+                        stroke = Stroke(width = 200.0f),      // 縁取りの太さ
+                        textStyle = TextStyle(fontSize = 20.sp),
+                        strokeColor = Color.White,
+                                modifier = Modifier
+                                .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
+                        .padding(8.dp)
+                        )
                 }
                 Box(
                     modifier = Modifier
@@ -135,7 +136,7 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                         ) {
                             Text(
                                 //表示と折り返しのテスト
-                                text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                                text = Title,
                                 modifier = Modifier
                                     .padding(all = 4.dp)
                                     .fillMaxWidth(),
@@ -244,11 +245,20 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text("通報", style = MaterialTheme.typography.titleMedium)
+                            // 発見場所
+                            Text("【 発見場所 】", style = MaterialTheme.typography.titleMedium)
+                            Text("   $location\n", style = MaterialTheme.typography.titleMedium)
+
+                            // 発見日
+                            Text("【 発見日 】", style = MaterialTheme.typography.titleMedium)
+                            Text("   $discoveryDate\n", style = MaterialTheme.typography.titleMedium)
+
+                            // 通報場所
+                            Text("【 通報 】", style = MaterialTheme.typography.titleMedium)
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 buildAnnotatedString() {
-                                    append("地方環境事務所等一覧")
+                                    append("")
                                     withLink(
                                         LinkAnnotation.Url(
                                             "https://www.env.go.jp/nature/intro/reo.html",
@@ -259,8 +269,9 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                                                 )
                                             )
                                         )
-                                    ) {
-                                        append("地方環境事務所等一覧")
+                                    )
+                                    {
+                                        append("   地方環境事務所等一覧")
                                     }
                                 },
                                 color = Color.Blue

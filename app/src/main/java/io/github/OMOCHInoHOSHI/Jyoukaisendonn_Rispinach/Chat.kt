@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
@@ -34,7 +35,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.dp
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -198,4 +204,29 @@ fun postComment(postId: String, message: String) {
     commentsRef.push().setValue(commentData)  // コメントを追加
 }
 
-
+@Composable
+fun OutlinedText(
+    text: String,
+    modifier: Modifier = Modifier,
+    textStyle: TextStyle = TextStyle.Default,
+    stroke: Stroke = Stroke(),
+    strokeColor: Color = Color.Transparent,
+) {
+    var textLayoutResult: TextLayoutResult? by remember { mutableStateOf(null) }
+    BasicText(
+        text = text,
+        style = textStyle,
+        onTextLayout = { textLayoutResult = it },
+        modifier = modifier
+            .padding(4.dp)
+            .drawBehind {
+                textLayoutResult?.let {
+                    drawText(
+                        textLayoutResult = it,
+                        color = strokeColor,
+                        //style = textStyle.copy(drawStyle = stroke)
+                    )
+                }
+            }
+    )
+}
