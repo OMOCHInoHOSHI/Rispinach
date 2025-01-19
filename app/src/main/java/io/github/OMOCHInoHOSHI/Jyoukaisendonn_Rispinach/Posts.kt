@@ -199,16 +199,17 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                             postId =idName.toString()
                         )
                     }
-                        Box(
-                            modifier = Modifier,
-                            contentAlignment = Alignment.CenterEnd
-                        )
-                        {
-                            MessageInput(
-                                text = text,
-                                onTextChange = { text = it }
-                            )
-                        }
+//                        Box(
+//                            modifier = Modifier,
+//                            contentAlignment = Alignment.CenterEnd
+//                        )
+//                        {
+//                            MessageInput(
+//                                text = text,
+//                                onTextChange = { text = it },
+//                                postId =idName.toString()
+//                            )
+//                        }
 //                    Column {
 //
 //                    }
