@@ -71,8 +71,8 @@ class MainActivity : ComponentActivity() {
         //enableEdgeToEdge()    //スマホの端を無くす
 
         // 位置情報を取得の許可
-        val location = LocationViewModel(context = this)
-        location.requestLocationPermission(activity = this)
+//        val location = LocationViewModel(context = this)
+//        location.requestLocationPermission(activity = this)
 
         //enableEdgeToEdge()
         setContent {

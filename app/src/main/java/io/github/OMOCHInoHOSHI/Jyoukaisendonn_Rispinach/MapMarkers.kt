@@ -104,21 +104,21 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
 @Composable
 fun MapMarkers(imageViewModel: ImageViewModel = viewModel()) {
 
-    val locationViewModel = LocationViewModel(context = LocalContext.current)
-
-    // LiveDataを監視
-    val location by locationViewModel.location.observeAsState()
-
-    LaunchedEffect(location) {
-        location?.let {
-            println("ここ緯度経度: ${it.latitude}, ${it.longitude}")
-        }
-    }
-    // 必要に応じて権限リクエストを行う
-    LaunchedEffect(Unit) {
-//        locationViewModel.requestLocationPermission(activity)
-        locationViewModel.fusedLocation()
-    }
+//    val locationViewModel = LocationViewModel(context = LocalContext.current)
+//
+//    // LiveDataを監視
+//    val location by locationViewModel.location.observeAsState()
+//
+//    LaunchedEffect(location) {
+//        location?.let {
+//            println("ここ緯度経度: ${it.latitude}, ${it.longitude}")
+//        }
+//    }
+//    // 必要に応じて権限リクエストを行う
+//    LaunchedEffect(Unit) {
+////        locationViewModel.requestLocationPermission(activity)
+//        locationViewModel.fusedLocation()
+//    }
 
     Log.i("GoogleMap", "GoogleMap_Start")
 
