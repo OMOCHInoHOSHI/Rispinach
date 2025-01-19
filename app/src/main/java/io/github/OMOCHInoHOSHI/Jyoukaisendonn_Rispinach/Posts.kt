@@ -83,7 +83,7 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                         text = "名前: $lName",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontSize = 20.sp,
-                            color = Color.White
+                            color = Color.Black
                         ),
                         modifier = Modifier
                             .border(2.dp, Color.Black, RoundedCornerShape(8.dp))

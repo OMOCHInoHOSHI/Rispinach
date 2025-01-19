@@ -2,6 +2,7 @@ package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -353,6 +354,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                     text = "Rispinach",
                                     modifier = Modifier
                                         .offset(x = -28.dp)
+                                        .background(Color.Green)
                                 )
                             }
                             else
@@ -361,6 +363,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                     text = "Rispinach",
                                     modifier = Modifier
                                         .offset(x = -12.dp)
+                                        .background(Color.Green)
                                 )
                             }
                         }
