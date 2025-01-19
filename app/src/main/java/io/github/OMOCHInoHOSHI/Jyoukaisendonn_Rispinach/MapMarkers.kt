@@ -42,6 +42,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -102,6 +103,23 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
 // マーカー付きマップを表示する関数
 @Composable
 fun MapMarkers(imageViewModel: ImageViewModel = viewModel()) {
+
+    val locationViewModel = LocationViewModel(context = LocalContext.current)
+
+    // LiveDataを監視
+    val location by locationViewModel.location.observeAsState()
+
+    LaunchedEffect(location) {
+        location?.let {
+            println("ここ緯度経度: ${it.latitude}, ${it.longitude}")
+        }
+    }
+    // 必要に応じて権限リクエストを行う
+    LaunchedEffect(Unit) {
+//        locationViewModel.requestLocationPermission(activity)
+        locationViewModel.fusedLocation()
+    }
+
     Log.i("GoogleMap", "GoogleMap_Start")
 
     // 現在のコンテキストを取得

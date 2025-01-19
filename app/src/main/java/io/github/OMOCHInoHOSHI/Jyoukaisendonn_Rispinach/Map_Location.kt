@@ -116,6 +116,9 @@ class LocationViewModel(private val context: Context) : ViewModel() {
             .addOnSuccessListener { location ->
                 if (location != null) {
                     _location.postValue(location) // LiveDataに結果を格納
+                    // 緯度経度を文字列で結合し、ログに出力
+                    val locationString = "${location.latitude}, ${location.longitude}"
+                    Log.d("LocationSensor", "位置情報取得成功: $locationString")
                 } else {
                     Log.d("LocationSensor", "位置情報が取得できませんでした")
                 }
