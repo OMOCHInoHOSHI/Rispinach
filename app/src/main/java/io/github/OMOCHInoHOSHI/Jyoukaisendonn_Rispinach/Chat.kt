@@ -174,11 +174,12 @@ fun MessageInput(text: String, onTextChange: (String) -> Unit, postId: String, m
         modifier = modifier
             .padding(8.dp)  // 必要なパディング
     ) {
+        // テキストフィールドを親コンポーネントの幅に固定
         OutlinedTextField(
             value = text,
-            onValueChange = onTextChange,  // onTextChangeを渡す
-            modifier = modifier
-                .width(300.dp)
+            onValueChange = onTextChange,
+            modifier = Modifier
+                .weight(1f)  // 幅を親コンポーネントの残りの空間に合わせる
                 .padding(2.dp),
             maxLines = 5,
             singleLine = false,
@@ -188,7 +189,8 @@ fun MessageInput(text: String, onTextChange: (String) -> Unit, postId: String, m
         // 投稿ボタン
         IconButton(
             modifier = Modifier
-                .align(alignment = Alignment.CenterVertically),
+                .align(Alignment.CenterVertically)
+                .padding(start = 8.dp),  // 適切な余白を設定
             onClick = {
                 if (text.isNotEmpty()) {
                     postComment(postId, text)  // コメント投稿処理を呼び出し
