@@ -107,7 +107,7 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                     verticalArrangement = Arrangement.Bottom
                 ) {
                     //チャット表示ここでいいはず
-                    Conversation()
+                    Conversation(postId = idName.toString())
 
                     var text by rememberSaveable { mutableStateOf("") }
 
