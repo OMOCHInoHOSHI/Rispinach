@@ -187,7 +187,7 @@ fun MessageInput(text: String, onTextChange: (String) -> Unit, postId: String, m
 }
 
 fun postComment(postId: String, message: String) {
-    val user = "user123"  // 現在のユーザーIDを使用
+    val user = "ペルソナユーザ"  // 現在のユーザーIDを使用
     val commentData = mapOf(
         "user" to user,
         "body" to message,  // bodyにコメントを格納
