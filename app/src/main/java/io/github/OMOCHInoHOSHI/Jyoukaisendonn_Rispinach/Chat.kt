@@ -1,3 +1,4 @@
+//Chat.kt
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 import androidx.compose.animation.animateColorAsState
@@ -35,9 +36,13 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.dp
+import com.google.firebase.database.ServerValue
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+
 
 @Composable
-fun Conversation(messages: List<Message>, modifier: Modifier = Modifier) {
+fun Conversation(messages: List<Message>, postId: String, modifier: Modifier = Modifier) {
     LazyColumn(
         modifier = modifier.padding(bottom = 1.dp) // 必要に応じてパディングを調整
     ) {
@@ -45,6 +50,13 @@ fun Conversation(messages: List<Message>, modifier: Modifier = Modifier) {
             MessageCard(message)
         }
     }
+
+    // メッセージ入力フォームの表示
+    MessageInput(
+        text = "",  // コメントのテキスト
+        onTextChange = {},  // テキスト変更時の処理
+        postId = postId  // 投稿IDを渡す
+    )
 }
 
 @Composable
@@ -90,15 +102,14 @@ fun MessageCard(msg: Message) {
 fun MessageInput(
     text: String,
     onTextChange: (String) -> Unit,
+    postId: String,  // 投稿IDを追加
     modifier: Modifier = Modifier
 ) {
-    Row()
-    {
+    Row {
         OutlinedTextField(
             value = text,
             onValueChange = onTextChange,
             modifier = modifier
-                //.fillMaxWidth()
                 .width(300.dp)
                 .padding(8.dp),
             maxLines = 5,
@@ -106,23 +117,39 @@ fun MessageInput(
             label = { Text("メッセージを入力") }
         )
 
-        //投稿ボタン
+        // 投稿ボタン
         IconButton(
             modifier = Modifier
                 .align(alignment = Alignment.CenterVertically),
-            onClick = {/*投稿処理*/}
-        )
-        {
+            onClick = {
+                if (text.isNotEmpty()) {
+                    postComment(postId, text)  // コメント投稿処理を呼び出し
+                    onTextChange("")  // 入力フィールドをクリア
+                }
+            }
+        ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
                 contentDescription = "投稿",
-                modifier = Modifier
-                    .size(100.dp),
-                //.border(2.dp, Color.White, RoundedCornerShape(20.dp)),
+                modifier = Modifier.size(40.dp),
                 tint = Color(0xFF2196F3)
             )
         }
     }
+}
+
+fun postComment(postId: String, message: String) {
+
+
+    val user = "user123"  // 現在のユーザーIDを使用
+    val commentData = mapOf(
+        "user" to user,
+        "message" to message,
+        "timestamp" to ServerValue.TIMESTAMP
+    )
+
+    val commentsRef = Firebase.database.reference.child("posts").child(postId).child("comments")
+    commentsRef.push().setValue(commentData)  // コメントを追加
 }
 
 @Composable
@@ -145,7 +172,6 @@ fun OutlinedText(
                     drawText(
                         textLayoutResult = it,
                         color = strokeColor,
-                        //style = textStyle.copy(drawStyle = stroke)
                     )
                 }
             }
