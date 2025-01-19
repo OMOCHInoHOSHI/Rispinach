@@ -43,37 +43,38 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.Checkbox
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginScreen(): Boolean {
-    // Firebase の初期化 (すでにどこかで呼ばれていれば不要)
-    FirebaseApp.initializeApp(LocalContext.current)
-
-    // FirebaseAuth インスタンス
+    val context = LocalContext.current
     val auth = remember { FirebaseAuth.getInstance() }
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
+    val sharedPreferences: SharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
 
-    val context = LocalContext.current
+    var email by remember { mutableStateOf(sharedPreferences.getString("email", "") ?: "") }
+    var password by remember { mutableStateOf(sharedPreferences.getString("password", "") ?: "") }
+    var rememberMe by remember { mutableStateOf(sharedPreferences.getBoolean("rememberMe", false)) }
+    var isLoading by remember { mutableStateOf(false) }
 
     var signSuccess by remember { mutableStateOf(false) }
 
-    // GoogleSignInClient
+    // GoogleSignInClient 設定
     val googleSignInClient = remember {
         GoogleSignIn.getClient(
             context,
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("1:796232278012:web:e07084ff3d13d8e4a6dc79")
+                .requestIdToken("1:796232278012:web:e07084ff3d13d8e4a6dc79") // FirebaseのWebクライアントIDを設定
                 .requestEmail()
                 .build()
         )
     }
 
-    // Googleサインイン結果処理
     val googleSignInResult = rememberUpdatedState { task: Task<GoogleSignInAccount> ->
         try {
             val account = task.getResult(ApiException::class.java)
@@ -83,22 +84,19 @@ fun LoginScreen(): Boolean {
                     .addOnCompleteListener { authTask ->
                         if (authTask.isSuccessful) {
                             Toast.makeText(context, "Googleログイン成功", Toast.LENGTH_SHORT).show()
-                            // 画面遷移やDB登録など
-                            // val user = auth.currentUser
-                            signSuccess=true
+                            signSuccess = true
                         } else {
                             Toast.makeText(context, "Google認証に失敗しました", Toast.LENGTH_SHORT).show()
-                            signSuccess=false
+                            signSuccess = false
                         }
                     }
             }
         } catch (e: ApiException) {
             Toast.makeText(context, "Google認証に失敗: ${e.message}", Toast.LENGTH_SHORT).show()
-            signSuccess=false
+            signSuccess = false
         }
     }
 
-    // GoogleサインインIntentの結果受け取り
     val googleSignInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { result ->
@@ -107,30 +105,40 @@ fun LoginScreen(): Boolean {
         }
     )
 
+    // 自動ログイン処理
+    if (rememberMe && email.isNotEmpty() && password.isNotEmpty()) {
+        isLoading = true
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                isLoading = false
+                signSuccess = task.isSuccessful
+                if (task.isSuccessful) {
+                    Toast.makeText(context, "自動ログイン成功", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "自動ログイン失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 modifier = Modifier
-                    .padding(top=110.dp)
+                    .padding(top = 110.dp)
                     .fillMaxWidth(),
                 title = {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(),
-
-                        contentAlignment=Alignment.Center
-                    )
-                    {
+                        contentAlignment = Alignment.Center
+                    ) {
                         Text(
-                            modifier = Modifier
-                                .offset(x=-15.dp),
+                            modifier = Modifier.offset(x = -15.dp),
                             text = "ようこそRispinachへ",
-                            fontSize = 30.sp,
-                            //textAlign= TextAlign.Center
+                            fontSize = 30.sp
                         )
                     }
-                        },
-                //colors= TopAppBarColors(Color.Black,Color.White,Color.White,Color.White,Color.White)
+                }
             )
         },
         content = {
@@ -141,36 +149,37 @@ fun LoginScreen(): Boolean {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // Email入力
                 TextField(
                     value = email,
                     onValueChange = { email = it },
                     label = { Text("メールアドレス") },
-                    placeholder = { Text("メールアドレス") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Next
-                    )
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Password入力
                 TextField(
                     value = password,
                     onValueChange = { password = it },
                     label = { Text("パスワード") },
-                    placeholder = { Text("パスワード") },
                     modifier = Modifier.fillMaxWidth(),
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
-                    )
+                    visualTransformation = PasswordVisualTransformation()
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // ログインボタン (既存ユーザー用)
+                // 「ログイン情報を保持する」チェックボックス
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = rememberMe,
+                        onCheckedChange = { rememberMe = it }
+                    )
+                    Text("ログイン情報を保持する")
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // ログインボタン
                 Button(
                     onClick = {
                         isLoading = true
@@ -179,11 +188,23 @@ fun LoginScreen(): Boolean {
                                 isLoading = false
                                 if (task.isSuccessful) {
                                     Toast.makeText(context, "ログイン成功", Toast.LENGTH_SHORT).show()
-                                    // val user = auth.currentUser
-                                    signSuccess=true
+                                    signSuccess = true
+                                    if (rememberMe) {
+                                        with(sharedPreferences.edit()) {
+                                            putString("email", email)
+                                            putString("password", password)
+                                            putBoolean("rememberMe", true)
+                                            apply()
+                                        }
+                                    } else {
+                                        with(sharedPreferences.edit()) {
+                                            clear()
+                                            apply()
+                                        }
+                                    }
                                 } else {
                                     Toast.makeText(context, "ログイン失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                                    signSuccess=false
+                                    signSuccess = false
                                 }
                             }
                     },
@@ -195,7 +216,7 @@ fun LoginScreen(): Boolean {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // サインアップボタン (新規ユーザー登録)
+                // 新規登録ボタン
                 Button(
                     onClick = {
                         isLoading = true
@@ -204,11 +225,10 @@ fun LoginScreen(): Boolean {
                                 isLoading = false
                                 if (task.isSuccessful) {
                                     Toast.makeText(context, "ユーザー登録成功", Toast.LENGTH_SHORT).show()
-                                    // val newUser = auth.currentUser
-                                    signSuccess=true
+                                    signSuccess = true
                                 } else {
                                     Toast.makeText(context, "登録失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                                    signSuccess=false
+                                    signSuccess = false
                                 }
                             }
                     },
@@ -241,6 +261,8 @@ fun LoginScreen(): Boolean {
 
     return signSuccess
 }
+
+
 
 /**
  * 例: Firestore や Realtime Database にユーザー情報を保存する場合の関数。

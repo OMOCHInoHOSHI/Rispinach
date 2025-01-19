@@ -42,6 +42,7 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -61,12 +62,23 @@ fun Conversation(postId: String, modifier: Modifier = Modifier) {
         val database = Firebase.database.reference.child("posts").child(postId).child("comments")
         database.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val message = snapshot.getValue(Message::class.java)
-                Log.d("FirebaseData", "Received message: $message")  // ログを追加
-                message?.let {
-                    messages = messages + it // 正しくメッセージをリストに追加
+                Log.d("Firebase", "New data added: ${snapshot.value}")
+
+                val messageMap = snapshot.value as? Map<String, Any>
+                if (messageMap != null) {
+                    val user = messageMap["user"] as? String ?: "Unknown User"
+                    val body = messageMap["body"] as? String ?: ""
+                    val timestamp = messageMap["timestamp"] as? Long ?: 0L
+                    val message = Message(user, body, timestamp)
+
+                    messages = messages + message
+                    Log.d("Firebase", "Parsed message added: $message")
+                } else {
+                    Log.e("Firebase", "Failed to parse snapshot: ${snapshot.value}")
                 }
             }
+
+
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val updatedMessage = snapshot.getValue(Message::class.java)
@@ -124,7 +136,7 @@ fun MessageCard(msg: Message) {
     Row(
         modifier = Modifier
             .padding(all = 8.dp)
-            .clickable { isExpanded = !isExpanded }
+            .clickable {}
     ) {
         Spacer(modifier = Modifier.width(8.dp))
         Column {
@@ -144,9 +156,8 @@ fun MessageCard(msg: Message) {
             ) {
                 // bodyが空の場合は "コメントがありません" を表示
                 Text(
-                    text = if (msg.body.isNotEmpty()) msg.body else "コメントがありません",
+                    text = msg.body,
                     modifier = Modifier.padding(all = 4.dp),
-                    maxLines = if (isExpanded) Int.MAX_VALUE else 1,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -193,16 +204,31 @@ fun MessageInput(text: String, onTextChange: (String) -> Unit, postId: String, m
 }
 
 fun postComment(postId: String, message: String) {
-    val user = "ペルソナユーザ"  // 現在のユーザーIDを使用
+    val user = FirebaseAuth.getInstance().currentUser
+
+    if (user == null) {
+        Log.e("Firebase", "ユーザーがログインしていません")
+        return
+    }
+
+    val userEmail = user.email ?: "Unknown User"
+
     val commentData = mapOf(
-        "user" to user,
-        "body" to message,  // bodyにコメントを格納
+        "user" to userEmail,
+        "body" to message,  // "message" ではなく "body" に変更
         "timestamp" to ServerValue.TIMESTAMP
     )
 
     val commentsRef = Firebase.database.reference.child("posts").child(postId).child("comments")
-    commentsRef.push().setValue(commentData)  // コメントを追加
+    commentsRef.push().setValue(commentData).addOnSuccessListener {
+        Log.d("Firebase", "Comment added successfully: $commentData")
+    }.addOnFailureListener {
+        Log.e("Firebase", "Failed to add comment", it)
+    }
 }
+
+
+
 
 @Composable
 fun OutlinedText(
