@@ -238,16 +238,16 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                             }
                         )
                     },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = "住所表示",
-                            tint = androidx.compose.ui.graphics.Color(0xFFEF857D), // アイコンをコーラルレッド色に変更
-                            modifier = Modifier.clickable {
-                                location = markerAddress
-                            }
-                        )
-                    },
+//                    trailingIcon = {
+//                        Icon(
+//                            imageVector = Icons.Default.Check,
+//                            contentDescription = "住所表示",
+//                            tint = androidx.compose.ui.graphics.Color(0xFFEF857D), // アイコンをコーラルレッド色に変更
+//                            modifier = Modifier.clickable {
+//                                location = markerAddress
+//                            }
+//                        )
+//                    },
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
@@ -255,7 +255,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                 )
             }
 
-            // 地図アイコンが押された時の処理
+// 地図アイコンが押された時の処理
             if (showMap) {
                 Spacer(modifier = Modifier.height(4.dp))
                 // 地図表示
@@ -269,6 +269,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                             markerAddress = address
                         },
                         onCloseMap = {
+                            location = markerAddress
                             showMap = false
                         }
                     )
