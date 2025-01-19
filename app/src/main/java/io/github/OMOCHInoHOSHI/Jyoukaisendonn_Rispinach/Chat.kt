@@ -107,7 +107,7 @@ fun Conversation(postId: String, modifier: Modifier = Modifier) {
     // コメントリストの表示
     LazyColumn(
         modifier = modifier//.padding(bottom = 80.dp)
-            .height(555.dp)
+            .height(570.dp)
     )
     {
         items(messages) { message ->
