@@ -13,6 +13,8 @@ fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
     // 画像データを格納するリストを作成
     val imageList = mutableListOf<ImageData>()
 
+//    /* ここの"//"を消すとFirebaseから読み取らなくなる
+
     // "images" フォルダ内の全てのアイテムをリストアップ
     storageRef.listAll().addOnSuccessListener { listResult ->
         // 各アイテムに対して処理を行う
@@ -54,4 +56,6 @@ fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
         // 画像リストの取得に失敗した場合のエラーログ
         Log.e("FirebaseStorage", "Failed to list images", exception)
     }
+//    ここの"//"を消すとFirebaseから読み取らなくなる  */
+
 }
