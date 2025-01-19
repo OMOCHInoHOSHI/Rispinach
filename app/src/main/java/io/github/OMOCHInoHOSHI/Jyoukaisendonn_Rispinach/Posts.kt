@@ -3,7 +3,6 @@ package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -102,26 +100,29 @@ fun Posts(pName: Bitmap, lName: String, idName: Int) {
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    //チャット表示ここでいいはず
-                    Conversation(postId = idName.toString())
+                Conversation(postId = idName.toString())
 
-                    var text by rememberSaveable { mutableStateOf("") }
 
-//                    Box(
-//                        modifier = Modifier,
-//                        contentAlignment = Alignment.CenterEnd
-//                    ) {
-//                        MessageInput(
-//                            text = text,
-//                            onTextChange = { text = it },
-//                            postId = idName.toString()
-//                        )
-//                    }
-                }
+//                Column(
+//                    modifier = Modifier.fillMaxSize(),
+//                    verticalArrangement = Arrangement.Bottom
+//                ) {
+//                    //チャット表示ここでいいはず
+//                    //Conversation(postId = idName.toString())
+//
+//                    var text by rememberSaveable { mutableStateOf("") }
+//
+////                    Box(
+////                        modifier = Modifier,
+////                        contentAlignment = Alignment.CenterEnd
+////                    ) {
+////                        MessageInput(
+////                            text = text,
+////                            onTextChange = { text = it },
+////                            postId = idName.toString()
+////                        )
+////                    }
+//                }
                 if (openBottomSheet) {
                     ModalBottomSheet(
                         onDismissRequest = { openBottomSheet = false },
