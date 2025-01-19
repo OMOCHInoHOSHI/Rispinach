@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +37,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.LinkAnnotation
@@ -80,16 +83,23 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .padding(8.dp)
+                        .background(Color.DarkGray.copy(alpha = 0.5f)) // 半透明の灰色
                 ) {
-                    OutlinedText(
+                    Text(
                         text = "名前: $lName",
-                        stroke = Stroke(width = 200.0f),      // 縁取りの太さ
-                        textStyle = TextStyle(fontSize = 20.sp),
-                        strokeColor = Color.White,
-                                modifier = Modifier
-                                .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
-                        .padding(8.dp)
-                        )
+                        style = TextStyle(
+                            color = Color.White,  // テキストの色
+                            fontSize = 15.sp,
+                            shadow = Shadow(
+                                color = Color.Black,  // 縁取りの色
+                                offset = Offset(4f, 4f),  // 縁取りの位置（大きさ）
+                                blurRadius = 16f  // 縁取りのぼかし具合（大きさ）
+                            )
+                        ),
+                        modifier = Modifier
+                            .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
+                            .padding(8.dp)
+                    )
                 }
                 Box(
                     modifier = Modifier
@@ -117,14 +127,11 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-
-                )
-                {
+                ) {
                     Box(
                         modifier = Modifier
-                        .clickable { isExpanded = !isExpanded },
-                    )
-                    {
+                            .clickable { isExpanded = !isExpanded },
+                    ) {
                         //投稿時コメント(仮)
                         Surface(
                             //shape = MaterialTheme.shapes.medium,
@@ -144,8 +151,7 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                                 maxLines = if (isExpanded) Int.MAX_VALUE else 2,
                                 style = MaterialTheme.typography.bodyLarge,
                                 overflow = TextOverflow.Ellipsis, // 非表示部分を省略記号に
-
-                                )
+                            )
                             // Boxの底辺に線を追加
                             Divider(
                                 modifier = Modifier
@@ -163,81 +169,25 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                             )
                         }
                     }
-//                    Text(
-//                        modifier = Modifier
-//                            .fillMaxWidth(),
-//                        text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",//表示と折り返しのテスト
-//                        fontSize = 30.sp,
-//                    )
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Bottom
-                    )
-                    {
-//                    Box(
-//                        modifier = Modifier,
-//                        contentAlignment = Alignment.TopStart
-//                    )
-//                    {
-//                        Text(
-//                            text = "test",
-//                            fontSize = 30.sp,
-//                        )
-//                    }
-//                        Conversation(
-//                            messages = SampleData.conversationSample,
-//                            modifier = Modifier.weight(1f)
-//                        )
+                    ) {
                         var text by rememberSaveable { mutableStateOf("") }
-                Conversation(postId = idName.toString())
+                        Conversation(postId = idName.toString())
 
-
-                    Box(
-                        modifier = Modifier,
-                        contentAlignment = Alignment.CenterEnd
-                    )
-                    {
-                        MessageInput(
-                            text = text,
-                            onTextChange = { text = it },
-                            postId =idName.toString()
-                        )
-                    }
-//                        Box(
-//                            modifier = Modifier,
-//                            contentAlignment = Alignment.CenterEnd
-//                        )
-//                        {
-//                            MessageInput(
-//                                text = text,
-//                                onTextChange = { text = it },
-//                                postId =idName.toString()
-//                            )
-//                        }
-//                    Column {
-//                Column(
-//                    modifier = Modifier.fillMaxSize(),
-//                    verticalArrangement = Arrangement.Bottom
-//                ) {
-//                    //チャット表示ここでいいはず
-//                    //Conversation(postId = idName.toString())
-//
-//                    }
+                        Box(
+                            modifier = Modifier,
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
+                            MessageInput(
+                                text = text,
+                                onTextChange = { text = it },
+                                postId = idName.toString()
+                            )
+                        }
                     }
                 }
-//                    var text by rememberSaveable { mutableStateOf("") }
-//
-////                    Box(
-////                        modifier = Modifier,
-////                        contentAlignment = Alignment.CenterEnd
-////                    ) {
-////                        MessageInput(
-////                            text = text,
-////                            onTextChange = { text = it },
-////                            postId = idName.toString()
-////                        )
-////                    }
-//                }
                 if (openBottomSheet) {
                     ModalBottomSheet(
                         onDismissRequest = { openBottomSheet = false },
@@ -257,7 +207,7 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                             Text("【 通報 】", style = MaterialTheme.typography.titleMedium)
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                buildAnnotatedString() {
+                                buildAnnotatedString {
                                     append("")
                                     withLink(
                                         LinkAnnotation.Url(
@@ -269,8 +219,7 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                                                 )
                                             )
                                         )
-                                    )
-                                    {
+                                    ) {
                                         append("   地方環境事務所等一覧")
                                     }
                                 },
