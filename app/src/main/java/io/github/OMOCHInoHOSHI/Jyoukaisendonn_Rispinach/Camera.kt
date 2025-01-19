@@ -10,9 +10,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,19 +24,41 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 
+// showCameraを変更するためのViewModelS------------------------
+class CameraViewModel : ViewModel() {
+    // showCamera の状態を管理
+    private val _showCamera = mutableStateOf(true)
+    val showCamera: State<Boolean> get() = _showCamera
+
+    // showCamera を変更するメソッド
+    fun setShowCamera(value: Boolean) {
+        _showCamera.value = value
+    }
+}
+// showCameraを変更するためのViewModelE------------------------
+
+
+// カメラ～投稿画面S-----------------------------------------------------------------------------------
 @Composable
-fun Camera()
+fun Camera(cameraViewModel: CameraViewModel = viewModel())
 {
 //    var isCameraOpen by remember { mutableStateOf(false) }
 
-    var camera_flg = 1
+    var camera_flg by rememberSaveable { mutableIntStateOf(1) }
 //    camera_flg = CameraScreen_2(1)
 
 
-    var showCamera by remember { mutableStateOf(true) } // カメラ表示フラグ
+//    var showCamera by rememberSaveable { mutableStateOf(true) } // カメラ表示フラグ
 
+    // ViewModel から showCamera を参照
+    val showCamera = cameraViewModel.showCamera.value
+
+//    println("1 camera_flg = $camera_flg")
+//    println("showCamera = $showCamera")
     if (showCamera) {
 
 //        BackHandler {
@@ -44,7 +69,7 @@ fun Camera()
         Dialog(
             onDismissRequest = { var showPopup = false },
             properties = DialogProperties(usePlatformDefaultWidth = false) // 幅を制限しない
-            ) {
+        ) {
             // バックボタン処理を追加
 //            BackHandler {
 //                println("BackHandler")
@@ -56,13 +81,25 @@ fun Camera()
                     .fillMaxSize()
             ) {
 
-                camera_flg = CameraScreen_2(1)
+                camera_flg = CameraScreen_2(camera_flg)
+                println("Camera.ktcamera_flg = $camera_flg")
 
                 // バック操作でカメラ終了
                 BackHandler {
                     println("BackHandler")
-                    showCamera = false // カメラ画面を閉じる
+//                    camera_flg = 0
+//                    showCamera = false // カメラ画面を閉じる
+                    cameraViewModel.setShowCamera(false)
+//                    if(camera_flg == 0){
+//                        showCamera = false // カメラ画面を閉じる
+//                        println("2 showCamera = $showCamera")
+//                    }
                 }
+
+//                if(camera_flg == 0){
+//                    showCamera = false // カメラ画面を閉じる
+//                    println("2 showCamera = $showCamera")
+//                }
             }
         }
     } else {
@@ -71,26 +108,5 @@ fun Camera()
         Home()
 
     }
-
-    }
-
-
-    //val permissionState: PermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
-
-
-
-
-    //デバッグ用
-//    Text("main/camera")
-//    println("Camera")
-//}
-
-//fun StartCamera()
-//{
-//    //カメラ起動
-//}
-//
-//fun StartPhoto()
-//{
-//    //スマホ内の画像で判定
-//}
+}
+// カメラ～投稿画面E-----------------------------------------------------------------------------------

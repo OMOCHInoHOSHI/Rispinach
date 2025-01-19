@@ -3,6 +3,7 @@ package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Camera
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Map
@@ -27,6 +29,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
@@ -46,6 +49,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -84,6 +89,13 @@ enum class MainScreenTab(
         label = "Map",
         idx=2,
         //enabled = true
+    ),
+    MyPage(
+    id = "main/mypage",
+    icon = Icons.Outlined.AccountCircle,
+    label = "MyPage",
+    idx=3
+    //enabled = true
     )
 }
 
@@ -112,6 +124,9 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
     //var x=null
     //WindowInsets.run { x?.let { navigationBars.getBottom(it) } }
 
+    StartupScreen()
+
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = DismissibleDrawerEnabled,
@@ -122,7 +137,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
             {
                 println(drawerState)
                 SideEffect { Log.d("compose-log", "ModalNavigationDrawer") }
-                Text(text = "ナビゲーションドロワー")
+//                Text(text = "ナビゲーションドロワー")
                 MainScreenTab.entries.forEachIndexed { index, item ->
                     if(selectButton=="main/camera")
                     {
@@ -183,7 +198,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
             bottomBar = {
                 NavigationBar(
                     contentColor = Color.White,
-                    containerColor = Color.Black
+                    containerColor = Color.Black //BottomBarの背景色
                 )
                 {
                     SideEffect { Log.d("compose-log", "NavigationBar") }
@@ -319,30 +334,41 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                     DismissibleDrawerEnabled=true
                 }
 
-                if(!goMap) {
-                    TopAppBar(
-                        modifier = Modifier
-                            .onGloballyPositioned { coordinates ->
-                            topBarHeight =
-                                with(localDensity) { coordinates.size.height.toDp() /* 高さをdpで取得*/ }
-                        },
-                        title = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            )
+//                if(!goMap) {
+                TopAppBar(
+                    modifier = Modifier
+                        .onGloballyPositioned { coordinates ->
+                        topBarHeight =
+                            with(localDensity) { coordinates.size.height.toDp() /* 高さをdpで取得*/ }
+                    },
+                    title = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        )
+                        {
+                            if(!goMap) {
+                                Text(
+                                    text = "Rispinach",
+                                    modifier = Modifier
+                                        .offset(x = -28.dp)
+                                )
+                            }
+                            else
                             {
                                 Text(
                                     text = "Rispinach",
                                     modifier = Modifier
-                                        .offset(x=-28.dp)
+                                        .offset(x = -12.dp)
                                 )
                             }
+                        }
 
-                        },
+                    },
 
-                        navigationIcon = {
+                    navigationIcon = {
+                        if(!goMap) {
                             IconButton(
                                 //modifier = Modifier.padding(start = 30.dp, top = 20.dp, end = 20.dp),
                                 onClick = {
@@ -366,25 +392,26 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                 )
 
                             }
-                        },
+                        }
+                    },
 
-                        colors=TopAppBarColors(Color.Black,Color.White,Color.White,Color.White,Color.White)
+                    colors=TopAppBarColors(Color.Black/*TopBar背景色*/,Color.White,Color.White,Color.White,Color.White)
 
 
-                    //colors = TopAppBarColors(containerColor = Color.Black)
+                //colors = TopAppBarColors(containerColor = Color.Black)
 
 //                backgroundColor = MaterialTheme.colors.primary,
 //                contentColor = Color.White
 
-                    )
+                )
 
 
 
-                }
-                else
-                {
-                    topBarHeight=0.dp
-                }
+//                }
+//                else
+//                {
+//                    topBarHeight=0.dp
+//                }
 
 
             },
@@ -458,10 +485,67 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
             //ドロワーメニューのアイコン----------------------------------------
         }
     }
+}
+
+
+@Composable
+fun StartupScreen() {
+    // ダイアログ表示の状態を管理
+    val showDialog = remember { mutableStateOf(true) }
+
+    // ダイアログが表示されている間は、他のUIは非表示
+    if (showDialog.value) {
+        StartupDialog(
+            onDismiss = { showDialog.value = false }
+        )
+    }
+
+    // 他の画面のコンテンツはここに追加することができます。
+}
+
+@Composable
+fun StartupDialog(onDismiss: () -> Unit) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false, // 幅を制限しない
+            //dismissOnBackPress = false,  // Backボタンを押してもDialogを消さない
+            //dismissOnClickOutside = false // Dialogの外を押してもDialogを消さない
+        )
+    )
+    {
+        Surface(
+//            modifier = Modifier.padding(20.dp),
+//            shape = CircleShape,
+//            color = Color.White
+        )
+            {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+                modifier = Modifier.fillMaxSize().padding(20.dp)
+            ) {
+                // ダイアログに表示するテキスト
+
+                if(LoginScreen())
+                {
+                    onDismiss()
+                }
 
 
 
+//                    Text(
+//                        text = "アプリが起動しました！",
+//                        modifier = Modifier.padding(bottom = 16.dp)
+//                    )
 
+                // ダイアログを閉じるボタン
+//                Button(onClick = onDismiss) {
+//                    Text(text = "閉じる")
+//                }
+            }
+        }
+    }
 }
 
 fun NavGraphBuilder.mainScreen()
@@ -490,6 +574,10 @@ fun NavGraphBuilder.screenMode()
     composable("main/map")
     {
         Map()
+    }
+    composable("main/mypage")
+    {
+        MyPage()
     }
 }
 //各画面の処理------------------------------------------------

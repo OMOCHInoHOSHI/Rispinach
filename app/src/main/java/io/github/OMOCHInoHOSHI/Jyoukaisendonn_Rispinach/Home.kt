@@ -12,11 +12,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -28,14 +25,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.painterResource as painterResource1
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,14 +41,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import fetchImagesFromFirebaseStorage
 import kotlinx.coroutines.launch
 
-data class ImageData(val bitmap: Bitmap, val name: String, val location: String, val discoveryDate: String, val id: Int)
+data class ImageData(val bitmap: Bitmap, val title: String, val name: String, val location: String, val discoveryDate: String, val id: Int)
 
+// Firebadeの情報を共有(pictureNameに投稿情報を格納)
 class ImageViewModel : ViewModel() {
     var pictureName by mutableStateOf(listOf<ImageData>())
         private set
@@ -132,7 +128,7 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
             MapContent()
             SideEffect { Log.d("compose-log", "Map") }
             //デバッグ用
-            Text("main/map")
+//            Text("main/map")
             println("map")
         }
 
@@ -233,6 +229,10 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
                                 //.padding(start = 16.dp, bottom = 50.dp)
                                 //.imePadding()//.padding(start = 16.dp, bottom = 24.dp)
                         ) {
+                            println(imageViewModel.pictureName[index].name)
+                            Posts(imageViewModel.pictureName[index].bitmap, imageViewModel.pictureName[index].name, imageViewModel.pictureName[index].id)        // 画像情報、生物名、idを送る場合
+
+                            //LoginScreen()
                             //Posts(pictureName[index], lsName)
 //                            println(imageViewModel.pictureName[index].name)
 //                            Posts(imageViewModel.pictureName[index].bitmap, imageViewModel.pictureName[index].name, imageViewModel.pictureName[index].id)        // 画像情報、生物名、idを送る場合
@@ -275,11 +275,11 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
     }
 }
 
-//@Composable
-fun HomeMap()
-{
-
-}
+////@Composable
+//fun HomeMap()
+//{
+//
+//}
 
 class MyDto(val data: Boolean)
     val MyDtoSaver = listSaver<MyDto, Any>(

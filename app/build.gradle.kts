@@ -1,3 +1,5 @@
+// アプリレベルの build.gradle.kts
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -10,6 +12,9 @@ plugins {
 
     // Firebaseプラグインの追加
     id("com.google.gms.google-services")
+
+    //2.0.0追加した
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0" // this version matches your Kotlin version
 }
 
 android {
@@ -17,13 +22,12 @@ android {
     compileSdk = 35
 
     // Pythonにより追加
-    flavorDimensions += "pyVersion"
-    productFlavors {
-        create("py38") { dimension = "pyVersion" }
-    }
+    //flavorDimensions += "pyVersion"
+    //productFlavors {
+    //    create("py38") { dimension = "pyVersion" }
+    //}
 
     defaultConfig {
-
         // Pythonにより追加
         ndk {
             abiFilters += listOf("arm64-v8a", "x86_64", "armeabi-v7a", "x86")
@@ -76,22 +80,20 @@ android {
 }
 
 // Pythonにより追加
-chaquopy {
-    defaultConfig {
-        version = "3.8"
-    }
-    productFlavors {
-        getByName("py38") { version = "3.8" }
-    }
-    sourceSets { }
-}
+//chaquopy {
+//    defaultConfig {
+//        version = "3.8"
+//    }
+//    productFlavors {
+//        getByName("py38") { version = "3.8" }
+//    }
+//    sourceSets { }
+//}
 
 dependencies {
-
     //map
     implementation("com.google.maps.android:maps-compose:6.1.0")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
-    //implementation(libs.firebase.auth.common)//重複している可能性があるため一旦削除してます
 
     //カメラライブラリS---------------------------------------------------------
     val cameraxVersion = "1.3.4"    //変数
@@ -122,8 +124,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.camera.core)
-    //implementation(libs.litert)       // tensorflow-liteの使用のためコメントアウト
-    //implementation(libs.litert.support.api)       // tensorflow-liteの使用のためコメントアウト
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -139,15 +140,17 @@ dependencies {
     // tensorflow-liteの依存関係を追加E----------------------------------------------------------------------
 
     // Firebaseの依存関係を追加S----------------------------------------------------------------------
-    implementation(platform("com.google.firebase:firebase-bom:31.0.2"))
+    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
-    implementation("com.google.firebase:firebase-core:16.0.8")
+    implementation("com.google.firebase:firebase-core:21.1.1")
     implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation ("com.google.firebase:firebase-database-ktx:21.0.0")
+    //implementation("com.google.firebase:firebase-app-ktx:20.1.0")
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
     // Firebaseの依存関係を追加E---------------------------------------------------------------------
-
 
     //Geocodingの依存関係
     implementation("com.squareup.okhttp3:okhttp:4.10.0") // 最新バージョンを確認してください

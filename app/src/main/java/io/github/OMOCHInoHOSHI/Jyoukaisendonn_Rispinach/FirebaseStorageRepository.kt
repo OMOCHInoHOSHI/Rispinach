@@ -5,6 +5,7 @@ import io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach.ImageData
 
 // Firebase Storage から画像を取得する関数
 fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
+    Log.d("FirebaseStorage", "FirebaseStorage_Start")
     // Firebase Storage のインスタンスを取得
     val storage = FirebaseStorage.getInstance()
     // "images" フォルダの参照を取得
@@ -18,7 +19,8 @@ fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
         listResult.items.forEachIndexed { index, item ->
             // アイテムのメタデータを取得
             item.metadata.addOnSuccessListener { metadata ->
-                // メタデータから speciesName, location, discoveryDate を取得（存在しない場合は "不明" とする）
+                // メタデータからtitle, speciesName, location, discoveryDate を取得（存在しない場合は "不明" とする）
+                val title = metadata.getCustomMetadata("title") ?: "無題"
                 val speciesName = metadata.getCustomMetadata("speciesName") ?: "不明"
                 val location = metadata.getCustomMetadata("location") ?: "不明"
                 val discoveryDate = metadata.getCustomMetadata("discoveryDate") ?: "不明"
@@ -27,10 +29,15 @@ fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
                     // バイトデータを Bitmap に変換
                     val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                     // ImageData オブジェクトをリストに追加
-                    imageList.add(ImageData(bitmap, speciesName, location, discoveryDate, index + 1))
-                    // 全てのアイテムの処理が完了したらコールバックを呼び出す
+                    imageList.add(ImageData(bitmap, title, speciesName, location, discoveryDate, index + 1))
+                    // 全てのアイテムの処理が完了したら、ソートして、コールバックを呼び出す
                     if (imageList.size == listResult.items.size) {
-                        onDataReceived(imageList)
+                        Log.d("FirebaseStorage", "FirebaseStorage_End")
+
+                        val sortedImageList = imageList.sortedByDescending  { it.id }       // 降順にソート
+                        // val sortedImageList = imageList.sortedBy { it.id }       // 昇順にソート
+
+                        onDataReceived(sortedImageList)
                     }
                 }.addOnFailureListener { exception ->
                     // 画像のダウンロードに失敗した場合のエラーログ

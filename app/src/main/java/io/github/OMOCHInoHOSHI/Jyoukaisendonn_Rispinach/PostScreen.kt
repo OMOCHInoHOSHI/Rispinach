@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
@@ -36,10 +38,14 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 import com.google.firebase.FirebaseApp
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ServerValue
+import com.google.firebase.database.ktx.database
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PostScreen(bitmap: Bitmap?) {
+fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) {
     // 投稿タイトルの状態を保持する変数
     var title by rememberSaveable { mutableStateOf("") }
     // 生物名の状態を保持する変数
@@ -74,7 +80,20 @@ fun PostScreen(bitmap: Bitmap?) {
         floatingActionButton = {
             // 投稿ボタンの設定
             FloatingActionButton(
-                onClick = { TransmitData(bitmap, title.ifEmpty { "無題" }, speciesName.ifEmpty { "不明" }, location.ifEmpty { "不明" }, discoveryDate.ifEmpty { "不明" }) },
+                onClick = {
+                    // カメラの表示状態を非表示に変更
+                    cameraViewModel.setShowCamera(false)
+                    // データ送信
+//                    TransmitData(bitmap, title.ifEmpty { "無題" }, speciesName.ifEmpty { "不明" }, location.ifEmpty { "不明" }, discoveryDate.ifEmpty { "不明" }) },
+                    TransmitData(
+                        bitmap,
+                        title.ifEmpty { "無題" },
+                        speciesName.ifEmpty { "不明" },
+                        location.ifEmpty { "不明" },
+                        discoveryDate.ifEmpty { "不明" },
+                        context
+                    )
+                },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
@@ -386,6 +405,82 @@ fun TransmitData(bitmap: Bitmap?, title: String, speciesName: String, location: 
     uploadTask.addOnFailureListener { exception ->
         Log.e("TransmitData", "Upload failed", exception)
     }.addOnSuccessListener { taskSnapshot ->
+        // 画像URLを取得
+        taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { imageURL ->
+            // 投稿IDを生成（push()を使って一意なIDを生成）
+            val postsRef = Firebase.database.reference.child("posts")
+            val newPostRef = postsRef.push()  // 一意な投稿IDを生成
+            val postId = newPostRef.key  // 新しく生成されたIDを取得
+
+            // 投稿メタデータをRealtime Databaseに保存
+            val postData = mapOf(
+                "imageURL" to imageURL.toString(),
+                "title" to title,
+                "speciesName" to speciesName,
+                "location" to location,
+                "discoveryDate" to discoveryDate,
+                "timestamp" to ServerValue.TIMESTAMP
+            )
+            newPostRef.setValue(postData)
+
+            // 投稿IDを保存（コメントを投稿IDに紐づけるために使います）
+            Log.d("TransmitData", "Post uploaded with ID: $postId")
+        }
+    }
+}
+
+// 投稿データの送信
+fun TransmitData(
+    bitmap: Bitmap?,
+    title: String,
+    speciesName: String,
+    location: String,
+    discoveryDate: String,
+    context: Context
+) {
+    if (bitmap == null) {
+        Log.e("TransmitData", "Bitmap is null")
+        return
+    }
+
+    // Firebase Storage のインスタンスを取得
+    val storage = Firebase.storage
+    val storageRef = storage.reference
+    val imagesRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+    Log.d("TransmitData", "TransmitData_1")
+
+    // Bitmap を JPEG に変換
+    val baos = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    val data = baos.toByteArray()
+    Log.d("TransmitData", "image")
+
+    // メタデータを作成
+    val metadata = com.google.firebase.storage.StorageMetadata.Builder()
+        .setCustomMetadata("title", title.ifEmpty { "無題" }) // タイトルが空の場合は「無題」とする
+        .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" }) // 生物名が空の場合は「不明」とする
+        .setCustomMetadata("location", location.ifEmpty { "不明" }) // 発見場所が空の場合は「不明」とする
+        .setCustomMetadata("discoveryDate", discoveryDate.ifEmpty { "不明" }) // 発見日付が空の場合は「不明」とする
+        .build()
+    Log.d("TransmitData", "metadata")
+
+    // アップロード中のフラグ
+    var isUploading = false
+    // アップロード開始
+    isUploading = true
+    Toast.makeText(context, "アップロード中です...", Toast.LENGTH_SHORT).show()
+
+    // Firebase Storage にアップロード
+    val uploadTask = imagesRef.putBytes(data, metadata)
+    uploadTask.addOnFailureListener { exception ->
+        Log.e("TransmitData", "Upload failed", exception)
+        // アップロード失敗時にToastメッセージを表示
+        Toast.makeText(context, "アップロードに失敗しました: ${exception.message}", Toast.LENGTH_SHORT).show()
+        isUploading = false
+    }.addOnSuccessListener { taskSnapshot ->
         Log.d("TransmitData", "Upload successful")
+        // アップロード成功時にToastメッセージを表示
+        Toast.makeText(context, "アップロードが成功しました！", Toast.LENGTH_SHORT).show()
+        isUploading = false
     }
 }
