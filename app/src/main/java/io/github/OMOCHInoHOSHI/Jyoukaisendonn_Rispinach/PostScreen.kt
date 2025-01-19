@@ -3,20 +3,25 @@ package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
+import android.location.Geocoder
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,6 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
@@ -39,6 +46,19 @@ import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.GoogleMap
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.rememberMarkerState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.filled.Info
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,6 +96,12 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
     // 表示する前にビットマップをリサイズ
     val resizedBitmap = bitmap?.let { resizeBitmap(it, 224, 224) }
 
+    // 発見場所の地図表示フラグ
+    var showMap by remember { mutableStateOf(false) }
+
+    // マーカーの住所を保持する状態を追加
+    var markerAddress by remember { mutableStateOf("") }
+
     Scaffold(
         topBar = {
             // トップバーの設定
@@ -90,7 +116,6 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                     // カメラの表示状態を非表示に変更
                     cameraViewModel.setShowCamera(false)
                     // データ送信
-//                    TransmitData(bitmap, title.ifEmpty { "無題" }, speciesName.ifEmpty { "不明" }, location.ifEmpty { "不明" }, discoveryDate.ifEmpty { "不明" }) },
                     TransmitData(
                         bitmap,
                         title.ifEmpty { "無題" },
@@ -109,84 +134,54 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
         },
         floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // 画像エリアの設定
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-                        shape = RoundedCornerShape(12.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                resizedBitmap?.let {
-                    Image(
-                        bitmap = it.asImageBitmap(),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                } ?: run {
-                    Text(
-                        text = "picture",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.outline
-                    )
+            item {
+                // 画像エリアの設定
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .border(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+                            shape = RoundedCornerShape(12.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    resizedBitmap?.let {
+                        Image(
+                            bitmap = it.asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    } ?: run {
+                        Text(
+                            text = "picture",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                    }
                 }
             }
 
-            // タイトル入力フィールドの設定
-            OutlinedTextField(
-                value = title,
-                onValueChange = { title = it },
-                placeholder = { Text("投稿タイトル入力") },
-                modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.ChatBubble,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.outline
-                    )
-                },
-                shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                )
-            )
-
-            // 生物名入力フィールドの設定
-            Box {
+            item {
+                // タイトル入力フィールドの設定
                 OutlinedTextField(
-                    value = speciesName, // 入力された生物名の状態を保持
-                    onValueChange = { speciesName = it }, // 生物名が変更されたときの処理
-                    placeholder = { Text("生物名入力") },
+                    value = title,
+                    onValueChange = { title = it },
+                    placeholder = { Text("投稿タイトル入力") },
                     modifier = Modifier.fillMaxWidth(),
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Search,
+                            imageVector = Icons.Default.ChatBubble,
                             contentDescription = null,
-                            tint = androidx.compose.ui.graphics.Color(0xFF89C3EB), // アイコンを勿忘草色(わすれなぐさいろ)に変更
-                            modifier = Modifier.clickable {
-                                Log.d("PostScreen_image", "Icon clicked") // クリック時のログ
-
-                                resizedBitmap?.let { bmp ->
-                                    coroutineScope.launch {
-                                        val result = imageAnalyzer.analyzePhoto(bmp) // 画像解析
-
-                                        speciesName = result // 解析結果を生物名に設定
-                                        speciesNameSet = true // 生物名が設定されたことを記録
-                                        Log.d("PostScreen_image", "speciesName set to: $speciesName") // 解析結果のログ
-                                    }
-                                }
-                            }
+                            tint = MaterialTheme.colorScheme.outline
                         )
                     },
                     shape = RoundedCornerShape(8.dp),
@@ -196,72 +191,135 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                 )
             }
 
-            // 発見場所入力フィールドの設定
-            OutlinedTextField(
-                value = location,
-                onValueChange = { location = it },
-                placeholder = { Text("発見場所") },
-                modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.LocationOn,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.outline
+            item {
+                // 生物名入力フィールドの設定
+                Box {
+                    OutlinedTextField(
+                        value = speciesName, // 入力された生物名の状態を保持
+                        onValueChange = { speciesName = it }, // 生物名が変更されたときの処理
+                        placeholder = { Text("生物名入力") },
+                        modifier = Modifier.fillMaxWidth(),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = null,
+                                tint = androidx.compose.ui.graphics.Color(0xFF89C3EB), // アイコンを勿忘草色(わすれなぐさいろ)に変更
+                                modifier = Modifier.clickable {
+                                    Log.d("PostScreen_image", "Icon clicked") // クリック時のログ
+
+                                    resizedBitmap?.let { bmp ->
+                                        coroutineScope.launch {
+                                            val result = imageAnalyzer.analyzePhoto(bmp) // 画像解析
+
+                                            speciesName = result // 解析結果を生物名に設定
+                                            speciesNameSet = true // 生物名が設定されたことを記録
+                                            Log.d("PostScreen_image", "speciesName set to: $speciesName") // 解析結果のログ
+                                        }
+                                    }
+                                }
+                            )
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                        )
                     )
-                },
-                shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                )
-            )
-
-            // 発見日付入力フィールドの設定
-//            OutlinedTextField(
-//                value = discoveryDate,
-//                onValueChange = { discoveryDate = it },
-//                placeholder = { Text("発見日付") },
-//                modifier = Modifier.fillMaxWidth()
-//                    .clickable { date_flg = true },
-//                leadingIcon = {
-//                    Icon(
-//                        imageVector = Icons.Default.DateRange,
-//                        contentDescription = null,
-//                        tint = MaterialTheme.colorScheme.outline
-//                    )
-//                },
-//
-//                shape = RoundedCornerShape(8.dp),
-//                colors = OutlinedTextFieldDefaults.colors(
-//                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-//                )
-//            )
-            // 発見日付入力フィールドの設定
-            SelectOutlineTextField(
-                value = discoveryDate,
-                onValueChange = { discoveryDate = it },
-                onClick = { date_flg = true },
-            )
-
-
-            // 日付カレンダーを表示-------------------------------------------------------
-            val focusManager = LocalFocusManager.current
-            if(date_flg){
-                DatePickerModal(
-                    // 選択時の処理
-                    onDateSelected = {
-                        discoveryDate = convertMillisToDate(it)
-                        date_flg = false
-                        focusManager.clearFocus()
-                    },
-                    // 未選択時の処理
-                    onDismiss = {
-                        date_flg = false
-                        focusManager.clearFocus()
-                    },
-                )
-
+                }
             }
-            // 日付カレンダーを表示E-------------------------------------------------------
+
+            item {
+                // 発見場所入力フィールドの設定
+                Box {
+                    OutlinedTextField(
+                        value = location,
+                        onValueChange = { location = it },
+                        placeholder = { Text("発見場所") },
+                        modifier = Modifier.fillMaxWidth(),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.LocationOn,
+                                contentDescription = null,
+                                tint = androidx.compose.ui.graphics.Color(0xFF89C3EB), // アイコンを勿忘草色(わすれなぐさいろ)に変更
+                                modifier = Modifier.clickable {
+                                    showMap = true
+                                }
+                            )
+                        },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = "住所表示",
+                                tint = androidx.compose.ui.graphics.Color(0xFFEF857D), // アイコンをコーラルレッド色に変更
+                                modifier = Modifier.clickable {
+                                    location = markerAddress
+                                }
+                            )
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                        )
+                    )
+                }
+            }
+
+
+
+            // 地図アイコンが押された時の処理
+            if (showMap) {
+                item {
+                    // 地図の前に隙間を追加
+                    Spacer(modifier = Modifier.height(4.dp))
+                    // 地図表示
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp) // 地図の高さを指定
+                    ) {
+                        LocatePosition(
+                            onAddressChanged = { address ->
+                                markerAddress = address
+                            },
+                            onCloseMap = {
+                                showMap = false
+                            }
+                        )
+                    }
+                    // 地図の後に隙間を追加
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
+            }
+
+            item {
+                // 発見日付入力フィールドの設定
+                SelectOutlineTextField(
+                    value = discoveryDate,
+                    onValueChange = { discoveryDate = it },
+                    onClick = { date_flg = true },
+                )
+                Spacer(modifier = Modifier.height(100.dp))
+            }
+
+            item {
+                // 日付カレンダーを表示-------------------------------------------------------
+                val focusManager = LocalFocusManager.current
+                if (date_flg) {
+                    DatePickerModal(
+                        // 選択時の処理
+                        onDateSelected = {
+                            discoveryDate = convertMillisToDate(it)
+                            date_flg = false
+                            focusManager.clearFocus()
+                        },
+                        // 未選択時の処理
+                        onDismiss = {
+                            date_flg = false
+                            focusManager.clearFocus()
+                        },
+                    )
+                }
+                // 日付カレンダーを表示E-------------------------------------------------------
+            }
         }
     }
 }
@@ -399,6 +457,116 @@ fun resizeBitmap(bitmap: Bitmap, targetWidth: Int, targetHeight: Int): Bitmap {
     canvas.drawBitmap(resizedBitmap, left.toFloat(), top.toFloat(), null)
 
     return finalBitmap
+}
+
+// 発見場所指定マップの表示
+@Composable
+fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: () -> Unit) {
+    // 地名と緯度経度の対応付け
+    val locations = mapOf(
+        "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
+        "東京" to LatLng(35.689501, 139.691722),  // 東京都庁
+        "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
+        "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
+    )
+    // デフォルトのカメラ位置を東京都庁に設定
+    val defaultPosition = locations["東京"]!!
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(defaultPosition, 13f)
+    }
+
+    // CoroutineScopeをrememberで保持
+    val coroutineScope = rememberCoroutineScope()
+
+    // マーカーの位置を保持する状態を追加
+    var markerPosition by remember { mutableStateOf<LatLng?>(null) }
+
+    // 逆ジオコーディングのためのGeocoderを取得
+    val context = LocalContext.current
+    val geocoder = Geocoder(context, Locale.getDefault())
+
+    Box(Modifier.fillMaxSize()) {
+        // GoogleMapコンポーザブルを表示
+        GoogleMap(
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState,
+            onMapClick = { latLng ->
+                // マップがクリックされたときの処理
+                markerPosition = latLng
+
+                // 逆ジオコーディングで住所を取得
+                coroutineScope.launch {
+                    val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+                    val address = addresses?.firstOrNull()?.getAddressLine(0) ?: "住所が見つかりません"
+                    onAddressChanged(address)
+                }
+            }
+        ) {
+            // マーカーを表示
+            markerPosition?.let {
+                Marker(
+                    state = rememberMarkerState(position = it),
+                    title = "選択した場所"
+                )
+            }
+        }
+
+        var expanded by remember { mutableStateOf(false) }
+        val options = locations.keys.toList()
+        var selectedOptionText by remember { mutableStateOf(options[0]) }
+
+        // 右上に✕ボタンを追加
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+                .background(Color.White.copy(alpha = 0.5f), shape = CircleShape)
+        ) {
+            // ✕ボタンの表示
+            IconButton(onClick = { onCloseMap() }) {
+                Icon(Icons.Default.Close, contentDescription = "閉じる", tint = Color.Red)
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // その他のオプションボタンの表示
+            IconButton(onClick = { expanded = true }) {
+                Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
+            }
+        }
+
+        // ドロップダウンメニューの表示
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            options.forEach { option ->
+                DropdownMenuItem(
+                    text = { Text(option) },
+                    onClick = {
+                        selectedOptionText = option
+                        expanded = false
+                        // 地名に対応する緯度経度を取得
+                        val selectedLocation = locations[option]
+
+                        // マップを移動
+                        if (selectedLocation != null) {
+                            coroutineScope.launch {
+                                cameraPositionState.animate(
+                                    CameraUpdateFactory.newLatLngZoom(
+                                        selectedLocation,
+                                        10f
+                                    ), // ズームレベルも変更
+                                    1000 // アニメーション時間（ミリ秒）
+                                )
+                            }
+                            Log.d("MapContent", "$option が選択されました")
+                        }
+                    }
+                )
+            }
+        }
+    }
 }
 
 // 投稿データの送信
