@@ -179,7 +179,7 @@ fun MessageInput(text: String, onTextChange: (String) -> Unit, postId: String, m
             onValueChange = onTextChange,  // onTextChangeを渡す
             modifier = modifier
                 .width(300.dp)
-                .padding(20.dp),
+                .padding(2.dp),
                 //.height(50.dp),
             maxLines = 5,
             singleLine = false,
