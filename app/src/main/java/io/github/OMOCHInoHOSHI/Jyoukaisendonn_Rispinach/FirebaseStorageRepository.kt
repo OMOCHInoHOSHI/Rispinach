@@ -39,7 +39,7 @@ fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
                         val sortedImageList = imageList.sortedByDescending  { it.id }       // 降順にソート
                         // val sortedImageList = imageList.sortedBy { it.id }       // 昇順にソート
 
-                        //onDataReceived(sortedImageList)
+                        onDataReceived(sortedImageList)
                     }
                 }.addOnFailureListener { exception ->
                     // 画像のダウンロードに失敗した場合のエラーログ
