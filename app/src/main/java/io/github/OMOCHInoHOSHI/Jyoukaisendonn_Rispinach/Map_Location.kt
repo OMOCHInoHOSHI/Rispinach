@@ -42,14 +42,62 @@ class LocationViewModel(private val context: Context) : ViewModel() {
     }
     // 位置情報へのアクセス権限を要求する関数E---------------------------------
 
-    // FusedLocationProviderClientを使ってデバイスの最後の既知の位置を取得S---------------
-    fun fusedLocation() {
+//    // FusedLocationProviderClientを使ってデバイスの最後の既知の位置を取得S---------------
+//    fun fusedLocation():String {
+//
+//        // 緯度経度
+//        var locationString = ""
+//
+//        // 最後に確認された位置情報を取得
+//        val fusedLocationClient: FusedLocationProviderClient =
+//            LocationServices.getFusedLocationProviderClient(context)
+//
+//        // 一応権限のチェック
+//        if (ActivityCompat.checkSelfPermission(
+//                context,
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) != PackageManager.PERMISSION_GRANTED
+//            && ActivityCompat.checkSelfPermission(
+//                context,
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            Log.d("LocationSensor","権限がない")
+//            // 権限もらえないと困っちゃうなぁ
+//            return null.toString()
+//        }
+//
+//        // 位置情報を取得したらListenerが反応する
+//        fusedLocationClient.lastLocation
+//            .addOnSuccessListener { location ->
+////                Log.d("LocationSensor", "$location")
+//
+//                if (location != null) {
+//                    val latitude = location.latitude
+//                    val longitude = location.longitude
+//                    // 緯度経度を文字列として結合
+//                    locationString = "$latitude, $longitude"
+//
+//                    Log.d("LocationSensor", "緯度経度: $locationString")
+//
+//                    _location.postValue(location)
+//                }
+//            }
+//            .addOnFailureListener { exception ->
+//                Log.e("LocationSensor", "Error getting location", exception)
+//            }
+//
+//        return locationString
+//    }
+//    // FusedLocationProviderClientを使ってデバイスの最後の既知の位置を取得E---------------
 
-        // 最後に確認された位置情報を取得
+    // FusedLocationProviderClientを使ってデバイスの最後の既知の位置を取得
+    fun fusedLocation() {
+        // FusedLocationProviderClientを取得
         val fusedLocationClient: FusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(context)
 
-        // 一応権限のチェック
+        // 権限のチェック
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -59,23 +107,22 @@ class LocationViewModel(private val context: Context) : ViewModel() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Log.d("LocationSensor","権限がない")
-            // 権限もらえないと困っちゃうなぁ
+            Log.d("LocationSensor", "権限がない")
             return
         }
 
-        // 位置情報を取得したらListenerが反応する
+        // 位置情報を取得
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
-                Log.d("LocationSensor", "$location")
                 if (location != null) {
-                    _location.postValue(location)
+                    _location.postValue(location) // LiveDataに結果を格納
+                } else {
+                    Log.d("LocationSensor", "位置情報が取得できませんでした")
                 }
             }
             .addOnFailureListener { exception ->
-                Log.e("LocationSensor", "Error getting location", exception)
+                Log.e("LocationSensor", "位置情報取得中にエラー", exception)
             }
     }
-    // FusedLocationProviderClientを使ってデバイスの最後の既知の位置を取得E---------------
 }
 // Androidアプリで位置情報を取得するためのクラスE----------------------------------------------------

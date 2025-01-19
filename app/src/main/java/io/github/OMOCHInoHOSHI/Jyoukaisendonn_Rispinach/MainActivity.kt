@@ -51,6 +51,7 @@ import androidx.compose.ui.* // ui関連をまとめてimport
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.Fragment
@@ -168,9 +169,21 @@ fun DRAWER(
 @Composable
 fun MapContent() {//マップの表示内容
 
-    val location = LocationViewModel(context = LocalContext.current)
-    location.fusedLocation()
-    println("MapContentロケーション$location.fusedLocation()")
+    val locationViewModel = LocationViewModel(context = LocalContext.current)
+
+    // LiveDataを監視
+    val location by locationViewModel.location.observeAsState()
+
+    LaunchedEffect(location) {
+        location?.let {
+            println("ここ緯度経度: ${it.latitude}, ${it.longitude}")
+        }
+    }
+    // 必要に応じて権限リクエストを行う
+    LaunchedEffect(Unit) {
+//        locationViewModel.requestLocationPermission(activity)
+        locationViewModel.fusedLocation()
+    }
 
     // 地名と緯度経度の対応付け
     val locations = mapOf(
