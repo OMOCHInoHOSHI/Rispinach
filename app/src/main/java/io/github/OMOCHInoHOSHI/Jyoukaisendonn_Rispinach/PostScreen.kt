@@ -75,9 +75,19 @@ class Post_SucsessViewModel : ViewModel() {
     private val _uploadSuccess = MutableStateFlow(false)
     val uploadSuccess: StateFlow<Boolean> get() = _uploadSuccess
 
+    // コールバック関数
+    private var onUploadStatusChanged: ((Boolean) -> Unit)? = null
+
     // 投稿が成功したかを確認する関数
     fun setUploadSuccess(success: Boolean) {
         _uploadSuccess.value = success
+        // 状態を変更する際にコールバックを実行
+        onUploadStatusChanged?.invoke(success)
+    }
+
+    // コールバックを登録する
+    fun setOnUploadStatusChangedListener(callback: (Boolean) -> Unit) {
+        onUploadStatusChanged = callback
     }
 
     // 現在の uploadSuccess の状態を取得

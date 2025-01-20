@@ -97,13 +97,35 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
 {
     // _uploadSuccessの値が変わったら、Homeを更新したい
     // Post_SucsessViewModelのインスタンスを取得
-//    val post_viewModel = viewModel<Post_SucsessViewModel>()
-//    post_viewModel.checkUploadSuccess()
-//    println("Home　post_viewModel.checkUploadSuccess() = ")
-//    println(post_viewModel.checkUploadSuccess())
-//
-//    var poet_scsess by remember { mutableStateOf(false) }
-//    poet_scsess = post_viewModel.checkUploadSuccess()
+    val post_viewModel = viewModel<Post_SucsessViewModel>()
+    post_viewModel.checkUploadSuccess()
+    println("Home　post_viewModel.checkUploadSuccess() = ")
+    println(post_viewModel.checkUploadSuccess())
+
+    var poet_scsess by remember { mutableStateOf(false) }
+    poet_scsess = post_viewModel.checkUploadSuccess()
+
+    fun onUploadSuccess() {
+        // アップロード成功時の処理
+        Log.d("Callback", "アップロード成功時の処理を実行します")
+    }
+
+    fun onUploadFailure() {
+        // アップロード失敗時の処理
+        Log.d("Callback", "アップロード失敗時の処理を実行します")
+    }
+    post_viewModel.setOnUploadStatusChangedListener { success ->
+        if (success) {
+            Log.d("UploadStatus", "アップロードが成功しました！")
+            // ここで別の関数を呼び出す
+            onUploadSuccess()
+        } else {
+            Log.d("UploadStatus", "アップロードに失敗しました。")
+            // 必要に応じて処理
+            onUploadFailure()
+        }
+    }
+
 
     SideEffect { Log.d("compose-log", "Home") }
     //val itemsIndexedList = rememberSaveable { mutableListOf("A", "B", "C", "D", "E")}
