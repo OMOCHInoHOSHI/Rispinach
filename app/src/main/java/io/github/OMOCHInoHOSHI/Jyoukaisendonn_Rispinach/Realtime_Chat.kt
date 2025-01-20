@@ -26,15 +26,15 @@ class ChatRepository {
     }
 }
 
-// firebase realtime databaseにデータを書き込むS-----------
-fun Realtime_Database_Write_Message(){
-    // Write a message to the database
-    val database = Firebase.database
-    val myRef = database.getReference("message")
-
-    myRef.setValue("こんにちは！！！！")
-}
-// firebase realtime databaseにデータを書き込むE-----------
+//// firebase realtime databaseにデータを書き込むS-----------
+//fun Realtime_Database_Write_Message(){
+//    // Write a message to the database
+//    val database = Firebase.database
+//    val myRef = database.getReference("message")
+//
+//    myRef.setValue("こんにちは！！！！")
+//}
+//// firebase realtime databaseにデータを書き込むE-----------
 
 
 // Realtime Database でキーだけを取得S--------------------------------------------------------
