@@ -47,10 +47,14 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ServerValue
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 data class Message(val user: String = "", val body: String = "", val timestamp: Long = 0L)
+
+val auth = FirebaseAuth.getInstance()
+val currentUser = auth.currentUser
 
 @Composable
 fun Conversation(postId: String, modifier: Modifier = Modifier) {
@@ -58,52 +62,63 @@ fun Conversation(postId: String, modifier: Modifier = Modifier) {
     var text by rememberSaveable { mutableStateOf("") }  // 入力されたメッセージを保持
 
     // Firebase Realtime Database からコメントをリアルタイムで取得
+    // Firebase Realtime Database からコメントをリアルタイムで取得
     LaunchedEffect(postId) {
-        val database = Firebase.database.reference.child("posts").child(postId).child("comments")
-        database.addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d("Firebase", "New data added: ${snapshot.value}")
+        val database = Firebase.database.reference
+        val postsRef = database.child("posts").child(postId).child("comments")
+        val usersRef = database.child("users")
 
-                val messageMap = snapshot.value as? Map<String, Any>
-                if (messageMap != null) {
-                    val user = messageMap["user"] as? String ?: "Unknown User"
-                    val body = messageMap["body"] as? String ?: ""
-                    val timestamp = messageMap["timestamp"] as? Long ?: 0L
-                    val message = Message(user, body, timestamp)
+        // ユーザー情報を保持するマップ
+        val usersMap = mutableMapOf<String, String>()
 
-                    messages = messages + message
-                    Log.d("Firebase", "Parsed message added: $message")
-                } else {
-                    Log.e("Firebase", "Failed to parse snapshot: ${snapshot.value}")
-                }
-            }
+        // usersノードからユーザー情報を取得してマップに保存
+        usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (userSnapshot in snapshot.children) {
+                    val storedKey = userSnapshot.key // Firebaseに保存されているカンマ区切りのメールアドレス
+                    val originalEmail = storedKey?.replace(",", ".") // カンマをドットに戻す
+                    val username = userSnapshot.child("username").getValue(String::class.java)
 
-
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val updatedMessage = snapshot.getValue(Message::class.java)
-                updatedMessage?.let {
-                    messages = messages.map { message ->
-                        if (message.timestamp == updatedMessage.timestamp) {
-                            updatedMessage // 更新されたメッセージをリストに反映
-                        } else {
-                            message
-                        }
+                    if (originalEmail != null && username != null) {
+                        usersMap[originalEmail] = username
                     }
                 }
+
+                // メッセージのリアルタイム取得
+                postsRef.addChildEventListener(object : ChildEventListener {
+                    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                        val messageMap = snapshot.value as? Map<String, Any>
+                        if (messageMap != null) {
+                            val userEmail = messageMap["user"] as? String ?: ""
+                            val formattedEmail = userEmail.replace(".", ",")  // 照合用に.を,に変換
+                            val username = usersMap[userEmail] ?: usersMap[formattedEmail] ?: "Unknown User"
+
+                            val body = messageMap["body"] as? String ?: ""
+                            val timestamp = messageMap["timestamp"] as? Long ?: 0L
+                            val message = Message(username, body, timestamp)
+
+                            messages = messages + message
+                            Log.d("Firebase", "Parsed message added: $message")
+                        } else {
+                            Log.e("Firebase", "Failed to parse snapshot: ${snapshot.value}")
+                        }
+                    }
+
+                    override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+                    override fun onChildRemoved(snapshot: DataSnapshot) {}
+                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e("Firebase", "Failed to read comments data.", error.toException())
+                    }
+                })
             }
 
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                val removedMessage = snapshot.getValue(Message::class.java)
-                removedMessage?.let {
-                    messages = messages.filterNot { message -> message.timestamp == removedMessage.timestamp }
-                }
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Firebase", "Failed to read users data.", error.toException())
             }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onCancelled(error: DatabaseError) {}
         })
     }
+
 
 //    // コメントリストの表示
 //    LazyColumn(

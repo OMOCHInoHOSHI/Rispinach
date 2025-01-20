@@ -577,7 +577,8 @@ fun NavGraphBuilder.screenMode()
     }
     composable("main/mypage")
     {
-        MyPage()
+        MyPage(onBackClick = { /* 戻る処理をここに実装する */ },
+            onStartClick = { username -> /* ユーザー名を処理する処理をここに実装する */ })
     }
 }
 //各画面の処理------------------------------------------------
