@@ -95,6 +95,16 @@ class ImageViewModel : ViewModel() {
 @Composable
 fun Home(imageViewModel: ImageViewModel = viewModel())
 {
+    // _uploadSuccessの値が変わったら、Homeを更新したい
+    // Post_SucsessViewModelのインスタンスを取得
+//    val post_viewModel = viewModel<Post_SucsessViewModel>()
+//    post_viewModel.checkUploadSuccess()
+//    println("Home　post_viewModel.checkUploadSuccess() = ")
+//    println(post_viewModel.checkUploadSuccess())
+//
+//    var poet_scsess by remember { mutableStateOf(false) }
+//    poet_scsess = post_viewModel.checkUploadSuccess()
+
     SideEffect { Log.d("compose-log", "Home") }
     //val itemsIndexedList = rememberSaveable { mutableListOf("A", "B", "C", "D", "E")}
     //var activePhotoId by rememberSaveable { mutableStateOf<Int?>(null) }
