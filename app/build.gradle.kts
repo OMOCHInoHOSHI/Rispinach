@@ -171,4 +171,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.10.0") // 最新バージョンを確認してください
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4") // 最新バージョンを確認してください
     implementation ("com.google.maps:google-maps-services:0.18.0") // 追加
+
+    // SwipeRefreshLayout の依存関係
+//    implementation (libs.androidx.swiperefreshlayout)
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.23.1")
 }
