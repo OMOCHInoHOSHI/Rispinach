@@ -129,18 +129,22 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
     var lod by rememberSaveable { mutableStateOf(false) }
     var isRefreshing by rememberSaveable { mutableStateOf(false) }
 
-    if(lod){
-        println("ロード中")
+    // ファイヤーベースを再読み込みS--------------------------------------------
+    if(isRefreshing){
+        println("再ロード中")
         // Firebase Storageからデータを読み込む
         LaunchedEffect(Unit) {
             fetchImagesFromFirebaseStorage { images ->
 //            pictureName = images
                 isLoading = false // ロード完了後にフラグをfalseにする
+                isRefreshing = false
             }
             imageViewModel.fetchImages()
         }
 
     }
+    // ファイヤーベースを再読み込みE--------------------------------------------
+
 
     // Firebase Storageからデータを読み込む
     LaunchedEffect(Unit) {
@@ -170,11 +174,6 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
             println("map")
         }
 
-//        Box{IconButton(onClick = { lod = true }) {
-//            Icon(Icons.Default.Close, contentDescription = "aaa", tint = Color.Red)
-//        }}
-
-
 
         // くるくる表示S-----------------------------------------------
         if(isLoading) {
@@ -192,17 +191,15 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
         }
         // くるくる表示E-----------------------------------------------
 
-        // Pull to Refresh を設定
+        // Pull to Refresh を設定　下スワイプで更新できるS--------------------------
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing),
             onRefresh = {
                 isRefreshing = true
                 println("更新中")
-                isRefreshing = false
             }
         ) {
-
-
+            // Pull to Refresh を設定　下スワイプで更新できるE--------------------------
             //投稿(仮)
             LazyVerticalGrid(
                 modifier = Modifier,
@@ -366,62 +363,7 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
 //    }
 //}
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PullToRefreshBasicSample(
-    isRefreshing: Boolean,
-    onRefresh: () -> Unit,
-    modifier: Modifier = Modifier,
-    images: List<ImageData> // 画像データを受け取る
-) {
-    PullToRefreshBox(
-        isRefreshing = isRefreshing,
-        onRefresh = onRefresh,
-        modifier = modifier
-    ) {
-        LazyColumn(Modifier.fillMaxSize()) {
-            items(images) { image ->
-                Image(
-                    bitmap = image.bitmap.asImageBitmap(),
-                    contentDescription = image.title,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .padding(8.dp)
-                )
-            }
-        }
-    }
-}
 
-@Composable
-fun RefreshableScreen() {
-    // リフレッシュ状態を管理するフラグ
-    var isRefreshing by remember { mutableStateOf(false) }
-
-    // ダミーデータ
-    var data by remember { mutableStateOf("データの初期状態") }
-
-    // Pull to Refresh を設定
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing),
-        onRefresh = {
-            isRefreshing = true
-            // データを更新
-            data = "更新済みデータ"
-            // 更新後にフラグをリセット
-            isRefreshing = false
-        }
-    ) {
-        // 中身の表示
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(text = data, style = MaterialTheme.typography.titleLarge)
-        }
-    }
-}
 
 ////@Composable
 //fun HomeMap()
