@@ -7,6 +7,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -104,22 +105,36 @@ fun Conversation(postId: String, modifier: Modifier = Modifier) {
         })
     }
 
-    // コメントリストの表示
-    LazyColumn(
-        modifier = modifier//.padding(bottom = 80.dp)
-            .height(560.dp)
-    )
-    {
-        items(messages) { message ->
-            MessageCard(message)
-        }
-    }
+//    // コメントリストの表示
+//    LazyColumn(
+////        modifier = modifier//.padding(bottom = 80.dp)
+////            .height(560.dp)
+//        modifier = Modifier.weight(1f), // 残りの空間を全て使用
+//        contentPadding = PaddingValues(bottom = 8.dp)
+//    )
+//    {
+//        items(messages) { message ->
+//            MessageCard(message)
+//        }
+//    }
 
     Column(
         modifier = Modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.Bottom
     ) {
+        // コメントリストの表示
+        LazyColumn(
+//        modifier = modifier//.padding(bottom = 80.dp)
+//            .height(560.dp)
+            modifier = Modifier.weight(1f), // 残りの空間を全て使用
+            contentPadding = PaddingValues(bottom = 8.dp)
+        )
+        {
+            items(messages) { message ->
+                MessageCard(message)
+            }
+        }
         // メッセージ入力フォーム
         MessageInput(
             text = text,
