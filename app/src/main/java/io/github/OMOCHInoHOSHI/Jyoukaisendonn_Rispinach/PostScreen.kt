@@ -60,9 +60,42 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.ViewModel
 import java.util.Locale
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+
+
+// 投稿が成功したかを確認し、Homeの更新が必要かを管理するViewModelS----------------
+class Post_SucsessViewModel : ViewModel() {
+
+    // アップロードが成功したか確認
+    private val _uploadSuccess = MutableStateFlow(false)
+    val uploadSuccess: StateFlow<Boolean> get() = _uploadSuccess
+
+    // コールバック関数
+    private var onUploadStatusChanged: ((Boolean) -> Unit)? = null
+
+    // 投稿が成功したかを確認する関数
+    fun setUploadSuccess(success: Boolean) {
+        _uploadSuccess.value = success
+        // 状態を変更する際にコールバックを実行
+        onUploadStatusChanged?.invoke(success)
+    }
+
+    // コールバックを登録する
+    fun setOnUploadStatusChangedListener(callback: (Boolean) -> Unit) {
+        onUploadStatusChanged = callback
+    }
+
+    // 現在の uploadSuccess の状態を取得
+    fun checkUploadSuccess(): Boolean {
+        return _uploadSuccess.value
+    }
+}
+// 投稿が成功したかを確認し、Homeの更新が必要かを管理するViewModelS----------------
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,6 +120,9 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
     val context = LocalContext.current
     // ImageAnalyzerのインスタンスを作成
     val imageAnalyzer = remember { ImageAnalyzer(context) }
+
+    // ViewModelのインスタンスを取得
+    val viewModel = viewModel<Post_SucsessViewModel>()
 
     // Firebaseの初期化
     FirebaseApp.initializeApp(context)
@@ -128,7 +164,8 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                         location.ifEmpty { "不明" },
                         discoveryDate.ifEmpty { "不明" },
                         context,
-                        r_t_d_key
+                        r_t_d_key,
+                        viewModel
                     )
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -630,7 +667,8 @@ fun TransmitData(
     location: String,
     discoveryDate: String,
     context: Context,
-    r_t_d_Key: String
+    r_t_d_Key: String,
+    viewModel: Post_SucsessViewModel,
 ) {
     if (bitmap == null) {
         Log.e("TransmitData", "Bitmap is null")
@@ -651,17 +689,16 @@ fun TransmitData(
 
     // メタデータを作成
     val metadata = com.google.firebase.storage.StorageMetadata.Builder()
-        .setCustomMetadata("title", title.ifEmpty { "無題" }) // タイトルが空の場合は「無題」とする
-        .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" }) // 生物名が空の場合は「不明」とする
-        .setCustomMetadata("location", location.ifEmpty { "不明" }) // 発見場所が空の場合は「不明」とする
-        .setCustomMetadata("discoveryDate", discoveryDate.ifEmpty { "不明" }) // 発見日付が空の場合は「不明」とする
-        .setCustomMetadata("R_T_D_Key", r_t_d_Key.ifEmpty { "R_T_D_Key取得失敗" }) // リアルタイムデータベースキーを取得
+        .setCustomMetadata("title", title.ifEmpty { "無題" })
+        .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" })
+        .setCustomMetadata("location", location.ifEmpty { "不明" })
+        .setCustomMetadata("discoveryDate", discoveryDate.ifEmpty { "不明" })
+        .setCustomMetadata("R_T_D_Key", r_t_d_Key.ifEmpty { "R_T_D_Key取得失敗" })
         .build()
     Log.d("TransmitData", "metadata")
 
     // アップロード中のフラグ
     var isUploading = false
-    // アップロード開始
     isUploading = true
     Toast.makeText(context, "アップロード中です...", Toast.LENGTH_SHORT).show()
 
@@ -672,10 +709,16 @@ fun TransmitData(
         // アップロード失敗時にToastメッセージを表示
         Toast.makeText(context, "アップロードに失敗しました: ${exception.message}", Toast.LENGTH_SHORT).show()
         isUploading = false
+        // アップロード失敗時にViewModelのフラグを更新
+        viewModel.setUploadSuccess(false)
     }.addOnSuccessListener { taskSnapshot ->
         Log.d("TransmitData", "Upload successful")
         // アップロード成功時にToastメッセージを表示
         Toast.makeText(context, "アップロードが成功しました！", Toast.LENGTH_SHORT).show()
         isUploading = false
+        // アップロード成功時にViewModelのフラグを更新
+        viewModel.setUploadSuccess(true)
+        println("viewModel.checkUploadSuccess() = ")
+        println(viewModel.checkUploadSuccess())
     }
 }

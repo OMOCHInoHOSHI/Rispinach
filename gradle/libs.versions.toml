@@ -10,6 +10,7 @@ lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.3"
 composeBom = "2024.04.01"
 playServicesLocation = "21.3.0"
+swiperefreshlayout = "1.2.0-alpha01"
 tensorflowLite = "2.10.0"
 tensorflowLiteSupport = "0.3.1"
 tensorflowLiteMetadata = "0.1.0"
@@ -35,6 +36,7 @@ androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "materialIconsExtendedAndroid" }
 androidx-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
+androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
