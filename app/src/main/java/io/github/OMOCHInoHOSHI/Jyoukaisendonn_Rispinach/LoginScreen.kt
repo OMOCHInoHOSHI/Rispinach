@@ -169,13 +169,13 @@ fun LoginScreen(): Boolean {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // 「ログイン情報を保持する」チェックボックス
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(
-                        checked = rememberMe,
-                        onCheckedChange = { rememberMe = it }
-                    )
-                    Text("ログイン情報を保持する")
-                }
+//                Row(verticalAlignment = Alignment.CenterVertically) {
+//                    Checkbox(
+//                        checked = rememberMe,
+//                        onCheckedChange = { rememberMe = it }
+//                    )
+//                    Text("ログイン情報を保持する")
+//                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
