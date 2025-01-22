@@ -62,13 +62,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 data class ImageData(
-    val bitmap: Bitmap,
-    val title: String,
-    val name: String,
-    val location: String,
-    val discoveryDate: String,
-    val id: Int,
-    val Dkey: String
+    val bitmap: Bitmap,     // 画像のビットマップ情報
+    val title: String,      // タイトル
+    val name: String,       // 生物名
+    val location: String,       // 住所
+    val discoveryDate: String,      // 日付
+    val id: Int,        // ID
+    val Dkey: String,
+    val latitude: Double?, // 緯度
+    val longitude: Double? // 経度
 )
 
 // Firebadeの情報を共有(pictureNameに投稿情報を格納)

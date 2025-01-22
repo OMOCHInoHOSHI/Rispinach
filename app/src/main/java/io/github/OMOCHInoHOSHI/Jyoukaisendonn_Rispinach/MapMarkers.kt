@@ -66,28 +66,39 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
         val address = imageData.location
         val Title = imageData.title
         val Snippet = imageData.name
+        val Lat = imageData.latitude
+        val Lng = imageData.longitude
 
-        // 住所を緯度経度に変換
-        val results: Array<GeocodingResult> = GeocodingApi.geocode(geoApiContext, address).await()
-        if (results.isNotEmpty()) {
-            val location = results[0].geometry.location
-            val Lat = location.lat
-            val Lng = location.lng
-
-            // 変換結果をログに出力
-            //Log.i("GeocodingResult", "Title: $Title, Address: $address, Lat: $Lat, Lng: $Lng")
-
-            // マーカーオプションを作成
+        if (Lat != null && Lng != null) {
+            // 緯度経度が既にある場合
             val marker = MarkerOptions()
                 .position(LatLng(Lat, Lng))
                 .title(Title)
                 .snippet(Snippet)
-
-            // マーカー情報変数に格納
             markers.add(marker)
         } else {
-            // 住所が見つからなかった場合のログ出力
-            //Log.e("GeocodingResult", "No results found for address: $address")
+            // 住所を緯度経度に変換
+            val results: Array<GeocodingResult> = GeocodingApi.geocode(geoApiContext, address).await()
+            if (results.isNotEmpty()) {
+                val location = results[0].geometry.location
+                val Lat_l = location.lat
+                val Lng_l = location.lng
+
+                // 変換結果をログに出力
+                //Log.i("GeocodingResult", "Title: $Title, Address: $address, Lat: $Lat, Lng: $Lng")
+
+                // マーカーオプションを作成
+                val marker = MarkerOptions()
+                    .position(LatLng(Lat_l, Lng_l))
+                    .title(Title)
+                    .snippet(Snippet)
+
+                // マーカー情報変数に格納
+                markers.add(marker)
+            } else {
+                // 住所が見つからなかった場合のログ出力
+                //Log.e("GeocodingResult", "No results found for address: $address")
+            }
         }
     }
 
