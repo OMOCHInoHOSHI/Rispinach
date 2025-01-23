@@ -135,7 +135,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
     println("key = $r_t_d_key")
 
     // 表示する前にビットマップをリサイズ
-    val resizedBitmap = bitmap?.let { resizeBitmap(it, 224, 224) }
+    //val resizedBitmap = bitmap?.let { resizeBitmap(it, 224, 224) }
 
     // 発見場所の地図表示フラグ
     var showMap by remember { mutableStateOf(false) }
@@ -201,7 +201,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                resizedBitmap?.let {
+                bitmap?.let {
                     Image(
                         bitmap = it.asImageBitmap(),
                         contentDescription = null,
@@ -250,7 +250,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                             modifier = Modifier.clickable {
                                 Log.d("PostScreen_image", "Icon clicked") // クリック時のログ
 
-                                resizedBitmap?.let { bmp ->
+                                bitmap?.let { bmp ->
                                     coroutineScope.launch {
                                         val result = imageAnalyzer.analyzePhoto(bmp) // 画像解析
 
@@ -420,7 +420,7 @@ class ImageAnalyzer(context: Context) {
             // 画像の解析の開始を確認
             Log.d("ImageAnalyzer", "analyzePhoto_Start")
 
-            /*
+
             // モデルの入力サイズ
             val targetWidth = 224
             val targetHeight = 224
@@ -440,14 +440,14 @@ class ImageAnalyzer(context: Context) {
             val top = (targetHeight - resizedBitmap.height) / 2
             canvas.drawBitmap(resizedBitmap, left.toFloat(), top.toFloat(), null)
 
-             */
+
 
             Log.d("ImageAnalyzer", "analyzePhoto_1")
 
             // リソースの解放
             val tensorImage = TensorImage(DataType.FLOAT32)
-            //tensorImage.load(finalBitmap)
-            tensorImage.load(bitmap)
+            tensorImage.load(finalBitmap)
+            //tensorImage.load(bitmap)
             Log.d("ImageAnalyzer", "analyzePhoto_1")
 
             // バッファの形式を確認
