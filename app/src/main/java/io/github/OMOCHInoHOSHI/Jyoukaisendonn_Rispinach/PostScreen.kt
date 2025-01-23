@@ -131,8 +131,8 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
     // リアルタイムデータベースのキーを取得
     val database = FirebaseDatabase.getInstance()
     val myRef = database.getReference("users")
-    val r_t_d_key = getNewKeyFromRealtimeDatabase(myRef)
-    println("key = $r_t_d_key")
+//    val r_t_d_key = getNewKeyFromRealtimeDatabase(myRef)
+//    println("key = $r_t_d_key")
 
     // 表示する前にビットマップをリサイズ
     val resizedBitmap = bitmap?.let { resizeBitmap(it, 224, 224) }
@@ -168,8 +168,8 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                         location.ifEmpty { "不明" },
                         discoveryDate.ifEmpty { "不明" },
                         context,
-                        r_t_d_key,
-                        viewModel,
+//                        r_t_d_key,
+                        viewModel,//コールバック用
                         latitude, // 緯度を渡す
                         longitude // 経度を渡す
                     )
@@ -610,62 +610,62 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
     }
 }
 
-// 投稿データの送信
-fun TransmitData(bitmap: Bitmap?, title: String, speciesName: String, location: String, discoveryDate: String) {
-    if (bitmap == null) {
-        Log.e("TransmitData", "Bitmap is null")
-        return
-    }
-
-    // Firebase Storage のインスタンスを取得
-    val storage = Firebase.storage
-    val storageRef = storage.reference
-    val imagesRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
-    Log.d("TransmitData", "TransmitData_1")
-
-    // Bitmap を JPEG に変換
-    val baos = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-    val data = baos.toByteArray()
-    Log.d("TransmitData", "image")
-
-    // メタデータを作成
-    val metadata = com.google.firebase.storage.StorageMetadata.Builder()
-        .setCustomMetadata("title", title.ifEmpty { "無題" }) // タイトルが空の場合は「無題」とする
-        .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" }) // 生物名が空の場合は「不明」とする
-        .setCustomMetadata("location", location.ifEmpty { "不明" }) // 発見場所が空の場合は「不明」とする
-        .setCustomMetadata("discoveryDate", discoveryDate.ifEmpty { "不明" }) // 発見日付が空の場合は「不明」とする
-        .build()
-    Log.d("TransmitData", "metadata")
-
-    // Firebase Storage にアップロード
-    val uploadTask = imagesRef.putBytes(data, metadata)
-    uploadTask.addOnFailureListener { exception ->
-        Log.e("TransmitData", "Upload failed", exception)
-    }.addOnSuccessListener { taskSnapshot ->
-        // 画像URLを取得
-        taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { imageURL ->
-            // 投稿IDを生成（push()を使って一意なIDを生成）
-            val postsRef = Firebase.database.reference.child("posts")
-            val newPostRef = postsRef.push()  // 一意な投稿IDを生成
-            val postId = newPostRef.key  // 新しく生成されたIDを取得
-
-            // 投稿メタデータをRealtime Databaseに保存
-            val postData = mapOf(
-                "imageURL" to imageURL.toString(),
-                "title" to title,
-                "speciesName" to speciesName,
-                "location" to location,
-                "discoveryDate" to discoveryDate,
-                "timestamp" to ServerValue.TIMESTAMP
-            )
-            newPostRef.setValue(postData)
-
-            // 投稿IDを保存（コメントを投稿IDに紐づけるために使います）
-            Log.d("TransmitData", "Post uploaded with ID: $postId")
-        }
-    }
-}
+//// 投稿データの送信
+//fun TransmitData(bitmap: Bitmap?, title: String, speciesName: String, location: String, discoveryDate: String) {
+//    if (bitmap == null) {
+//        Log.e("TransmitData", "Bitmap is null")
+//        return
+//    }
+//
+//    // Firebase Storage のインスタンスを取得
+//    val storage = Firebase.storage
+//    val storageRef = storage.reference
+//    val imagesRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+//    Log.d("TransmitData", "TransmitData_1")
+//
+//    // Bitmap を JPEG に変換
+//    val baos = ByteArrayOutputStream()
+//    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+//    val data = baos.toByteArray()
+//    Log.d("TransmitData", "image")
+//
+//    // メタデータを作成
+//    val metadata = com.google.firebase.storage.StorageMetadata.Builder()
+//        .setCustomMetadata("title", title.ifEmpty { "無題" }) // タイトルが空の場合は「無題」とする
+//        .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" }) // 生物名が空の場合は「不明」とする
+//        .setCustomMetadata("location", location.ifEmpty { "不明" }) // 発見場所が空の場合は「不明」とする
+//        .setCustomMetadata("discoveryDate", discoveryDate.ifEmpty { "不明" }) // 発見日付が空の場合は「不明」とする
+//        .build()
+//    Log.d("TransmitData", "metadata")
+//
+//    // Firebase Storage にアップロード
+//    val uploadTask = imagesRef.putBytes(data, metadata)
+//    uploadTask.addOnFailureListener { exception ->
+//        Log.e("TransmitData", "Upload failed", exception)
+//    }.addOnSuccessListener { taskSnapshot ->
+//        // 画像URLを取得
+//        taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { imageURL ->
+//            // 投稿IDを生成（push()を使って一意なIDを生成）
+//            val postsRef = Firebase.database.reference.child("posts")
+//            val newPostRef = postsRef.push()  // 一意な投稿IDを生成
+//            val postId = newPostRef.key  // 新しく生成されたIDを取得
+//
+//            // 投稿メタデータをRealtime Databaseに保存
+//            val postData = mapOf(
+//                "imageURL" to imageURL.toString(),
+//                "title" to title,
+//                "speciesName" to speciesName,
+//                "location" to location,
+//                "discoveryDate" to discoveryDate,
+//                "timestamp" to ServerValue.TIMESTAMP
+//            )
+//            newPostRef.setValue(postData)
+//
+//            // 投稿IDを保存（コメントを投稿IDに紐づけるために使います）
+//            Log.d("TransmitData", "Post uploaded with ID: $postId")
+//        }
+//    }
+//}
 
 // 投稿データの送信
 fun TransmitData(
@@ -675,7 +675,7 @@ fun TransmitData(
     location: String,
     discoveryDate: String,
     context: Context,
-    r_t_d_Key: String,
+//    r_t_d_Key: String,
     viewModel: Post_SucsessViewModel,
     latitude: Double?, // 緯度を追加
     longitude: Double? // 経度を追加
@@ -703,7 +703,7 @@ fun TransmitData(
         .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" })
         .setCustomMetadata("location", location.ifEmpty { "不明" })
         .setCustomMetadata("discoveryDate", discoveryDate.ifEmpty { "不明" })
-        .setCustomMetadata("R_T_D_Key", r_t_d_Key.ifEmpty { "R_T_D_Key取得失敗" })
+//        .setCustomMetadata("R_T_D_Key", r_t_d_Key.ifEmpty { "R_T_D_Key取得失敗" })
         .setCustomMetadata("latitude", latitude?.toString() ?: "不明") // 緯度を追加
         .setCustomMetadata("longitude", longitude?.toString() ?: "不明") // 経度を追加
         .build()

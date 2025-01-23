@@ -37,10 +37,10 @@ class ChatRepository {
 //// firebase realtime databaseにデータを書き込むE-----------
 
 
-// Realtime Database でキーだけを取得S--------------------------------------------------------
-fun getNewKeyFromRealtimeDatabase(databaseReference: DatabaseReference): String {
-    val newChildRef = databaseReference.push()
-    val newKey = newChildRef.key ?: ""
-    return newKey
-}
-// Realtime Database でキーだけを取得E--------------------------------------------------------
+//// Realtime Database でキーだけを取得S--------------------------------------------------------
+//fun getNewKeyFromRealtimeDatabase(databaseReference: DatabaseReference): String {
+//    val newChildRef = databaseReference.push()
+//    val newKey = newChildRef.key ?: ""
+//    return newKey
+//}
+//// Realtime Database でキーだけを取得E--------------------------------------------------------

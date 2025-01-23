@@ -68,7 +68,7 @@ data class ImageData(
     val location: String,       // 住所
     val discoveryDate: String,      // 日付
     val id: Int,        // ID
-    val Dkey: String,
+//    val Dkey: String, // リアルタイムデータベースのキー
     val latitude: Double?, // 緯度
     val longitude: Double? // 経度
 )
