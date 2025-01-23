@@ -143,6 +143,10 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
     // マーカーの住所を保持する状態を追加
     var markerAddress by remember { mutableStateOf("") }
 
+    // 緯度と経度を保持する状態を追加
+    var latitude by remember { mutableStateOf<Double?>(null) }
+    var longitude by remember { mutableStateOf<Double?>(null) }
+
     Scaffold(
         topBar = {
             // トップバーの設定
@@ -165,7 +169,9 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                         discoveryDate.ifEmpty { "不明" },
                         context,
                         r_t_d_key,
-                        viewModel
+                        viewModel,
+                        latitude, // 緯度を渡す
+                        longitude // 経度を渡す
                     )
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -297,7 +303,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                 )
             }
 
-// 地図アイコンが押された時の処理
+            // 地図アイコンが押された時の処理
             if (showMap) {
                 Spacer(modifier = Modifier.height(4.dp))
                 // 地図表示
@@ -315,8 +321,10 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                             onAddressChanged = { address ->
                                 markerAddress = address
                             },
-                            onCloseMap = {
+                            onCloseMap = { lat, lng ->
                                 location = markerAddress
+                                latitude = lat
+                                longitude = lng
                                 showMap = false
                             }
                         )
@@ -494,7 +502,7 @@ fun resizeBitmap(bitmap: Bitmap, targetWidth: Int, targetHeight: Int): Bitmap {
 
 // 発見場所指定マップの表示
 @Composable
-fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: () -> Unit) {
+fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Double?) -> Unit) {
     // 地名と緯度経度の対応付け
     val locations = mapOf(
         "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
@@ -556,7 +564,7 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: () -> Unit) {
                 .background(Color.White.copy(alpha = 0.5f), shape = CircleShape)
         ) {
             // ✕ボタンの表示
-            IconButton(onClick = { onCloseMap() }) {
+            IconButton(onClick = { onCloseMap(markerPosition?.latitude, markerPosition?.longitude) }) {
                 Icon(Icons.Default.Close, contentDescription = "閉じる", tint = Color.Red)
             }
 
@@ -669,6 +677,8 @@ fun TransmitData(
     context: Context,
     r_t_d_Key: String,
     viewModel: Post_SucsessViewModel,
+    latitude: Double?, // 緯度を追加
+    longitude: Double? // 経度を追加
 ) {
     if (bitmap == null) {
         Log.e("TransmitData", "Bitmap is null")
@@ -694,6 +704,8 @@ fun TransmitData(
         .setCustomMetadata("location", location.ifEmpty { "不明" })
         .setCustomMetadata("discoveryDate", discoveryDate.ifEmpty { "不明" })
         .setCustomMetadata("R_T_D_Key", r_t_d_Key.ifEmpty { "R_T_D_Key取得失敗" })
+        .setCustomMetadata("latitude", latitude?.toString() ?: "不明") // 緯度を追加
+        .setCustomMetadata("longitude", longitude?.toString() ?: "不明") // 経度を追加
         .build()
     Log.d("TransmitData", "metadata")
 

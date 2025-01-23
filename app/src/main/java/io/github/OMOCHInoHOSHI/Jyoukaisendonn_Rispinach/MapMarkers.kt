@@ -66,28 +66,39 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
         val address = imageData.location
         val Title = imageData.title
         val Snippet = imageData.name
+        val Lat = imageData.latitude
+        val Lng = imageData.longitude
 
-        // 住所を緯度経度に変換
-        val results: Array<GeocodingResult> = GeocodingApi.geocode(geoApiContext, address).await()
-        if (results.isNotEmpty()) {
-            val location = results[0].geometry.location
-            val Lat = location.lat
-            val Lng = location.lng
-
-            // 変換結果をログに出力
-            //Log.i("GeocodingResult", "Title: $Title, Address: $address, Lat: $Lat, Lng: $Lng")
-
-            // マーカーオプションを作成
+        if (Lat != null && Lng != null) {
+            // 緯度経度が既にある場合
             val marker = MarkerOptions()
                 .position(LatLng(Lat, Lng))
                 .title(Title)
                 .snippet(Snippet)
-
-            // マーカー情報変数に格納
             markers.add(marker)
         } else {
-            // 住所が見つからなかった場合のログ出力
-            //Log.e("GeocodingResult", "No results found for address: $address")
+            // 住所を緯度経度に変換
+            val results: Array<GeocodingResult> = GeocodingApi.geocode(geoApiContext, address).await()
+            if (results.isNotEmpty()) {
+                val location = results[0].geometry.location
+                val Lat_l = location.lat
+                val Lng_l = location.lng
+
+                // 変換結果をログに出力
+                //Log.i("GeocodingResult", "Title: $Title, Address: $address, Lat: $Lat, Lng: $Lng")
+
+                // マーカーオプションを作成
+                val marker = MarkerOptions()
+                    .position(LatLng(Lat_l, Lng_l))
+                    .title(Title)
+                    .snippet(Snippet)
+
+                // マーカー情報変数に格納
+                markers.add(marker)
+            } else {
+                // 住所が見つからなかった場合のログ出力
+                //Log.e("GeocodingResult", "No results found for address: $address")
+            }
         }
     }
 
@@ -102,7 +113,7 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
 
 // マーカー付きマップを表示する関数
 @Composable
-fun MapMarkers(imageViewModel: ImageViewModel = viewModel()) {
+fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageViewModel = viewModel()) {
 
 //    val locationViewModel = LocationViewModel(context = LocalContext.current)
 //
@@ -148,7 +159,16 @@ fun MapMarkers(imageViewModel: ImageViewModel = viewModel()) {
     val defaultPosition = locations["大阪"]!! // 大阪府庁
     val defaultZoom = 13f
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(defaultPosition, defaultZoom)
+        // Postsからマップを開く場合
+        if (Lat != null && Lng != null) {       // クリックした投稿の場所を表示(LatとLngがnull以外の場合)
+            val Post_Position = LatLng(Lat, Lng)
+
+            position = CameraPosition.fromLatLngZoom(Post_Position, defaultZoom)
+
+        }
+        else{       // デフォルト設定の場所に表示
+            position = CameraPosition.fromLatLngZoom(defaultPosition, defaultZoom)
+        }
     }
 
     // CoroutineScopeをrememberで保持

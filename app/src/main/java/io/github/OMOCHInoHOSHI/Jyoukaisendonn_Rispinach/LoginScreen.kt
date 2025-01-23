@@ -168,6 +168,7 @@ fun LoginScreen(): Boolean {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                ///*
                 // 「ログイン情報を保持する」チェックボックス
 //                Row(verticalAlignment = Alignment.CenterVertically) {
 //                    Checkbox(
@@ -213,6 +214,7 @@ fun LoginScreen(): Boolean {
                 ) {
                     Text("ログインする", fontSize = 18.sp)
                 }
+                 //*/
 
                 Spacer(modifier = Modifier.height(16.dp))
 

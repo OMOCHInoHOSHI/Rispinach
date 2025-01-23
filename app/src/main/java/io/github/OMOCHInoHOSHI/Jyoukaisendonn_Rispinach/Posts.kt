@@ -55,7 +55,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discoveryDate: String, idName: Int) {
+fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discoveryDate: String, Lat: Double?, Lng: Double?, idName: Int) {
     val scope = rememberCoroutineScope()
     var openBottomSheet by remember { mutableStateOf(false) }
     val bottomSheetState = rememberModalBottomSheetState()
@@ -197,11 +197,19 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                         Column(modifier = Modifier.padding(16.dp)) {
                             // 発見場所
                             Text("【 発見場所 】", style = MaterialTheme.typography.titleMedium)
-                            Text("   $location\n", style = MaterialTheme.typography.titleMedium)
+//                            Text("  $location\n", style = MaterialTheme.typography.titleMedium.copy(fontSize = 13.sp))
+                            Text(
+                                text = "  $location\n",
+                                style = MaterialTheme.typography.titleMedium.copy(fontSize = 13.sp),
+                                modifier = Modifier.clickable {     // クリック時の処理
+//                                    MapMarkers(Lat, Lng)        // マーカー付き地図
+                                },
+                                color = Color.Blue
+                            )
 
                             // 発見日
                             Text("【 発見日 】", style = MaterialTheme.typography.titleMedium)
-                            Text("   $discoveryDate\n", style = MaterialTheme.typography.titleMedium)
+                            Text("  $discoveryDate\n", style = MaterialTheme.typography.titleMedium.copy(fontSize = 13.sp))
 
                             // 通報場所
                             Text("【 通報 】", style = MaterialTheme.typography.titleMedium)
@@ -220,7 +228,7 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                                             )
                                         )
                                     ) {
-                                        append("   地方環境事務所等一覧")
+                                        append("  地方環境事務所等一覧")
                                     }
                                 },
                                 color = Color.Blue
