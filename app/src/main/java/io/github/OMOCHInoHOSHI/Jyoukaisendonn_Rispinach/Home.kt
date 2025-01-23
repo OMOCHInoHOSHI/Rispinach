@@ -333,7 +333,9 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
                                     imageViewModel.pictureName[index].title,
                                     imageViewModel.pictureName[index].location,
                                     imageViewModel.pictureName[index].discoveryDate,
-                                    imageViewModel.pictureName[index].id
+                                    imageViewModel.pictureName[index].latitude,
+                                    imageViewModel.pictureName[index].longitude,
+                                    imageViewModel.pictureName[index].id,
                                 )        // 画像情報、生物名、idを送る場合
 
                                 //LoginScreen()
@@ -406,10 +408,10 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
 //}
 
 class MyDto(val data: Boolean)
-    val MyDtoSaver = listSaver<MyDto, Any>(
-        save = { mutableListOf(it.data) },
-        restore = { MyDto(it[0] as Boolean) }
-    )
+val MyDtoSaver = listSaver<MyDto, Any>(
+    save = { mutableListOf(it.data) },
+    restore = { MyDto(it[0] as Boolean) }
+)
 
 //@Composable
 fun ImageList(photos:List<Photo>)

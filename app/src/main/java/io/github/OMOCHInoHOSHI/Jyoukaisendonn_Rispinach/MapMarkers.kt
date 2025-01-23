@@ -113,7 +113,7 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
 
 // マーカー付きマップを表示する関数
 @Composable
-fun MapMarkers(imageViewModel: ImageViewModel = viewModel()) {
+fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageViewModel = viewModel()) {
 
 //    val locationViewModel = LocationViewModel(context = LocalContext.current)
 //
@@ -159,7 +159,16 @@ fun MapMarkers(imageViewModel: ImageViewModel = viewModel()) {
     val defaultPosition = locations["大阪"]!! // 大阪府庁
     val defaultZoom = 13f
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(defaultPosition, defaultZoom)
+        // Postsからマップを開く場合
+        if (Lat != null && Lng != null) {       // クリックした投稿の場所を表示(LatとLngがnull以外の場合)
+            val Post_Position = LatLng(Lat, Lng)
+
+            position = CameraPosition.fromLatLngZoom(Post_Position, defaultZoom)
+
+        }
+        else{       // デフォルト設定の場所に表示
+            position = CameraPosition.fromLatLngZoom(defaultPosition, defaultZoom)
+        }
     }
 
     // CoroutineScopeをrememberで保持
