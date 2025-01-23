@@ -2,6 +2,7 @@ package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -36,6 +37,8 @@ import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,8 +47,11 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+
+import androidx.compose.ui.graphics.Color
 
 // マーカーを読み込む関数
 @Composable
@@ -200,8 +206,18 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
         val options = locations.keys.toList()
         var selectedOptionText by remember { mutableStateOf(options[0]) }
 
+
+
         // 画面右上に配置するBoxコンポーネント
         Box(Modifier.align(Alignment.TopEnd).padding(16.dp)) {
+
+            Box(
+                modifier = Modifier
+                    .size(40.dp) // アイコンのサイズに合わせて調整
+                    .clip(CircleShape) // 円形にクリップ
+                    .background(Color.White) // 白い背景
+                    .align(Alignment.Center) // アイコンと重ねる
+            )
             // アイコンボタンを表示
             IconButton(onClick = { expanded = true }) {
                 Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
