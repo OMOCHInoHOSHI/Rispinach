@@ -143,8 +143,10 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                 modifier = Modifier.width(200.dp)
             )
             {
-                println(drawerState)
-                SideEffect { Log.d("compose-log", "ModalNavigationDrawer") }
+//                println(drawerState)
+
+                //　動作が重い原因？頻繁にインスタンスを再生成している？
+//                SideEffect { Log.d("compose-log", "ModalNavigationDrawer") }
 //                Text(text = "ナビゲーションドロワー")
                 MainScreenTab.entries.forEachIndexed { index, item ->
                     if(selectButton=="main/camera")
