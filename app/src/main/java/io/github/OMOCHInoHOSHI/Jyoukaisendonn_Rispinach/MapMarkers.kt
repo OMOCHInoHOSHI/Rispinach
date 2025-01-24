@@ -183,6 +183,9 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     // マーカーの色を設定
     val color_enemy = BitmapDescriptorFactory.HUE_RED
 
+    // クリックされたマーカーのインデックスを保持するための状態変数
+    var clickedMarkerIndex by remember { mutableStateOf(-1) }
+
     // マーカーのクリック回数を管理するための状態
     val markerClickCounts = remember { mutableStateMapOf<LatLng, Int>() }
 
@@ -197,7 +200,7 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
             cameraPositionState = cameraPositionState,
         ) {
             // 読み込んだマーカー情報をマップに追加
-            markers.forEach { markerOptions ->
+            markers.forEachIndexed  { index, markerOptions ->
                 // マーカーが何回クリックされたかを取得する貯めの変数
                 val position = markerOptions.position   //マーカーの位置を取得
                 val clickCount = markerClickCounts[position] ?: 0   //　マップからクリック回数を取得し、存在しない場合は0を返す
@@ -219,6 +222,8 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
                             println("Marker at $position clicked for the second time!")
                         }
 
+                        clickedMarkerIndex = index
+
                         // trueを返してデフォルトの動作を抑制
                         false
                     },
@@ -229,10 +234,26 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
                         markerClickCounts[position] = newCount
 
                         // ここにinfo windowクリック時の動作を追加
+                        clickedMarkerIndex = index
                     }
                 )
             }
         }
+
+        // クリックされたマーカーの情報を表示する
+        if (clickedMarkerIndex != -1) {
+            Posts(
+                imageViewModel.pictureName[clickedMarkerIndex].bitmap,
+                imageViewModel.pictureName[clickedMarkerIndex].name,
+                imageViewModel.pictureName[clickedMarkerIndex].title,
+                imageViewModel.pictureName[clickedMarkerIndex].location,
+                imageViewModel.pictureName[clickedMarkerIndex].discoveryDate,
+                imageViewModel.pictureName[clickedMarkerIndex].latitude,
+                imageViewModel.pictureName[clickedMarkerIndex].longitude,
+                imageViewModel.pictureName[clickedMarkerIndex].id,
+            )
+        }
+
 
         // ドロップダウンメニューの状態を管理
         var expanded by remember { mutableStateOf(false) }
