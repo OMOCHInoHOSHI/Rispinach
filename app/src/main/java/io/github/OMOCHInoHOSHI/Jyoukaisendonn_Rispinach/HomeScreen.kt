@@ -2,6 +2,7 @@ package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,8 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.AccountCircle
@@ -43,10 +46,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -117,6 +122,9 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
     var selectButton=currentTab
     var DismissibleDrawerEnabled=true
     var goMap=false
+    var drawerMenuWidth by remember { mutableStateOf(0.dp) }
+    var iconWidth by remember { mutableStateOf(0.dp) }
+    var dw=drawerMenuWidth
 
     //var navEnabled by rememberSaveable { mutableStateOf(true) }
     //var n=true
@@ -352,7 +360,8 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                 Text(
                                     text = "Rispinach",
                                     modifier = Modifier
-                                        .offset(x = -28.dp)
+                                        .align(Alignment.Center)
+                                        //.offset(x = (dw-iconWidth))
                                 )
                             }
                             else
@@ -360,7 +369,8 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                 Text(
                                     text = "Rispinach",
                                     modifier = Modifier
-                                        .offset(x = -12.dp)
+                                        .align(Alignment.Center)
+                                        .offset(x = ((dw+iconWidth)/6)+1.5.dp)
                                 )
                             }
                         }
@@ -388,11 +398,28 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                     modifier = Modifier
                                         .height(60.dp)
                                         .width(60.dp)
+                                        .onGloballyPositioned { coordinates ->
+                                            drawerMenuWidth = with(localDensity) { coordinates.size.width.toDp() }
+                                        }
                                     //.border(2.dp, Color.White, RoundedCornerShape(20.dp))
                                 )
 
                             }
                         }
+                    },
+
+                    actions = {
+                        Image(
+                            painter = painterResource(id=R.drawable.ic_launcher_playstore), // 自作の画像リソースを指定
+                            contentDescription = "Custom Icon",
+                            modifier = Modifier
+                                .size(45.dp) // アイコンのサイズ
+                                .clip(CircleShape) // 丸型に切り抜き
+                                .onGloballyPositioned { coordinates ->
+                                    iconWidth = with(localDensity) { coordinates.size.width.toDp() }
+                                }
+                                //.padding(4.dp) // アイコンの周りにパディング
+                        )
                     },
 
                     colors=TopAppBarColors(Color.Black/*TopBar背景色*/,Color.White,Color.White,Color.White,Color.White)
