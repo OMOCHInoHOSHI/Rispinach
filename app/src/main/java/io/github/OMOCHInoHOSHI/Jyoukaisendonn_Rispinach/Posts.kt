@@ -3,6 +3,7 @@ package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 import android.graphics.Bitmap
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,7 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.outlined.Report
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,9 +40,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -107,12 +108,111 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                         .padding(8.dp)
                 ) {
                     IconButton(onClick = { openBottomSheet = true }) {
+//                        Canvas(modifier = Modifier.matchParentSize()) {
+//                            val path = Path().apply {
+//                                moveTo(size.width / 2f, 0f) // 上端の中央
+//                                lineTo(0f, size.height/1.25f) // 左下
+//                                lineTo(size.width, size.height/1.25f) // 右下
+//                                close() // 三角形を閉じる
+//                            }
+//                            drawPath(path, Color.Black) // 三角形を黒色で描画
+//                        }
+//                        Canvas(modifier = Modifier.matchParentSize()) {
+//                            val centerX = size.width / 2f  // 中心X座標
+//                            val centerY = size.height / 2f  // 中心Y座標
+//                            val radius = size.width / 3f  // 半径（画面幅に基づいて設定）
+//
+//                            val path = Path()
+//
+//                            // 六角形の各頂点を計算してPathを作成
+//                            for (i in 0 until 6) {
+//                                val angle = Math.toRadians((60 * i).toDouble())  // 60度ずつ回転
+//                                val x = (centerX + radius * Math.cos(angle)).toFloat()
+//                                val y = (centerY + radius * Math.sin(angle)).toFloat()
+//
+//                                if (i == 0) {
+//                                    path.moveTo(x, y)  // 最初の点でPathを開始
+//                                } else {
+//                                    path.lineTo(x, y)  // 他の点に線を引く
+//                                }
+//                            }
+//
+//                            path.close()  // 最後の点を最初の点と繋げて閉じる
+//
+//                            drawPath(path, Color.Red)  // 黒色で六角形を描画
+//                        }
+//                        Canvas(modifier = Modifier.matchParentSize()) {
+//                            val centerX = size.width / 2f  // 中心X座標
+//                            val centerY = size.height / 2f  // 中心Y座標
+//                            val radius = size.width / 3f  // 半径（画面幅に基づいて設定）
+//
+//                            val path = Path()
+//
+//                            // 八角形の各頂点を計算してPathを作成
+//                            for (i in 0 until 8) {
+//                                val angle = Math.toRadians((45 * i).toDouble())  // 45度ずつ回転
+//                                val x = (centerX + radius * Math.cos(angle)).toFloat()
+//                                val y = (centerY + radius * Math.sin(angle)).toFloat()
+//
+//                                if (i == 0) {
+//                                    path.moveTo(x, y)  // 最初の点でPathを開始
+//                                } else {
+//                                    path.lineTo(x, y)  // 他の点に線を引く
+//                                }
+//                            }
+//
+//                            path.close()  // 最後の点を最初の点と繋げて閉じる
+//
+//                            drawPath(path, Color.Red)  // 黒色で八角形を描画
+//                        }
+
+                        Canvas(modifier = Modifier.matchParentSize()) {
+                            val centerX = size.width / 2f  // 中心X座標
+                            val centerY = size.height / 2f  // 中心Y座標
+                            val radius = size.width / 3f  // 半径（画面幅に基づいて設定）
+
+                            val path = Path()
+
+                            // 45度回転のためのラジアン変換
+                            val rotationAngle = Math.toRadians(22.5)  // 22.5度をラジアンに変換
+
+                            // 八角形の各頂点を計算してPathを作成
+                            for (i in 0 until 8) {
+                                // 45度ずつ回転させた角度を計算
+                                val angle = Math.toRadians((45 * i).toDouble())
+
+                                // 回転前のx, y座標を計算
+                                val xBeforeRotation = centerX + radius * Math.cos(angle)
+                                val yBeforeRotation = centerY + radius * Math.sin(angle)
+
+                                // 回転行列を使って座標を回転させる
+                                val x = (xBeforeRotation - centerX) * Math.cos(rotationAngle) - (yBeforeRotation - centerY) * Math.sin(rotationAngle) + centerX
+                                val y = (xBeforeRotation - centerX) * Math.sin(rotationAngle) + (yBeforeRotation - centerY) * Math.cos(rotationAngle) + centerY
+
+                                // 最初の点でPathを開始
+                                if (i == 0) {
+                                    path.moveTo(x.toFloat(), y.toFloat())
+                                } else {
+                                    path.lineTo(x.toFloat(), y.toFloat())  // 他の点に線を引く
+                                }
+                            }
+
+                            path.close()  // 最後の点を最初の点と繋げて閉じる
+
+                            drawPath(path, Color(0xFFFF663C))  // 八角形を描画
+                        }
+
+
+
+
                         Icon(
-                            imageVector = Icons.Filled.Info,
+                            imageVector =Icons.Outlined.Report,
                             contentDescription = "情報",
                             modifier = Modifier
-                                .border(2.dp, Color.White, RoundedCornerShape(20.dp)),
-                            tint = Color(0xFFB0BEC5)
+                                .padding(top=1.dp, start = 1.dp/*bottom=2.dp,end=2.dp*/),
+                                //.background(color = Color.Black, shape = ),
+                                //.border(2.dp, Color.White, RoundedCornerShape(20.dp)),
+                            tint = Color.Black
                         )
                     }
                 }
