@@ -57,7 +57,12 @@ import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.text.style.TextIndent
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.ViewModel
@@ -66,6 +71,7 @@ import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import androidx.compose.material.icons.filled.Clear
 
 
 // 投稿が成功したかを確認し、Homeの更新が必要かを管理するViewModelS----------------
@@ -135,7 +141,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
 //    println("key = $r_t_d_key")
 
     // 表示する前にビットマップをリサイズ
-    val resizedBitmap = bitmap?.let { resizeBitmap(it, 224, 224) }
+    //val resizedBitmap = bitmap?.let { resizeBitmap(it, 224, 224) }
 
     // 発見場所の地図表示フラグ
     var showMap by remember { mutableStateOf(false) }
@@ -201,7 +207,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                resizedBitmap?.let {
+                bitmap?.let {
                     Image(
                         bitmap = it.asImageBitmap(),
                         contentDescription = null,
@@ -217,55 +223,106 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
             }
 
             // タイトル入力フィールドの設定
-            OutlinedTextField(
-                value = title,
-                onValueChange = { title = it },
-                placeholder = { Text("投稿タイトル入力") },
-                modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.ChatBubble,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.outline
-                    )
-                },
-                shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+            Box {
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    placeholder = { Text("  投稿タイトル入力") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .drawBehind {
+                            val strokeWidth = 2.dp.toPx()
+                            val iconWidth = 48.dp.toPx() // アイコンの幅を考慮
+                            val padding = 8.dp.toPx() // アイコンと線の間のパディング
+                            val x = iconWidth + padding + strokeWidth / 2
+                            drawLine(
+                                color = Color.Gray,
+                                start = Offset(x - 11, 0f + 22),
+                                end = Offset(x - 11, size.height - 22),
+                                strokeWidth = strokeWidth
+                            )
+                        },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.ChatBubble,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.outline
+                        )
+                    },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                    ),
+                    textStyle = LocalTextStyle.current.copy(textIndent = TextIndent(firstLine = 6.sp)) // テキストのインデントを設定
                 )
-            )
+            }
 
             // 生物名入力フィールドの設定
             Box {
                 OutlinedTextField(
                     value = speciesName, // 入力された生物名の状態を保持
                     onValueChange = { speciesName = it }, // 生物名が変更されたときの処理
-                    placeholder = { Text("生物名入力") },
-                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("  生物名入力") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .drawBehind {
+                            val strokeWidth = 2.dp.toPx()
+                            val iconWidth = 48.dp.toPx() // アイコンの幅を考慮
+                            val padding = 8.dp.toPx() // アイコンと線の間のパディング
+                            val x = iconWidth + padding + strokeWidth / 2
+                            drawLine(
+                                color = Color.Gray,
+                                start = Offset(x - 11, 0f + 22),
+                                end = Offset(x - 11, size.height - 22),
+                                strokeWidth = strokeWidth
+                            )
+                        },
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = null,
-                            tint = androidx.compose.ui.graphics.Color(0xFF89C3EB), // アイコンを勿忘草色(わすれなぐさいろ)に変更
-                            modifier = Modifier.clickable {
-                                Log.d("PostScreen_image", "Icon clicked") // クリック時のログ
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(40.dp) // アイコンと文字を含むボックスのサイズ
+                                .background(
+                                    color = androidx.compose.ui.graphics.Color(0xFF89c3eb).copy(alpha = 0.2f),      // 背景を勿忘草色(わすれなぐさいろ)に変更
+                                    shape = CircleShape
+                                )
+                                .clickable {
+                                    Log.d("PostScreen_image", "Circle clicked") // クリック時のログ
 
-                                resizedBitmap?.let { bmp ->
-                                    coroutineScope.launch {
-                                        val result = imageAnalyzer.analyzePhoto(bmp) // 画像解析
+                                    bitmap?.let { bmp ->
+                                        coroutineScope.launch {
+                                            val result = imageAnalyzer.analyzePhoto(bmp) // 画像解析
 
-                                        speciesName = result // 解析結果を生物名に設定
-                                        speciesNameSet = true // 生物名が設定されたことを記録
-                                        Log.d("PostScreen_image", "speciesName set to: $speciesName") // 解析結果のログ
+                                            speciesName = result // 解析結果を生物名に設定
+                                            speciesNameSet = true // 生物名が設定されたことを記録
+                                            Log.d("PostScreen_image", "speciesName set to: $speciesName") // 解析結果のログ
+                                        }
                                     }
                                 }
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = null,
+                                    tint = androidx.compose.ui.graphics.Color(0xFF007BBB) // アイコンを紺碧色 (こんぺきいろ)に変更
+                                )
+                                Text(
+                                    text = "AI",
+                                    fontSize = 14.sp,
+                                    color = androidx.compose.ui.graphics.Color(0xFF007BBB), // 文字を紺碧色 (こんぺきいろ)に変更
+                                    modifier = Modifier.padding(top = 0.dp) // 文字の位置を調整
+                                )
                             }
-                        )
+                        }
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                    )
+                    ),
+                    textStyle = LocalTextStyle.current.copy(textIndent = TextIndent(firstLine = 6.sp)) // テキストのインデントを設定
                 )
             }
 
@@ -274,33 +331,85 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                 OutlinedTextField(
                     value = location,
                     onValueChange = { location = it },
-                    placeholder = { Text("発見場所") },
-                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("  発見場所") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .drawBehind {
+                            val strokeWidth = 2.dp.toPx()
+                            val iconWidth = 48.dp.toPx() // アイコンの幅を考慮
+                            val padding = 8.dp.toPx() // アイコンと線の間のパディング
+                            val x = iconWidth + padding + strokeWidth / 2
+                            drawLine(
+                                color = Color.Gray,
+                                start = Offset(x - 11, 0f + 22),
+                                end = Offset(x - 11, size.height - 22),
+                                strokeWidth = strokeWidth
+                            )
+                        },
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.LocationOn,
-                            contentDescription = null,
-                            tint = androidx.compose.ui.graphics.Color(0xFF89C3EB), // アイコンを勿忘草色(わすれなぐさいろ)に変更
-                            modifier = Modifier.clickable {
-                                showMap = true
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(40.dp) // アイコンと文字を含むボックスのサイズ
+                                .background(
+                                    color = androidx.compose.ui.graphics.Color(0xFF89C3EB).copy(alpha = 0.2f),      //背景を勿忘草色(わすれなぐさいろ)に変更
+                                    shape = CircleShape
+                                )
+                                .clickable {
+                                    showMap = true
+                                }
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.LocationOn,
+                                    contentDescription = null,
+                                    tint = androidx.compose.ui.graphics.Color(0xFF007BBB) // アイコンを紺碧色 (こんぺきいろ)に変更
+                                )
+                                Text(
+                                    text = "Map",
+                                    fontSize = 14.sp,
+                                    color = androidx.compose.ui.graphics.Color(0xFF007BBB), // 文字を紺碧色 (こんぺきいろ)に変更
+                                    modifier = Modifier.padding(top = 0.dp) // 文字の位置を調整
+                                )
                             }
-                        )
+                        }
                     },
-//                    trailingIcon = {
-//                        Icon(
-//                            imageVector = Icons.Default.Check,
-//                            contentDescription = "住所表示",
-//                            tint = androidx.compose.ui.graphics.Color(0xFFEF857D), // アイコンをコーラルレッド色に変更
-//                            modifier = Modifier.clickable {
-//                                location = markerAddress
-//                            }
-//                        )
-//                    },
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                    )
+                    ),
+                    textStyle = LocalTextStyle.current.copy(textIndent = TextIndent(firstLine = 6.sp)) // テキストのインデントを設定
                 )
+            }
+
+            // 地図アイコンが押された時の処理
+            if (showMap) {
+                Spacer(modifier = Modifier.height(4.dp))
+                // 地図表示
+                Dialog(
+                    onDismissRequest = { var showPopup = false },
+                    properties = DialogProperties(usePlatformDefaultWidth = false) // 幅を制限しない
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        LocatePosition(
+                            onAddressChanged = { address ->
+                                markerAddress = address
+                            },
+                            onCloseMap = { lat, lng ->
+                                location = markerAddress
+                                latitude = lat
+                                longitude = lng
+                                showMap = false
+                            }
+                        )
+                    }
+                }
             }
 
             // 地図アイコンが押された時の処理
@@ -340,6 +449,20 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                 value = discoveryDate,
                 onValueChange = { discoveryDate = it },
                 onClick = { date_flg = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .drawBehind {
+                        val strokeWidth = 2.dp.toPx()
+                        val iconWidth = 48.dp.toPx() // アイコンの幅を考慮
+                        val padding = 8.dp.toPx() // アイコンと線の間のパディング
+                        val x = iconWidth + padding + strokeWidth / 2
+                        drawLine(
+                            color = Color.Gray,
+                            start = Offset(x - 11, 0f + 22),
+                            end = Offset(x - 11, size.height - 22),
+                            strokeWidth = strokeWidth
+                        )
+                    }
             )
             Spacer(modifier = Modifier.height(100.dp))
 
@@ -420,7 +543,7 @@ class ImageAnalyzer(context: Context) {
             // 画像の解析の開始を確認
             Log.d("ImageAnalyzer", "analyzePhoto_Start")
 
-            /*
+
             // モデルの入力サイズ
             val targetWidth = 224
             val targetHeight = 224
@@ -440,14 +563,14 @@ class ImageAnalyzer(context: Context) {
             val top = (targetHeight - resizedBitmap.height) / 2
             canvas.drawBitmap(resizedBitmap, left.toFloat(), top.toFloat(), null)
 
-             */
+
 
             Log.d("ImageAnalyzer", "analyzePhoto_1")
 
             // リソースの解放
             val tensorImage = TensorImage(DataType.FLOAT32)
-            //tensorImage.load(finalBitmap)
-            tensorImage.load(bitmap)
+            tensorImage.load(finalBitmap)
+            //tensorImage.load(bitmap)
             Log.d("ImageAnalyzer", "analyzePhoto_1")
 
             // バッファの形式を確認
@@ -521,10 +644,13 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
 
     // マーカーの位置を保持する状態を追加
     var markerPosition by remember { mutableStateOf<LatLng?>(null) }
+    var markerAddress by remember { mutableStateOf("") } // 住所情報も状態として保持
 
     // 逆ジオコーディングのためのGeocoderを取得
     val context = LocalContext.current
     val geocoder = Geocoder(context, Locale.getDefault())
+
+
 
     Box(Modifier.fillMaxSize()) {
         // GoogleMapコンポーザブルを表示
@@ -538,8 +664,9 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
                 // 逆ジオコーディングで住所を取得
                 coroutineScope.launch {
                     val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-                    val address = addresses?.firstOrNull()?.getAddressLine(0) ?: "住所が見つかりません"
-                    onAddressChanged(address)
+                    markerAddress =
+                        addresses?.firstOrNull()?.getAddressLine(0) ?: "住所が見つかりません"
+                    onAddressChanged(markerAddress)
                 }
             }
         ) {
@@ -564,7 +691,12 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
                 .background(Color.White.copy(alpha = 0.5f), shape = CircleShape)
         ) {
             // ✕ボタンの表示
-            IconButton(onClick = { onCloseMap(markerPosition?.latitude, markerPosition?.longitude) }) {
+            IconButton(onClick = {
+                onCloseMap(
+                    markerPosition?.latitude,
+                    markerPosition?.longitude
+                )
+            }) {
                 Icon(Icons.Default.Close, contentDescription = "閉じる", tint = Color.Red)
             }
 
@@ -574,7 +706,26 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
             IconButton(onClick = { expanded = true }) {
                 Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
             }
+            //クリアボタンの追加
+            Row(
+                verticalAlignment = Alignment.CenterVertically // 垂直方向中央揃え
+            ){
+                Button(
+                    onClick = {
+                        markerPosition = null // ピンをクリア
+                        markerAddress = ""      // 住所情報をクリア
+                        onAddressChanged("") // 住所情報をクリア
+                    },
+                    colors = ButtonDefaults.buttonColors( // 色を設定
+                        containerColor = Color.White,
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("クリア")
+                }
+            }
         }
+
 
         // ドロップダウンメニューの表示
         DropdownMenu(

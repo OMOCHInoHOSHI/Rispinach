@@ -13,6 +13,7 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -22,7 +23,12 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import java.text.SimpleDateFormat
@@ -65,6 +71,8 @@ fun SelectOutlineTextField(
     value: String,
     onValueChange: (String) -> Unit,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    textStyle: androidx.compose.ui.text.TextStyle = LocalTextStyle.current.copy(textIndent = TextIndent(firstLine = 6.sp)) // デフォルトのテキストインデントを設定
 ) {
     val interactionSource = remember {
         object : MutableInteractionSource {
@@ -90,19 +98,30 @@ fun SelectOutlineTextField(
     }
 
     OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth(),
-//            .padding(horizontal = 16.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .drawBehind {
+                val strokeWidth = 2.dp.toPx()
+                val iconWidth = 48.dp.toPx() // アイコンの幅を考慮
+                val padding = 8.dp.toPx() // アイコンと線の間のパディング
+                val x = iconWidth + padding + strokeWidth / 2
+                drawLine(
+                    color = Color.Gray,
+                    start = Offset(x - 11, 0f + 22),
+                    end = Offset(x - 11, size.height - 22),
+                    strokeWidth = strokeWidth
+                )
+            },
         value = value,
         onValueChange = onValueChange,
-        placeholder = { Text(text = "選択してください") },
+        placeholder = { Text(text = "  選択してください") },
         leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.DateRange,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.outline
-                    )
-                },
+            Icon(
+                imageVector = Icons.Default.DateRange,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.outline
+            )
+        },
         trailingIcon = {
             Icon(
                 imageVector = Icons.Filled.KeyboardArrowDown,
@@ -112,9 +131,10 @@ fun SelectOutlineTextField(
         readOnly = true,    //読み取り専用
         interactionSource = interactionSource,
         shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                )
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+        ),
+        textStyle = textStyle // テキストのインデントを設定
     )
 }
 // 日付選択ドロップダウンE-----------------------------------------------------------------------
