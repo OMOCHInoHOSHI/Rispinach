@@ -183,6 +183,12 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     // マーカーの色を設定
     val color_enemy = BitmapDescriptorFactory.HUE_RED
 
+    // マーカーのクリック回数を管理するための状態
+    val markerClickCounts = remember { mutableStateMapOf<LatLng, Int>() }
+
+    // コメント部分のタップ回数を管理するための状態
+    val commentClickCounts = remember { mutableIntStateOf(0) }
+
     // 画面全体を埋めるBoxコンポーネント
     Box(Modifier.fillMaxSize()) {
         // Google Mapを表示
@@ -192,11 +198,38 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
         ) {
             // 読み込んだマーカー情報をマップに追加
             markers.forEach { markerOptions ->
+                // マーカーが何回クリックされたかを取得する貯めの変数
+                val position = markerOptions.position   //マーカーの位置を取得
+                val clickCount = markerClickCounts[position] ?: 0   //　マップからクリック回数を取得し、存在しない場合は0を返す
+                val newCount = clickCount + 1                       // クリック回数
                 Marker(
-                    state = rememberMarkerState(position = markerOptions.position),
+                    state = rememberMarkerState(position = position),
                     title = markerOptions.title,
                     snippet = markerOptions.snippet,
-                    icon = BitmapDescriptorFactory.defaultMarker(color_enemy)
+                    icon = BitmapDescriptorFactory.defaultMarker(color_enemy),
+
+                    // マーカークリック
+                    onClick = {
+                        // クリック回数を更新
+
+                        markerClickCounts[position] = newCount
+
+                        // 2回目のクリック時に出力
+                        if (newCount == 2) {
+                            println("Marker at $position clicked for the second time!")
+                        }
+
+                        // trueを返してデフォルトの動作を抑制
+                        false
+                    },
+
+                    // ウィンドウクリック
+                    onInfoWindowClick = {
+
+                        markerClickCounts[position] = newCount
+
+                        // ここにinfo windowクリック時の動作を追加
+                    }
                 )
             }
         }
