@@ -7,6 +7,7 @@ import android.provider.ContactsContract.CommonDataKinds.Photo
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -231,7 +232,18 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
             //投稿(仮)
             Column(modifier = Modifier.fillMaxSize())
             {
-                Text("過去の投稿")
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.DarkGray),
+                    contentAlignment=Alignment.Center
+                )
+                {
+                    Text(
+                        text = "Anomaly",
+                        color = Color.White,
+                        )
+                }
                 LazyVerticalGrid(
                     modifier = Modifier,
                     columns = GridCells.Fixed(3),
