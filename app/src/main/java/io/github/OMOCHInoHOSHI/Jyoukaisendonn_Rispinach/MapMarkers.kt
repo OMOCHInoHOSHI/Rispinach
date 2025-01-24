@@ -35,7 +35,9 @@ import com.google.maps.model.GeocodingResult
 import fetchImagesFromFirebaseStorage
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -44,8 +46,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -118,6 +124,7 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
 }
 
 // マーカー付きマップを表示する関数
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageViewModel = viewModel()) {
 
@@ -192,6 +199,16 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     // コメント部分のタップ回数を管理するための状態
     val commentClickCounts = remember { mutableIntStateOf(0) }
 
+    // ボトムシートの状態を管理
+    var skipPartiallyExpanded by rememberSaveable { mutableStateOf(true) }
+    val bottomSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = skipPartiallyExpanded
+    )
+
+    // ボトムシートの表示状態を管理
+    var chatflg by remember { mutableStateOf(false )}
+
+
     // 画面全体を埋めるBoxコンポーネント
     Box(Modifier.fillMaxSize()) {
         // Google Mapを表示
@@ -203,8 +220,8 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
             markers.forEachIndexed  { index, markerOptions ->
                 // マーカーが何回クリックされたかを取得する貯めの変数
                 val position = markerOptions.position   //マーカーの位置を取得
-                val clickCount = markerClickCounts[position] ?: 0   //　マップからクリック回数を取得し、存在しない場合は0を返す
-                val newCount = clickCount + 1                       // クリック回数
+                var clickCount = markerClickCounts[position] ?: 0   //　マップからクリック回数を取得し、存在しない場合は0を返す
+
                 Marker(
                     state = rememberMarkerState(position = position),
                     title = markerOptions.title,
@@ -213,45 +230,69 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
 
                     // マーカークリック
                     onClick = {
-                        // クリック回数を更新
-
-                        markerClickCounts[position] = newCount
-
-                        // 2回目のクリック時に出力
-                        if (newCount == 2) {
+                        clickCount += 1
+                        if (clickCount == 2) {
                             println("Marker at $position clicked for the second time!")
+                            chatflg = true
+                            clickCount = 0
                         }
 
+                        markerClickCounts[position] = clickCount
                         clickedMarkerIndex = index
 
-                        // trueを返してデフォルトの動作を抑制
+                        coroutineScope.launch {
+                            bottomSheetState.show()
+                            Log.d("BottomSheet", "BottomSheet shown")
+                        }
+
                         false
                     },
 
                     // ウィンドウクリック
                     onInfoWindowClick = {
 
-                        markerClickCounts[position] = newCount
-
                         // ここにinfo windowクリック時の動作を追加
                         clickedMarkerIndex = index
+
+                        // ボトムシートを表示
+                        coroutineScope.launch {
+                            bottomSheetState.show()
+                            Log.d("BottomSheet", "BottomSheet shown")
+                            chatflg = true
+                        }
                     }
                 )
             }
         }
 
-        // クリックされたマーカーの情報を表示する
-        if (clickedMarkerIndex != -1) {
-            Posts(
-                imageViewModel.pictureName[clickedMarkerIndex].bitmap,
-                imageViewModel.pictureName[clickedMarkerIndex].name,
-                imageViewModel.pictureName[clickedMarkerIndex].title,
-                imageViewModel.pictureName[clickedMarkerIndex].location,
-                imageViewModel.pictureName[clickedMarkerIndex].discoveryDate,
-                imageViewModel.pictureName[clickedMarkerIndex].latitude,
-                imageViewModel.pictureName[clickedMarkerIndex].longitude,
-                imageViewModel.pictureName[clickedMarkerIndex].id,
-            )
+
+        // クリックされたマーカーのチャットを表示する
+        if (chatflg && clickedMarkerIndex != -1) {
+
+            ModalBottomSheet(
+                onDismissRequest = {
+                    chatflg = false
+                    coroutineScope.launch {
+                        bottomSheetState.hide()
+                    }
+                },
+                sheetState = bottomSheetState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            ){
+                // チャット画面を開く
+                Posts(
+                    imageViewModel.pictureName[clickedMarkerIndex].bitmap,
+                    imageViewModel.pictureName[clickedMarkerIndex].name,
+                    imageViewModel.pictureName[clickedMarkerIndex].title,
+                    imageViewModel.pictureName[clickedMarkerIndex].location,
+                    imageViewModel.pictureName[clickedMarkerIndex].discoveryDate,
+                    imageViewModel.pictureName[clickedMarkerIndex].latitude,
+                    imageViewModel.pictureName[clickedMarkerIndex].longitude,
+                    imageViewModel.pictureName[clickedMarkerIndex].id,
+                )
+            }
         }
 
 
