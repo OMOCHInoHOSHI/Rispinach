@@ -66,6 +66,7 @@ import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import androidx.compose.material.icons.filled.Clear
 
 
 // 投稿が成功したかを確認し、Homeの更新が必要かを管理するViewModelS----------------
@@ -521,10 +522,13 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
 
     // マーカーの位置を保持する状態を追加
     var markerPosition by remember { mutableStateOf<LatLng?>(null) }
+    var markerAddress by remember { mutableStateOf("") } // 住所情報も状態として保持
 
     // 逆ジオコーディングのためのGeocoderを取得
     val context = LocalContext.current
     val geocoder = Geocoder(context, Locale.getDefault())
+
+
 
     Box(Modifier.fillMaxSize()) {
         // GoogleMapコンポーザブルを表示
@@ -538,8 +542,9 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
                 // 逆ジオコーディングで住所を取得
                 coroutineScope.launch {
                     val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-                    val address = addresses?.firstOrNull()?.getAddressLine(0) ?: "住所が見つかりません"
-                    onAddressChanged(address)
+                    markerAddress =
+                        addresses?.firstOrNull()?.getAddressLine(0) ?: "住所が見つかりません"
+                    onAddressChanged(markerAddress)
                 }
             }
         ) {
@@ -564,7 +569,12 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
                 .background(Color.White.copy(alpha = 0.5f), shape = CircleShape)
         ) {
             // ✕ボタンの表示
-            IconButton(onClick = { onCloseMap(markerPosition?.latitude, markerPosition?.longitude) }) {
+            IconButton(onClick = {
+                onCloseMap(
+                    markerPosition?.latitude,
+                    markerPosition?.longitude
+                )
+            }) {
                 Icon(Icons.Default.Close, contentDescription = "閉じる", tint = Color.Red)
             }
 
@@ -574,7 +584,26 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
             IconButton(onClick = { expanded = true }) {
                 Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
             }
+            //クリアボタンの追加
+            Row(
+                verticalAlignment = Alignment.CenterVertically // 垂直方向中央揃え
+            ){
+                Button(
+                    onClick = {
+                        markerPosition = null // ピンをクリア
+                        markerAddress = ""      // 住所情報をクリア
+                        onAddressChanged("") // 住所情報をクリア
+                    },
+                    colors = ButtonDefaults.buttonColors( // 色を設定
+                        containerColor = Color.White,
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("クリア")
+                }
+            }
         }
+
 
         // ドロップダウンメニューの表示
         DropdownMenu(
