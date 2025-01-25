@@ -159,6 +159,7 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
 
     val localDensity = LocalDensity.current
     var homeHeight by remember { mutableStateOf(0.dp) }
+    var isDebounced by remember { mutableStateOf(false) }
     // ファイヤーベースを再読み込みS--------------------------------------------
     if(isRefreshing){
         println("再ロード中")
@@ -296,7 +297,10 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
                                 {
                                     //lsName=itemsIndexedList[index]
                                     println(/*itemsIndexedList*/imageViewModel.pictureName[index].name)
-                                    openBottomSheet = true
+                                    if (!isDebounced) {
+                                        isDebounced = true
+                                        openBottomSheet = true
+                                    }
                                 },
                         )
                         Box()
@@ -333,10 +337,14 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
                             }
                         }
                         if (openBottomSheet) {
+
                             ModalBottomSheet(
                                 modifier = Modifier,
                                 //modifier = Modifier.padding(top = 16.dp),
-                                onDismissRequest = { openBottomSheet = false },
+                                onDismissRequest = {
+                                    openBottomSheet = false
+                                    isDebounced=false
+                                },
                                 sheetState = bottomSheetState,
                             )
                             {
