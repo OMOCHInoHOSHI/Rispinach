@@ -388,7 +388,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
 
             // 地図アイコンが押された時の処理
             if (showMap) {
-                Spacer(modifier = Modifier.height(4.dp))
+//                Spacer(modifier = Modifier.height(4.dp))
                 // 地図表示
                 Dialog(
                     onDismissRequest = { var showPopup = false },
@@ -415,7 +415,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
 
             // 地図アイコンが押された時の処理
             if (showMap) {
-                Spacer(modifier = Modifier.height(4.dp))
+//                Spacer(modifier = Modifier.height(4.dp))
                 // 地図表示
                 Dialog(
                     onDismissRequest = { var showPopup = false },
