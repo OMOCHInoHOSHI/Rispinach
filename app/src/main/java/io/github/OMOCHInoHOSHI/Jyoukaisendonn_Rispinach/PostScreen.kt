@@ -72,6 +72,7 @@ import com.google.firebase.database.ktx.database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import androidx.compose.material.icons.filled.Clear
+import com.google.maps.android.compose.MarkerState
 
 
 // 投稿が成功したかを確認し、Homeの更新が必要かを管理するViewModelS----------------
@@ -645,6 +646,8 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
     // マーカーの位置を保持する状態を追加
     var markerPosition by remember { mutableStateOf<LatLng?>(null) }
     var markerAddress by remember { mutableStateOf("") } // 住所情報も状態として保持
+    // フラグ状態を追加
+    var markerUpdated by remember { mutableStateOf(false) }
 
     // 逆ジオコーディングのためのGeocoderを取得
     val context = LocalContext.current
@@ -660,6 +663,7 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
             onMapClick = { latLng ->
                 // マップがクリックされたときの処理
                 markerPosition = latLng
+                markerUpdated = !markerUpdated // フラグをトグルして強制更
 
                 // 逆ジオコーディングで住所を取得
                 coroutineScope.launch {
@@ -671,9 +675,10 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
             }
         ) {
             // マーカーを表示
-            markerPosition?.let {
+            markerPosition?.let {position ->
+                val markerState = MarkerState(position) // 新しいMarkerStateを作成
                 Marker(
-                    state = rememberMarkerState(position = it),
+                    state = markerState,
                     title = "選択した場所"
                 )
             }
