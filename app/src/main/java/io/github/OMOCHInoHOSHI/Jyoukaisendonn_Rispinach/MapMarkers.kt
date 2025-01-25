@@ -65,7 +65,10 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
     Log.i("MarkerUtils", "Marker_Start")
 
     // マーカーのリストを保持するための可変リストを作成
-    val markers = remember { mutableListOf<MarkerOptions>() }
+//    val markers = remember { mutableListOf<MarkerOptions>() }
+
+    // マーカーのリストを再作成
+    val markers = mutableListOf<MarkerOptions>()
 
     // Google Maps APIキーを取得
     val ApiKey = BuildConfig.MAPS_API_KEY
@@ -269,6 +272,7 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
         // クリックされたマーカーのチャットを表示する
         if (chatflg && clickedMarkerIndex != -1) {
 
+            // ボトムシートで表示
             ModalBottomSheet(
                 onDismissRequest = {
                     chatflg = false
@@ -282,16 +286,22 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
                     .fillMaxHeight()
             ){
                 // チャット画面を開く
-                Posts(
-                    imageViewModel.pictureName[clickedMarkerIndex].bitmap,
-                    imageViewModel.pictureName[clickedMarkerIndex].name,
-                    imageViewModel.pictureName[clickedMarkerIndex].title,
-                    imageViewModel.pictureName[clickedMarkerIndex].location,
-                    imageViewModel.pictureName[clickedMarkerIndex].discoveryDate,
-                    imageViewModel.pictureName[clickedMarkerIndex].latitude,
-                    imageViewModel.pictureName[clickedMarkerIndex].longitude,
-                    imageViewModel.pictureName[clickedMarkerIndex].id,
-                )
+                if (clickedMarkerIndex in imageViewModel.pictureName.indices) {
+                    Log.i("MapMarkers", "clickedMarkerIndex is Ok: $clickedMarkerIndex")
+                    // clickedMarkerIndexが範囲内の場合のみアクセス
+                    Posts(
+                        imageViewModel.pictureName[clickedMarkerIndex].bitmap,
+                        imageViewModel.pictureName[clickedMarkerIndex].name,
+                        imageViewModel.pictureName[clickedMarkerIndex].title,
+                        imageViewModel.pictureName[clickedMarkerIndex].location,
+                        imageViewModel.pictureName[clickedMarkerIndex].discoveryDate,
+                        imageViewModel.pictureName[clickedMarkerIndex].latitude,
+                        imageViewModel.pictureName[clickedMarkerIndex].longitude,
+                        imageViewModel.pictureName[clickedMarkerIndex].id,
+                    )
+                } else {
+                    Log.e("MapMarkers", "clickedMarkerIndex is out of bounds: $clickedMarkerIndex")
+                }
             }
         }
 
