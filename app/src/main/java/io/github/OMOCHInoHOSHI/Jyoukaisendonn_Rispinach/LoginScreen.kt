@@ -45,8 +45,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Checkbox
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -64,198 +67,95 @@ fun LoginScreen(): Boolean {
 
     var signSuccess by remember { mutableStateOf(false) }
 
-    // GoogleSignInClient 設定
-    val googleSignInClient = remember {
-        GoogleSignIn.getClient(
-            context,
-            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("1:796232278012:web:e07084ff3d13d8e4a6dc79") // FirebaseのWebクライアントIDを設定
-                .requestEmail()
-                .build()
-        )
-    }
-
-    val googleSignInResult = rememberUpdatedState { task: Task<GoogleSignInAccount> ->
-        try {
-            val account = task.getResult(ApiException::class.java)
-            account?.let {
-                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-                auth.signInWithCredential(credential)
-                    .addOnCompleteListener { authTask ->
-                        if (authTask.isSuccessful) {
-                            Toast.makeText(context, "Googleログイン成功", Toast.LENGTH_SHORT).show()
-                            signSuccess = true
-                        } else {
-                            Toast.makeText(context, "Google認証に失敗しました", Toast.LENGTH_SHORT).show()
-                            signSuccess = false
-                        }
-                    }
-            }
-        } catch (e: ApiException) {
-            Toast.makeText(context, "Google認証に失敗: ${e.message}", Toast.LENGTH_SHORT).show()
-            signSuccess = false
-        }
-    }
-
-    val googleSignInLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
-        onResult = { result ->
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            googleSignInResult.value(task)
-        }
-    )
-
-    // 自動ログイン処理
-    if (rememberMe && email.isNotEmpty() && password.isNotEmpty()) {
-        isLoading = true
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                isLoading = false
-                signSuccess = task.isSuccessful
-                if (task.isSuccessful) {
-                    Toast.makeText(context, "自動ログイン成功", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "自動ログイン失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-    }
-
     Scaffold(
-        topBar = {
-            TopAppBar(
-                modifier = Modifier
-                    .padding(top = 110.dp)
-                    .fillMaxWidth(),
-                title = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            modifier = Modifier.offset(x = -15.dp),
-                            text = "ようこそRispinachへ",
-                            fontSize = 30.sp
-                        )
-                    }
-                }
-            )
-        },
+//        topBar = {
+//            TopAppBar(
+//                modifier = Modifier
+//                    .padding(top = 110.dp)
+//                    .fillMaxWidth(),
+//                title = {
+//                    Text(
+//                        modifier = Modifier.offset(x = -15.dp),
+//                        text = "ようこそRispinachへ",
+//                        fontSize = 30.sp
+//                    )
+//                }
+//            )
+//        },
         content = {
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
             ) {
-                TextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("メールアドレス") },
-                    modifier = Modifier.fillMaxWidth()
+                Image(
+                    painter = painterResource(id = R.drawable.rispinach),
+                    contentDescription = "背景画像",
+                    contentScale = ContentScale.Crop, // 画面全体に引き伸ばす
+                    modifier = Modifier.fillMaxSize()
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
 
-                TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("パスワード") },
-                    modifier = Modifier.fillMaxWidth(),
-                    visualTransformation = PasswordVisualTransformation()
-                )
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                ///*
-                // 「ログイン情報を保持する」チェックボックス
-//                Row(verticalAlignment = Alignment.CenterVertically) {
-//                    Checkbox(
-//                        checked = rememberMe,
-//                        onCheckedChange = { rememberMe = it }
-//                    )
-//                    Text("ログイン情報を保持する")
-//                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // ログインボタン
-                Button(
-                    onClick = {
-                        isLoading = true
-                        auth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener { task ->
-                                isLoading = false
-                                if (task.isSuccessful) {
-                                    Toast.makeText(context, "ログイン成功", Toast.LENGTH_SHORT).show()
-                                    signSuccess = true
-                                    if (rememberMe) {
-                                        with(sharedPreferences.edit()) {
-                                            putString("email", email)
-                                            putString("password", password)
-                                            putBoolean("rememberMe", true)
-                                            apply()
-                                        }
-                                    } else {
-                                        with(sharedPreferences.edit()) {
-                                            clear()
-                                            apply()
-                                        }
-                                    }
-                                } else {
-                                    Toast.makeText(context, "ログイン失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                                    signSuccess = false
-                                }
-                            }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = email.isNotEmpty() && password.isNotEmpty() && !isLoading
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Text("ログインする", fontSize = 18.sp)
-                }
-                 //*/
+                    TextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text("メールアドレス") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // 新規登録ボタン
-                Button(
-                    onClick = {
-                        isLoading = true
-                        auth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener { task ->
-                                isLoading = false
-                                if (task.isSuccessful) {
-                                    Toast.makeText(context, "ユーザー登録成功", Toast.LENGTH_SHORT).show()
-                                    signSuccess = true
-                                } else {
-                                    Toast.makeText(context, "登録失敗: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                                    signSuccess = false
-                                }
-                            }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = email.isNotEmpty() && password.isNotEmpty() && !isLoading
-                ) {
-                    Text("新規登録", fontSize = 18.sp)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Googleログインボタン
-                Button(
-                    onClick = {
-                        val signInIntent = googleSignInClient.signInIntent
-                        googleSignInLauncher.launch(signInIntent)
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Google アカウントでログイン", fontSize = 18.sp, color = Color.White)
-                }
-
-                if (isLoading) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    CircularProgressIndicator()
+
+                    TextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text("パスワード") },
+                        modifier = Modifier.fillMaxWidth(),
+                        visualTransformation = PasswordVisualTransformation()
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        onClick = {
+                            isLoading = true
+                            auth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener { task ->
+                                    isLoading = false
+                                    signSuccess = task.isSuccessful
+                                }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("ログインする", fontSize = 18.sp)
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        onClick = {
+                            isLoading = true
+                            auth.createUserWithEmailAndPassword(email, password)
+                                .addOnCompleteListener { task ->
+                                    isLoading = false
+                                    signSuccess = task.isSuccessful
+                                }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("新規登録", fontSize = 18.sp)
+                    }
+
+                    if (isLoading) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }
@@ -263,6 +163,17 @@ fun LoginScreen(): Boolean {
 
     return signSuccess
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
