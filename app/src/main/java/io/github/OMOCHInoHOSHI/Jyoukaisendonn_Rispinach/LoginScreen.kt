@@ -46,10 +46,12 @@ import com.google.firebase.auth.GoogleAuthProvider
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Checkbox
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -64,6 +66,7 @@ fun LoginScreen(): Boolean {
     var password by remember { mutableStateOf(sharedPreferences.getString("password", "") ?: "") }
     var rememberMe by remember { mutableStateOf(sharedPreferences.getBoolean("rememberMe", false)) }
     var isLoading by remember { mutableStateOf(false) }
+    var isTextFieldClicked by remember { mutableStateOf(false) }
 
     var signSuccess by remember { mutableStateOf(false) }
 
@@ -88,9 +91,9 @@ fun LoginScreen(): Boolean {
                     .fillMaxSize()
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.rispinach),
+                    painter = painterResource(id = R.drawable.risrisris),
                     contentDescription = "背景画像",
-                    contentScale = ContentScale.Crop, // 画面全体に引き伸ばす
+                    contentScale = ContentScale.FillHeight, // 画面全体に引き伸ばす
                     modifier = Modifier.fillMaxSize()
                 )
 
@@ -103,14 +106,33 @@ fun LoginScreen(): Boolean {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "メールアドレスを入力",
+                        style = TextStyle(
+                            color = Color.White, // テキストの色を赤色に設定
+                            fontSize = 14.sp // フォントサイズを18スケールポイントに設定
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
                     TextField(
                         value = email,
                         onValueChange = { email = it },
                         label = { Text("メールアドレス") },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth().clickable {
+                            isTextFieldClicked = true
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "パスワードは6文字以上",
+                        style = TextStyle(
+                            color = Color.White, // テキストの色を赤色に設定
+                            fontSize = 14.sp // フォントサイズを18スケールポイントに設定
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
                     TextField(
                         value = password,
@@ -148,6 +170,8 @@ fun LoginScreen(): Boolean {
                                 }
                         },
                         modifier = Modifier.fillMaxWidth()
+
+
                     ) {
                         Text("新規登録", fontSize = 18.sp)
                     }
