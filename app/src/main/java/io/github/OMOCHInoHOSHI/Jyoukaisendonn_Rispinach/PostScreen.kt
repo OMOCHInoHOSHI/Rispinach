@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.location.Geocoder
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -708,24 +709,7 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
             IconButton(onClick = { expanded = true }) {
                 Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
             }
-//            //クリアボタンの追加
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically // 垂直方向中央揃え
-//            ){
-//                Button(
-//                    onClick = {
-//                        markerPosition = null // ピンをクリア
-//                        markerAddress = ""      // 住所情報をクリア
-//                        onAddressChanged("") // 住所情報をクリア
-//                    },
-//                    colors = ButtonDefaults.buttonColors( // 色を設定
-//                        containerColor = Color.White,
-//                        contentColor = Color.Black
-//                    )
-//                ) {
-//                    Text("クリア")
-//                }
-//            }
+
         }
 
 
@@ -760,6 +744,14 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
                 )
             }
         }
+    }
+
+    // バックハンドラでマップを閉じる
+    BackHandler {
+        onCloseMap(
+            markerPosition?.latitude,
+            markerPosition?.longitude
+        )
     }
 }
 
