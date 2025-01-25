@@ -646,8 +646,6 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
     // マーカーの位置を保持する状態を追加
     var markerPosition by remember { mutableStateOf<LatLng?>(null) }
     var markerAddress by remember { mutableStateOf("") } // 住所情報も状態として保持
-    // フラグ状態を追加
-    var markerUpdated by remember { mutableStateOf(false) }
 
     // 逆ジオコーディングのためのGeocoderを取得
     val context = LocalContext.current
@@ -663,7 +661,6 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
             onMapClick = { latLng ->
                 // マップがクリックされたときの処理
                 markerPosition = latLng
-                markerUpdated = !markerUpdated // フラグをトグルして強制更
 
                 // 逆ジオコーディングで住所を取得
                 coroutineScope.launch {
@@ -711,24 +708,24 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
             IconButton(onClick = { expanded = true }) {
                 Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
             }
-            //クリアボタンの追加
-            Row(
-                verticalAlignment = Alignment.CenterVertically // 垂直方向中央揃え
-            ){
-                Button(
-                    onClick = {
-                        markerPosition = null // ピンをクリア
-                        markerAddress = ""      // 住所情報をクリア
-                        onAddressChanged("") // 住所情報をクリア
-                    },
-                    colors = ButtonDefaults.buttonColors( // 色を設定
-                        containerColor = Color.White,
-                        contentColor = Color.Black
-                    )
-                ) {
-                    Text("クリア")
-                }
-            }
+//            //クリアボタンの追加
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically // 垂直方向中央揃え
+//            ){
+//                Button(
+//                    onClick = {
+//                        markerPosition = null // ピンをクリア
+//                        markerAddress = ""      // 住所情報をクリア
+//                        onAddressChanged("") // 住所情報をクリア
+//                    },
+//                    colors = ButtonDefaults.buttonColors( // 色を設定
+//                        containerColor = Color.White,
+//                        contentColor = Color.Black
+//                    )
+//                ) {
+//                    Text("クリア")
+//                }
+//            }
         }
 
 
