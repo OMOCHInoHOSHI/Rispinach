@@ -229,24 +229,24 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
                     icon = BitmapDescriptorFactory.defaultMarker(color_enemy),
 
                     // マーカークリック
-                    onClick = {
-                        clickCount += 1
-                        if (clickCount == 2) {
-                            println("Marker at $position clicked for the second time!")
-                            chatflg = true
-                            clickCount = 0
-                        }
-
-                        markerClickCounts[position] = clickCount
-                        clickedMarkerIndex = index
-
-                        coroutineScope.launch {
-                            bottomSheetState.show()
-                            Log.d("BottomSheet", "BottomSheet shown")
-                        }
-
-                        false
-                    },
+//                    onClick = {
+//                        clickCount += 1
+//                        if (clickCount == 2) {
+//                            println("Marker at $position clicked for the second time!")
+//                            chatflg = true
+//                            clickCount = 0
+//                        }
+//
+//                        markerClickCounts[position] = clickCount
+//                        clickedMarkerIndex = index
+//
+//                        coroutineScope.launch {
+//                            bottomSheetState.show()
+//                            Log.d("BottomSheet", "BottomSheet shown")
+//                        }
+//
+//                        false
+//                    },
 
                     // ウィンドウクリック
                     onInfoWindowClick = {
