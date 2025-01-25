@@ -44,6 +44,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -155,6 +157,8 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
     var lod by rememberSaveable { mutableStateOf(false) }
     var isRefreshing by rememberSaveable { mutableStateOf(false) }
 
+    val localDensity = LocalDensity.current
+    var homeHeight by remember { mutableStateOf(0.dp) }
     // ファイヤーベースを再読み込みS--------------------------------------------
     if(isRefreshing){
         println("再ロード中")
@@ -183,15 +187,19 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
 
     Column(
         modifier = Modifier
+            .onGloballyPositioned { coordinates ->
+                homeHeight =
+                    with(localDensity) { coordinates.size.height.toDp() /* 高さをdpで取得*/ }
+            }
     )
     {
         //地図枠(仮)
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(300.dp))
+                .height(homeHeight*2/5))
         {
-//            Image(
+//            Image(11
 //                modifier = Modifier.padding(start = 0.dp, top = 0.dp,end=0.dp, bottom = 225.dp),
 //                painter = painterResource1(R.drawable.tizu_kakkokari1), contentDescription = "test"
 //            )
