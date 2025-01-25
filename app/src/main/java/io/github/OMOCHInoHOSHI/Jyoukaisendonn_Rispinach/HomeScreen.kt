@@ -552,7 +552,9 @@ fun StartupDialog(onDismiss: () -> Unit) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
-                modifier = Modifier.fillMaxSize().padding(20.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    //.padding(20.dp)
             ) {
                 // ダイアログに表示するテキスト
 
