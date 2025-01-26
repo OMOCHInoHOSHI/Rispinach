@@ -70,10 +70,29 @@ class ImageViewModel : ViewModel() {
     var pictureName by mutableStateOf(listOf<ImageData>())
         private set
 
+//    fun fetchImages() {
+//        viewModelScope.launch {
+//            fetchImagesFromFirebaseStorage { images ->
+//                pictureName = images
+//            }
+//        }
+//    }
+
+    // キャッシュされたデータを保持する変数
+    private var isDataFetched = false
+
     fun fetchImages() {
+        if (isDataFetched) {
+            println("既にデータが取得されています（ImageView）")
+            // データが既に取得されている場合は何もしない
+            return
+        }
+
         viewModelScope.launch {
+            println("データを取得します（ImageView）")
             fetchImagesFromFirebaseStorage { images ->
                 pictureName = images
+                isDataFetched = true // データが取得されたことを記録
             }
         }
     }
