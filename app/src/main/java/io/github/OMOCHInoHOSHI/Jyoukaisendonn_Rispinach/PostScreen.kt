@@ -388,6 +388,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                 )
             }
 
+            /*
             // 地図アイコンが押された時の処理
             if (showMap) {
 //                Spacer(modifier = Modifier.height(4.dp))
@@ -414,6 +415,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                     }
                 }
             }
+             */
 
             // 地図アイコンが押された時の処理
             if (showMap) {
@@ -653,8 +655,6 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
     val context = LocalContext.current
     val geocoder = Geocoder(context, Locale.getDefault())
 
-
-
     Box(Modifier.fillMaxSize()) {
         // GoogleMapコンポーザブルを表示
         GoogleMap(
@@ -663,18 +663,10 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
             onMapClick = { latLng ->
                 // マップがクリックされたときの処理
                 markerPosition = latLng
-
-                // 逆ジオコーディングで住所を取得
-                coroutineScope.launch {
-                    val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-                    markerAddress =
-                        addresses?.firstOrNull()?.getAddressLine(0) ?: "住所が見つかりません"
-                    onAddressChanged(markerAddress)
-                }
             }
         ) {
             // マーカーを表示
-            markerPosition?.let {position ->
+            markerPosition?.let { position ->
                 val markerState = MarkerState(position) // 新しいMarkerStateを作成
                 Marker(
                     state = markerState,
@@ -696,10 +688,17 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
         ) {
             // ✕ボタンの表示
             IconButton(onClick = {
-                onCloseMap(
-                    markerPosition?.latitude,
-                    markerPosition?.longitude
-                )
+                // ✕ボタンが押されたときに逆ジオコーディングを実行
+                markerPosition?.let { latLng ->
+                    coroutineScope.launch {
+                        val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+                        val address = addresses?.firstOrNull()?.getAddressLine(0) ?: "住所が見つかりません"
+                        onAddressChanged(address)
+
+                        Log.d("MapContent", "逆ジオコーディング")
+                        onCloseMap(markerPosition?.latitude, markerPosition?.longitude)
+                    }
+                }
             }) {
                 Icon(Icons.Default.Close, contentDescription = "閉じる", tint = Color.Red)
             }
@@ -710,9 +709,7 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
             IconButton(onClick = { expanded = true }) {
                 Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
             }
-
         }
-
 
         // ドロップダウンメニューの表示
         DropdownMenu(

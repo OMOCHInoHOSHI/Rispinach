@@ -101,31 +101,33 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
                 .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)) // カスタムアイコンを設定
 
             markers.add(marker)
-        } else {
-            // 住所を緯度経度に変換
-            val results: Array<GeocodingResult> = GeocodingApi.geocode(geoApiContext, address).await()
-            if (results.isNotEmpty()) {
-                val location = results[0].geometry.location
-                val Lat_l = location.lat
-                val Lng_l = location.lng
-
-                // 変換結果をログに出力
-                //Log.i("GeocodingResult", "Title: $Title, Address: $address, Lat: $Lat, Lng: $Lng")
-
-                // マーカーオプションを作成
-                val marker = MarkerOptions()
-                    .position(LatLng(Lat_l, Lng_l))
-                    .title(Title)
-                    .snippet(Snippet)
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)) // カスタムアイコンを設定
-
-                // マーカー情報変数に格納
-                markers.add(marker)
-            } else {
-                // 住所が見つからなかった場合のログ出力
-                //Log.e("GeocodingResult", "No results found for address: $address")
-            }
         }
+//        else {
+//            // 住所を緯度経度に変換
+//            val results: Array<GeocodingResult> = GeocodingApi.geocode(geoApiContext, address).await()
+//            if (results.isNotEmpty()) {
+//                val location = results[0].geometry.location
+//                val Lat_l = location.lat
+//                val Lng_l = location.lng
+//
+//                // 変換結果をログに出力
+//                //Log.i("GeocodingResult", "Title: $Title, Address: $address, Lat: $Lat, Lng: $Lng")
+//
+//                // マーカーオプションを作成
+//                val marker = MarkerOptions()
+//                    .position(LatLng(Lat_l, Lng_l))
+//                    .title(Title)
+//                    .snippet(Snippet)
+//                    .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)) // カスタムアイコンを設定
+//
+//                // マーカー情報変数に格納
+//                markers.add(marker)
+//            }
+//            else {
+//                // 住所が見つからなかった場合のログ出力
+//                //Log.e("GeocodingResult", "No results found for address: $address")
+//            }
+//        }
     }
 
     // markersの中身をログに出力
