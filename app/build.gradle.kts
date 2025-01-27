@@ -106,6 +106,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:19.0.0")
     implementation(libs.play.services.location)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.ui.test.android)
+    implementation("com.google.maps.android:android-maps-utils:2.2.5")
     //implementation(libs.firebase.auth.common)//重複している可能性があるため一旦削除してます
 
     //カメラライブラリS---------------------------------------------------------

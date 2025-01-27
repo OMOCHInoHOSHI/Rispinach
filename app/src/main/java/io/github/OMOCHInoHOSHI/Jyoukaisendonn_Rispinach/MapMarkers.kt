@@ -1,7 +1,11 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,27 +29,31 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.util.Locale
 import com.google.maps.GeoApiContext
 import com.google.maps.GeocodingApi
 import com.google.maps.model.GeocodingResult
 import fetchImagesFromFirebaseStorage
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
+//import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.core.content.ContextCompat
+import com.google.android.gms.maps.model.BitmapDescriptor
+import android.graphics.Color
+import android.graphics.Paint
+import androidx.compose.ui.graphics.vector.Path
 
 // マーカーを読み込む関数
 @Composable
@@ -64,17 +72,23 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
     // 画像データのリストをループして各画像の位置情報を取得
     imageViewModel.pictureName.forEach { imageData ->
         val address = imageData.location
-        val Title = imageData.title
-        val Snippet = imageData.name
+//        val Title = imageData.title
+//        val Snippet = imageData.name
         val Lat = imageData.latitude
         val Lng = imageData.longitude
+        val bitmap = imageData.bitmap
+
+        // ビットマップをリサイズして白い枠と逆三角形を追加(色は別々にすること!!)
+        val resizedBitmap = ResizeMarkerIcon(bitmap, 180, 10, "#ed6d35", "#ed6d36") // 適切なサイズに変更(色：キャロットオレンジ、ほぼキャロットオレンジ)
 
         if (Lat != null && Lng != null) {
             // 緯度経度が既にある場合
             val marker = MarkerOptions()
                 .position(LatLng(Lat, Lng))
-                .title(Title)
-                .snippet(Snippet)
+//                .title(Title)
+//                .snippet(Snippet)
+                .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)) // カスタムアイコンを設定
+
             markers.add(marker)
         } else {
             // 住所を緯度経度に変換
@@ -90,8 +104,9 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
                 // マーカーオプションを作成
                 val marker = MarkerOptions()
                     .position(LatLng(Lat_l, Lng_l))
-                    .title(Title)
-                    .snippet(Snippet)
+//                    .title(Title)
+//                    .snippet(Snippet)
+                    .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)) // カスタムアイコンを設定
 
                 // マーカー情報変数に格納
                 markers.add(marker)
@@ -175,7 +190,7 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     val coroutineScope = rememberCoroutineScope()
 
     // マーカーの色を設定
-    val color_enemy = BitmapDescriptorFactory.HUE_RED
+    //val color_enemy = BitmapDescriptorFactory.HUE_RED
 
     // 画面全体を埋めるBoxコンポーネント
     Box(Modifier.fillMaxSize()) {
@@ -185,13 +200,15 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
             cameraPositionState = cameraPositionState,
         ) {
             // 読み込んだマーカー情報をマップに追加
-            markers.forEach { markerOptions ->
-                Marker(
-                    state = rememberMarkerState(position = markerOptions.position),
-                    title = markerOptions.title,
-                    snippet = markerOptions.snippet,
-                    icon = BitmapDescriptorFactory.defaultMarker(color_enemy)
-                )
+            markers.forEachIndexed  { index, markerOptions ->
+                if (index in 0 until imageViewModel.pictureName.size) {
+                    Marker(
+                        state = rememberMarkerState(position = markerOptions.position),
+//                        title = markerOptions.title,
+//                        snippet = markerOptions.snippet,
+                        icon = markerOptions.icon
+                    )
+                }
             }
         }
 
@@ -243,4 +260,67 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     // マーカーの数をログに出力
     println("危険マーカーの数: ${markers.size}")
     Log.i("GoogleMap", "GoogleMap_Mark_End")
+}
+
+// 画像を正方形に切り抜き、リサイズし、外枠を追加
+@Composable
+fun ResizeMarkerIcon(
+    bitmap: Bitmap,     // 元のビットマップ画像
+    targetSize: Int,        // 最終的な画像のサイズ（ピクセル単位）
+    borderSize: Int,        // ボーダーのサイズ（ピクセル単位）
+    backgroundColor: String,        // 背景色（例: "#FDEFF2"）
+    triangleColor: String       // 三角形の色（例: "#89C3EB"）
+): Bitmap {
+    val triangleHeight = 40 // 三角形の高さを設定
+    val triangleWidth = 50 // 三角形の幅を設定
+    val triangleOffset = 0 // 三角形の位置を設定
+
+    // 画像の幅と高さの最小値を取得し、正方形のサイズを決定
+    val dimension = Math.min(bitmap.width, bitmap.height)
+    // 画像の中心を計算
+    val x = (bitmap.width - dimension) / 2
+    val y = (bitmap.height - dimension) / 2
+
+    // 画像を正方形に切り抜く
+    val squareBitmap = Bitmap.createBitmap(bitmap, x, y, dimension, dimension)
+    // 正方形の画像をリサイズして、ボーダーサイズを考慮したターゲットサイズに調整
+    val resizedBitmap = Bitmap.createScaledBitmap(squareBitmap, targetSize - 2 * borderSize, targetSize - 2 * borderSize, true)
+
+    // 最終的なビットマップを作成（ターゲットサイズと三角形の高さを含む）
+    val finalBitmap = Bitmap.createBitmap(targetSize, targetSize + triangleHeight + triangleOffset, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(finalBitmap)
+    // 背景色を設定
+    canvas.drawColor(Color.parseColor(backgroundColor))
+    // リサイズした画像をキャンバスに描画
+    canvas.drawBitmap(resizedBitmap, borderSize.toFloat(), borderSize.toFloat(), null)
+
+    // 逆三角形の底辺を描画するためのペイントオブジェクトを作成
+    val paint = Paint()
+    paint.color = Color.parseColor(triangleColor) // 三角形の色を設定
+    paint.style = Paint.Style.FILL
+
+    // 逆三角形のパスを作成
+    val path = android.graphics.Path()
+    path.moveTo((targetSize / 2).toFloat(), (targetSize + triangleHeight).toFloat()) // 三角形の頂点
+    path.lineTo((targetSize / 2 - triangleWidth / 2).toFloat(), targetSize.toFloat()) // 三角形の左下
+    path.lineTo((targetSize / 2 + triangleWidth / 2).toFloat(), targetSize.toFloat()) // 三角形の右下
+    path.close()
+
+    // キャンバスに三角形を描画
+    canvas.drawPath(path, paint)
+
+    // 下部の白い背景を削除するためにビットマップを切り抜く
+    val croppedBitmap = Bitmap.createBitmap(finalBitmap, 0, 0, targetSize, targetSize + triangleHeight + triangleOffset)
+
+    // 下部の背景を透明に設定
+    for (i in 0 until croppedBitmap.width) {
+        for (j in targetSize until croppedBitmap.height) {
+            if (croppedBitmap.getPixel(i, j) == Color.parseColor(backgroundColor)) {
+                croppedBitmap.setPixel(i, j, Color.TRANSPARENT)
+            }
+        }
+    }
+
+    // 最終的なビットマップを返す
+    return croppedBitmap
 }

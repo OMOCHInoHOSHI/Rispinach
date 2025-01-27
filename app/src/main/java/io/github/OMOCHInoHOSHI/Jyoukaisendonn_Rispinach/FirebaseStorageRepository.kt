@@ -40,7 +40,7 @@ fun fetchImagesFromFirebaseStorage(onDataReceived: (List<ImageData>) -> Unit) {
                     longitude = longitudeStr.toDoubleOrNull()
                 }
 
-                Log.d("FirebaseStorage", "$speciesName, $latitude   |   $longitude")       // DKeyの確認用
+                //Log.d("FirebaseStorage", "$speciesName, $latitude   |   $longitude")       // DKeyの確認用
 
                 // アイテムのバイトデータを取得
                 item.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
