@@ -182,7 +182,7 @@ fun MapContent() {//マップの表示内容
     }
     // 必要に応じて権限リクエストを行う
     LaunchedEffect(Unit) {
-//        locationViewModel.requestLocationPermission(activity)
+        locationViewModel.requestLocationPermission(activity)
         locationViewModel.fusedLocation()
     }
 
