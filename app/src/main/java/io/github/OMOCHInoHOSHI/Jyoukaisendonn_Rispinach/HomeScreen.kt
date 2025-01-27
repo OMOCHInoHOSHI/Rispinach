@@ -1,7 +1,10 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,8 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.AccountCircle
@@ -18,7 +23,6 @@ import androidx.compose.material.icons.outlined.Camera
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material3.DismissibleDrawerSheet
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,20 +37,24 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -59,7 +67,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach.ui.theme.RispinachTheme
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 enum class MainScreenTab(
     var id: String,
@@ -100,12 +108,14 @@ enum class MainScreenTab(
 }
 
 //レイアウトはここに追加していく
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 {
     SideEffect { Log.d("compose-log", "MainScreen") }
-    var drawerState by remember { mutableStateOf(DrawerState(initialValue = DrawerValue.Closed)) }
+//    var drawerState by remember { mutableStateOf(DrawerState(initialValue = DrawerValue.Closed)) }
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
     val nestedNavController = rememberNavController()
     val navBackStackEntry by nestedNavController.currentBackStackEntryAsState()
     //val navBackStackEntry by rememberSaveable { mutableStateOf(nestedNavController.currentBackStackEntryAsState()) }
@@ -115,8 +125,13 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
     var topBarHeight by remember { mutableStateOf(0.dp) }
     var btmEnabled by rememberSaveable { mutableStateOf(true) }
     var selectButton=currentTab
-    var DismissibleDrawerEnabled=true
+    var DismissibleDrawerEnabled=false
     var goMap=false
+    var drawerMenuWidth by remember { mutableStateOf(0.dp) }
+    var iconWidth by remember { mutableStateOf(0.dp) }
+    var dw=drawerMenuWidth
+    // コルーチンスコープの取得
+    val coroutineScope = rememberCoroutineScope()
 
     //var navEnabled by rememberSaveable { mutableStateOf(true) }
     //var n=true
@@ -129,64 +144,79 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 
     ModalNavigationDrawer(
         drawerState = drawerState,
-        gesturesEnabled = DismissibleDrawerEnabled,
+        gesturesEnabled = false,/*DismissibleDrawerEnabled*/
         drawerContent = {
-            DismissibleDrawerSheet(
-                modifier = Modifier.width(200.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectTapGestures(onTap = {
+                            // ドロワーが開いている場合は閉じる
+                            if (drawerState.isOpen) {
+                                coroutineScope.launch {
+                                    drawerState.close()
+                                }
+                            }
+                        })
+                    }
             )
             {
-                println(drawerState)
-                SideEffect { Log.d("compose-log", "ModalNavigationDrawer") }
+                DismissibleDrawerSheet(
+                    modifier = Modifier
+                        .width(200.dp)
+                )
+                {
+//                println(drawerState)
+
+                    //　動作が重い原因？頻繁にインスタンスを再生成している？
+//                SideEffect { Log.d("compose-log", "ModalNavigationDrawer") }
 //                Text(text = "ナビゲーションドロワー")
-                MainScreenTab.entries.forEachIndexed { index, item ->
-                    if(selectButton=="main/camera")
-                    {
-                        selectButton="main/home"
-                        //selectIndex=0
-                    }
-                    NavigationDrawerItem(
-                        icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label) },
-                        onClick = dropUnlessResumed()
-                        {
-                            //デバッグ用
-                            println(item.id)
+                    MainScreenTab.entries.forEachIndexed { index, item ->
+                        if (selectButton == "main/camera") {
+                            selectButton = "main/home"
+                            //selectIndex=0
+                        }
+                        NavigationDrawerItem(
+                            icon = { Icon(item.icon, contentDescription = item.label) },
+                            label = { Text(item.label) },
+                            onClick = dropUnlessResumed()
+                            {
+                                //デバッグ用
+                                println(item.id)
 //                            if(index==item.idx)
 //                            {
 //                                return@NavigationBarItem
 //                            }
-                            if(currentTab==item.id)
-                            {
-                                btmEnabled=false
-                                //return@dropUnlessResumed
-                                //return@NavigationBarItem
-                            }
-                            else
-                            {
-                                btmEnabled=true
-                            }
-
-                            nestedNavController.navigate(item.id)
-                            {
-                                //launchSingleTop = true
-                                popUpTo(item.id)
-                                {
-                                    saveState = true
-                                    //inclusive=true
+                                if (currentTab == item.id) {
+                                    btmEnabled = false
+                                    //return@dropUnlessResumed
+                                    //return@NavigationBarItem
+                                } else {
+                                    btmEnabled = true
                                 }
-                                launchSingleTop = true
-                                //restoreState = true
-                            }
+
+                                nestedNavController.navigate(item.id)
+                                {
+                                    //launchSingleTop = true
+                                    popUpTo(item.id)
+                                    {
+                                        saveState = true
+                                        //inclusive=true
+                                    }
+                                    launchSingleTop = true
+                                    //restoreState = true
+                                }
 //                            nestedNavController.navigate(item.id)
 //                            {
 //                                restoreState=true
 //                            }
 
-                        },
-                        //enabled = currentTab==item.id==(!btmEnabled),
-                        //selected = currentTab == item.id/*==btmEnabled*/,
-                        selected = selectButton==item.id,
-                    )
+                            },
+                            //enabled = currentTab==item.id==(!btmEnabled),
+                            //selected = currentTab == item.id/*==btmEnabled*/,
+                            selected = selectButton == item.id,
+                        )
+                    }
                 }
             }
         },
@@ -310,13 +340,13 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                             //enabled = false==item.enabled,
                         )
                     }
-                    LaunchedEffect(key1=btmEnabled)
-                    {
-                        if(!btmEnabled)
-                        {
-                            delay(3000)
-                        }
-                    }
+//                    LaunchedEffect(key1=btmEnabled)
+//                    {
+//                        if(!btmEnabled)
+//                        {
+//                            delay(3000)
+//                        }
+//                    }
                 }
             },
             //ナビゲーションバー--------------------------------------------------------------------
@@ -325,13 +355,15 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                 if(selectButton=="main/map")
                 {
                     goMap=true
-                    DismissibleDrawerEnabled=false
-                    drawerState = DrawerState(initialValue = DrawerValue.Closed)
+//                    DismissibleDrawerEnabled=false
+                    coroutineScope.launch {
+                        drawerState.close()
+                    }
                 }
                 else
                 {
                     goMap=false
-                    DismissibleDrawerEnabled=true
+//                    DismissibleDrawerEnabled=true
                 }
 
 //                if(!goMap) {
@@ -352,7 +384,8 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                 Text(
                                     text = "Rispinach",
                                     modifier = Modifier
-                                        .offset(x = -28.dp)
+                                        .align(Alignment.Center)
+                                        //.offset(x = (dw-iconWidth))
                                 )
                             }
                             else
@@ -360,7 +393,8 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                 Text(
                                     text = "Rispinach",
                                     modifier = Modifier
-                                        .offset(x = -12.dp)
+                                        .align(Alignment.Center)
+                                        .offset(x = ((dw + iconWidth) / 6) + 1.5.dp)
                                 )
                             }
                         }
@@ -375,7 +409,9 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                     println("a")
                                     //DismissibleDrawerEnabled=true
                                     //drawerState!=drawerState
-                                    drawerState = DrawerState(initialValue = DrawerValue.Open)
+                                    coroutineScope.launch {
+                                        drawerState.open()
+                                    }
                                     //drawerState = DrawerState(initialValue = DrawerValue.Open)
                                 },
                                 enabled = !goMap,
@@ -388,11 +424,29 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                     modifier = Modifier
                                         .height(60.dp)
                                         .width(60.dp)
+                                        .onGloballyPositioned { coordinates ->
+                                            drawerMenuWidth =
+                                                with(localDensity) { coordinates.size.width.toDp() }
+                                        }
                                     //.border(2.dp, Color.White, RoundedCornerShape(20.dp))
                                 )
 
                             }
                         }
+                    },
+
+                    actions = {
+                        Image(
+                            painter = painterResource(id=R.drawable.ic_launcher_playstore), // 自作の画像リソースを指定
+                            contentDescription = "Custom Icon",
+                            modifier = Modifier
+                                .size(45.dp) // アイコンのサイズ
+                                .clip(CircleShape) // 丸型に切り抜き
+                                .onGloballyPositioned { coordinates ->
+                                    iconWidth = with(localDensity) { coordinates.size.width.toDp() }
+                                }
+                                //.padding(4.dp) // アイコンの周りにパディング
+                        )
                     },
 
                     colors=TopAppBarColors(Color.Black/*TopBar背景色*/,Color.White,Color.White,Color.White,Color.White)
@@ -421,7 +475,8 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
         )
         {
             Box(
-                modifier = Modifier.padding(it)
+                modifier = Modifier
+                    .padding(it)
             )
             {
                 SideEffect { Log.d("compose-log", "Box3") }
@@ -435,6 +490,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //            }
 
             }
+
         }
 
 
@@ -442,7 +498,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding()
-                .padding(top=topBarHeight,bottom = bottomBarHeight)
+                .padding(top = topBarHeight, bottom = bottomBarHeight)
 
         )
         {
@@ -523,7 +579,9 @@ fun StartupDialog(onDismiss: () -> Unit) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
-                modifier = Modifier.fillMaxSize().padding(20.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    //.padding(20.dp)
             ) {
                 // ダイアログに表示するテキスト
 

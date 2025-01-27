@@ -124,6 +124,8 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.material.icons.extended.android)
+//    implementation("androidx.compose.material:material-icons-extended:1.5.0")
+//    implementation("androidx.compose.ui:ui-text-google-fonts:1.5.0")
     //アイコン関係E----------------------------------------------------------------------
 
     // 既存の依存関係

@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.location.Geocoder
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -71,6 +72,8 @@ import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import androidx.compose.material.icons.filled.Clear
+import com.google.maps.android.compose.MarkerState
 
 
 // 投稿が成功したかを確認し、Homeの更新が必要かを管理するViewModelS----------------
@@ -136,8 +139,8 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
     // リアルタイムデータベースのキーを取得
     val database = FirebaseDatabase.getInstance()
     val myRef = database.getReference("users")
-    val r_t_d_key = getNewKeyFromRealtimeDatabase(myRef)
-    println("key = $r_t_d_key")
+//    val r_t_d_key = getNewKeyFromRealtimeDatabase(myRef)
+//    println("key = $r_t_d_key")
 
     // 表示する前にビットマップをリサイズ
     //val resizedBitmap = bitmap?.let { resizeBitmap(it, 224, 224) }
@@ -156,7 +159,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
         topBar = {
             // トップバーの設定
             TopAppBar(
-                title = { Text("投稿準備画面") }
+                title = { Text("Anomaly Post") }
             )
         },
         floatingActionButton = {
@@ -173,8 +176,8 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                         location.ifEmpty { "不明" },
                         discoveryDate.ifEmpty { "不明" },
                         context,
-                        r_t_d_key,
-                        viewModel,
+//                        r_t_d_key,
+                        viewModel,//コールバック用
                         latitude, // 緯度を渡す
                         longitude // 経度を渡す
                     )
@@ -330,6 +333,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                 OutlinedTextField(
                     value = location,
                     onValueChange = { location = it },
+                    readOnly = true,
                     placeholder = { Text("  発見場所") },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -386,7 +390,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
 
             // 地図アイコンが押された時の処理
             if (showMap) {
-                Spacer(modifier = Modifier.height(4.dp))
+//                Spacer(modifier = Modifier.height(4.dp))
                 // 地図表示
                 Dialog(
                     onDismissRequest = { var showPopup = false },
@@ -413,7 +417,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
 
             // 地図アイコンが押された時の処理
             if (showMap) {
-                Spacer(modifier = Modifier.height(4.dp))
+//                Spacer(modifier = Modifier.height(4.dp))
                 // 地図表示
                 Dialog(
                     onDismissRequest = { var showPopup = false },
@@ -643,10 +647,13 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
 
     // マーカーの位置を保持する状態を追加
     var markerPosition by remember { mutableStateOf<LatLng?>(null) }
+    var markerAddress by remember { mutableStateOf("") } // 住所情報も状態として保持
 
     // 逆ジオコーディングのためのGeocoderを取得
     val context = LocalContext.current
     val geocoder = Geocoder(context, Locale.getDefault())
+
+
 
     Box(Modifier.fillMaxSize()) {
         // GoogleMapコンポーザブルを表示
@@ -660,15 +667,17 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
                 // 逆ジオコーディングで住所を取得
                 coroutineScope.launch {
                     val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-                    val address = addresses?.firstOrNull()?.getAddressLine(0) ?: "住所が見つかりません"
-                    onAddressChanged(address)
+                    markerAddress =
+                        addresses?.firstOrNull()?.getAddressLine(0) ?: "住所が見つかりません"
+                    onAddressChanged(markerAddress)
                 }
             }
         ) {
             // マーカーを表示
-            markerPosition?.let {
+            markerPosition?.let {position ->
+                val markerState = MarkerState(position) // 新しいMarkerStateを作成
                 Marker(
-                    state = rememberMarkerState(position = it),
+                    state = markerState,
                     title = "選択した場所"
                 )
             }
@@ -686,7 +695,12 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
                 .background(Color.White.copy(alpha = 0.5f), shape = CircleShape)
         ) {
             // ✕ボタンの表示
-            IconButton(onClick = { onCloseMap(markerPosition?.latitude, markerPosition?.longitude) }) {
+            IconButton(onClick = {
+                onCloseMap(
+                    markerPosition?.latitude,
+                    markerPosition?.longitude
+                )
+            }) {
                 Icon(Icons.Default.Close, contentDescription = "閉じる", tint = Color.Red)
             }
 
@@ -696,7 +710,9 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
             IconButton(onClick = { expanded = true }) {
                 Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
             }
+
         }
+
 
         // ドロップダウンメニューの表示
         DropdownMenu(
@@ -730,64 +746,72 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
             }
         }
     }
-}
 
-// 投稿データの送信
-fun TransmitData(bitmap: Bitmap?, title: String, speciesName: String, location: String, discoveryDate: String) {
-    if (bitmap == null) {
-        Log.e("TransmitData", "Bitmap is null")
-        return
-    }
-
-    // Firebase Storage のインスタンスを取得
-    val storage = Firebase.storage
-    val storageRef = storage.reference
-    val imagesRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
-    Log.d("TransmitData", "TransmitData_1")
-
-    // Bitmap を JPEG に変換
-    val baos = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-    val data = baos.toByteArray()
-    Log.d("TransmitData", "image")
-
-    // メタデータを作成
-    val metadata = com.google.firebase.storage.StorageMetadata.Builder()
-        .setCustomMetadata("title", title.ifEmpty { "無題" }) // タイトルが空の場合は「無題」とする
-        .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" }) // 生物名が空の場合は「不明」とする
-        .setCustomMetadata("location", location.ifEmpty { "不明" }) // 発見場所が空の場合は「不明」とする
-        .setCustomMetadata("discoveryDate", discoveryDate.ifEmpty { "不明" }) // 発見日付が空の場合は「不明」とする
-        .build()
-    Log.d("TransmitData", "metadata")
-
-    // Firebase Storage にアップロード
-    val uploadTask = imagesRef.putBytes(data, metadata)
-    uploadTask.addOnFailureListener { exception ->
-        Log.e("TransmitData", "Upload failed", exception)
-    }.addOnSuccessListener { taskSnapshot ->
-        // 画像URLを取得
-        taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { imageURL ->
-            // 投稿IDを生成（push()を使って一意なIDを生成）
-            val postsRef = Firebase.database.reference.child("posts")
-            val newPostRef = postsRef.push()  // 一意な投稿IDを生成
-            val postId = newPostRef.key  // 新しく生成されたIDを取得
-
-            // 投稿メタデータをRealtime Databaseに保存
-            val postData = mapOf(
-                "imageURL" to imageURL.toString(),
-                "title" to title,
-                "speciesName" to speciesName,
-                "location" to location,
-                "discoveryDate" to discoveryDate,
-                "timestamp" to ServerValue.TIMESTAMP
-            )
-            newPostRef.setValue(postData)
-
-            // 投稿IDを保存（コメントを投稿IDに紐づけるために使います）
-            Log.d("TransmitData", "Post uploaded with ID: $postId")
-        }
+    // バックハンドラでマップを閉じる
+    BackHandler {
+        onCloseMap(
+            markerPosition?.latitude,
+            markerPosition?.longitude
+        )
     }
 }
+
+//// 投稿データの送信
+//fun TransmitData(bitmap: Bitmap?, title: String, speciesName: String, location: String, discoveryDate: String) {
+//    if (bitmap == null) {
+//        Log.e("TransmitData", "Bitmap is null")
+//        return
+//    }
+//
+//    // Firebase Storage のインスタンスを取得
+//    val storage = Firebase.storage
+//    val storageRef = storage.reference
+//    val imagesRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+//    Log.d("TransmitData", "TransmitData_1")
+//
+//    // Bitmap を JPEG に変換
+//    val baos = ByteArrayOutputStream()
+//    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+//    val data = baos.toByteArray()
+//    Log.d("TransmitData", "image")
+//
+//    // メタデータを作成
+//    val metadata = com.google.firebase.storage.StorageMetadata.Builder()
+//        .setCustomMetadata("title", title.ifEmpty { "無題" }) // タイトルが空の場合は「無題」とする
+//        .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" }) // 生物名が空の場合は「不明」とする
+//        .setCustomMetadata("location", location.ifEmpty { "不明" }) // 発見場所が空の場合は「不明」とする
+//        .setCustomMetadata("discoveryDate", discoveryDate.ifEmpty { "不明" }) // 発見日付が空の場合は「不明」とする
+//        .build()
+//    Log.d("TransmitData", "metadata")
+//
+//    // Firebase Storage にアップロード
+//    val uploadTask = imagesRef.putBytes(data, metadata)
+//    uploadTask.addOnFailureListener { exception ->
+//        Log.e("TransmitData", "Upload failed", exception)
+//    }.addOnSuccessListener { taskSnapshot ->
+//        // 画像URLを取得
+//        taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { imageURL ->
+//            // 投稿IDを生成（push()を使って一意なIDを生成）
+//            val postsRef = Firebase.database.reference.child("posts")
+//            val newPostRef = postsRef.push()  // 一意な投稿IDを生成
+//            val postId = newPostRef.key  // 新しく生成されたIDを取得
+//
+//            // 投稿メタデータをRealtime Databaseに保存
+//            val postData = mapOf(
+//                "imageURL" to imageURL.toString(),
+//                "title" to title,
+//                "speciesName" to speciesName,
+//                "location" to location,
+//                "discoveryDate" to discoveryDate,
+//                "timestamp" to ServerValue.TIMESTAMP
+//            )
+//            newPostRef.setValue(postData)
+//
+//            // 投稿IDを保存（コメントを投稿IDに紐づけるために使います）
+//            Log.d("TransmitData", "Post uploaded with ID: $postId")
+//        }
+//    }
+//}
 
 // 投稿データの送信
 fun TransmitData(
@@ -797,7 +821,7 @@ fun TransmitData(
     location: String,
     discoveryDate: String,
     context: Context,
-    r_t_d_Key: String,
+//    r_t_d_Key: String,
     viewModel: Post_SucsessViewModel,
     latitude: Double?, // 緯度を追加
     longitude: Double? // 経度を追加
@@ -825,7 +849,7 @@ fun TransmitData(
         .setCustomMetadata("speciesName", speciesName.ifEmpty { "不明" })
         .setCustomMetadata("location", location.ifEmpty { "不明" })
         .setCustomMetadata("discoveryDate", discoveryDate.ifEmpty { "不明" })
-        .setCustomMetadata("R_T_D_Key", r_t_d_Key.ifEmpty { "R_T_D_Key取得失敗" })
+//        .setCustomMetadata("R_T_D_Key", r_t_d_Key.ifEmpty { "R_T_D_Key取得失敗" })
         .setCustomMetadata("latitude", latitude?.toString() ?: "不明") // 緯度を追加
         .setCustomMetadata("longitude", longitude?.toString() ?: "不明") // 経度を追加
         .build()

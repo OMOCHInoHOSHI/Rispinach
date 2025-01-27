@@ -7,8 +7,8 @@ import android.provider.ContactsContract.CommonDataKinds.Photo
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,25 +16,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,6 +44,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -58,7 +53,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import fetchImagesFromFirebaseStorage
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 data class ImageData(
@@ -68,7 +62,7 @@ data class ImageData(
     val location: String,       // 住所
     val discoveryDate: String,      // 日付
     val id: Int,        // ID
-    val Dkey: String,
+//    val Dkey: String, // リアルタイムデータベースのキー
     val latitude: Double?, // 緯度
     val longitude: Double? // 経度
 )
@@ -78,10 +72,29 @@ class ImageViewModel : ViewModel() {
     var pictureName by mutableStateOf(listOf<ImageData>())
         private set
 
+//    fun fetchImages() {
+//        viewModelScope.launch {
+//            fetchImagesFromFirebaseStorage { images ->
+//                pictureName = images
+//            }
+//        }
+//    }
+
+    // キャッシュされたデータを保持する変数
+    private var isDataFetched = false
+
     fun fetchImages() {
+        if (isDataFetched) {
+            println("既にデータが取得されています（ImageView）")
+            // データが既に取得されている場合は何もしない
+            return
+        }
+
         viewModelScope.launch {
+            println("データを取得します（ImageView）")
             fetchImagesFromFirebaseStorage { images ->
                 pictureName = images
+                isDataFetched = true // データが取得されたことを記録
             }
         }
     }
@@ -163,6 +176,9 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
     var lod by rememberSaveable { mutableStateOf(false) }
     var isRefreshing by rememberSaveable { mutableStateOf(false) }
 
+    val localDensity = LocalDensity.current
+    var homeHeight by remember { mutableStateOf(0.dp) }
+    var isDebounced by remember { mutableStateOf(false) }
     // ファイヤーベースを再読み込みS--------------------------------------------
     if(isRefreshing){
         println("再ロード中")
@@ -191,12 +207,19 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
 
     Column(
         modifier = Modifier
+            .onGloballyPositioned { coordinates ->
+                homeHeight =
+                    with(localDensity) { coordinates.size.height.toDp() /* 高さをdpで取得*/ }
+            }
     )
     {
         //地図枠(仮)
-        Box(Modifier.fillMaxWidth().height(300.dp))
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(homeHeight*2/5))
         {
-//            Image(
+//            Image(11
 //                modifier = Modifier.padding(start = 0.dp, top = 0.dp,end=0.dp, bottom = 225.dp),
 //                painter = painterResource1(R.drawable.tizu_kakkokari1), contentDescription = "test"
 //            )
@@ -235,74 +258,93 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
         ) {
             // Pull to Refresh を設定　下スワイプで更新できるE--------------------------
             //投稿(仮)
-            LazyVerticalGrid(
-                modifier = Modifier,
-                columns = GridCells.Fixed(4),
-                //columns = GridCells.FixedSize(/*minSize = */128.dp)
-                //columns = GridCells.Adaptive(minSize = 128.dp),
-            )
+            Column(modifier = Modifier.fillMaxSize())
             {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.DarkGray),
+                    contentAlignment=Alignment.Center
+                )
+                {
+                    Text(
+                        text = "Anomaly",
+                        color = Color.White,
+                        )
+                }
+                LazyVerticalGrid(
+                    modifier = Modifier,
+                    columns = GridCells.Fixed(3),
+                    //columns = GridCells.FixedSize(/*minSize = */128.dp)
+                    //columns = GridCells.Adaptive(minSize = 128.dp),
+                )
+                {
+
 //            itemsIndexed(pictureName)
 //            {index, item ->
 //                items(item) { pName ->
 //                    PhotoItem(pName)
 //                }
 //            }
-                itemsIndexed(imageViewModel.pictureName/*itemsIndexedList*/)
-                { index, item ->
-                    //var checked by rememberSaveable(index) { mutableStateOf(false)}
-                    var checked: MyDto by rememberSaveable(index, stateSaver = MyDtoSaver) {
-                        mutableStateOf(
-                            MyDto(false)
+                    itemsIndexed(imageViewModel.pictureName/*itemsIndexedList*/)
+                    { index, item ->
+                        //var checked by rememberSaveable(index) { mutableStateOf(false)}
+                        var checked: MyDto by rememberSaveable(index, stateSaver = MyDtoSaver) {
+                            mutableStateOf(
+                                MyDto(false)
+                            )
+                        }
+                        var openBottomSheet by remember(index) { mutableStateOf(false) }
+                        //var checked: MyDto by rememberLazyListState(index,stateSaver = MyDtoSaver) { mutableStateOf(MyDto(false)) }
+                        //lsName=itemsIndexedList.get(index)
+                        //lsName= item[index].toString()
+                        //var lsName=itemsIndexedList[index]
+                        //var lName=rememberSaveable(index) { item }
+                        lsName = rememberSaveable(index) { mutableStateOf("") }.toString()
+                        //lsName=itemsIndexedList[index]
+                        Image(
+                            //painter = painterResource1(pictureName[index]), contentDescription = "test",
+                            //painter = painterResource1(pictureName[index]), contentDescription = "test",
+                            bitmap = item.bitmap.asImageBitmap(),       // 画像を表示するためのBitmap
+                            contentScale = ContentScale.Crop,
+                            //painter = painterResource1(pictureName[index].id),コメントアウト(中村)
+                            contentDescription = imageViewModel.pictureName[index].name,
+                            modifier = Modifier
+                                .size(128.dp)
+                                .padding(2.dp)
+                                .clickable
+                                {
+                                    //lsName=itemsIndexedList[index]
+                                    println(/*itemsIndexedList*/imageViewModel.pictureName[index].name)
+                                    if (!isDebounced) {
+                                        isDebounced = true
+                                        openBottomSheet = true
+                                    }
+                                },
                         )
-                    }
-                    var openBottomSheet by remember(index) { mutableStateOf(false) }
-                    //var checked: MyDto by rememberLazyListState(index,stateSaver = MyDtoSaver) { mutableStateOf(MyDto(false)) }
-                    //lsName=itemsIndexedList.get(index)
-                    //lsName= item[index].toString()
-                    //var lsName=itemsIndexedList[index]
-                    //var lName=rememberSaveable(index) { item }
-                    lsName = rememberSaveable(index) { mutableStateOf("") }.toString()
-                    //lsName=itemsIndexedList[index]
-                    Image(
-                        //painter = painterResource1(pictureName[index]), contentDescription = "test",
-                        //painter = painterResource1(pictureName[index]), contentDescription = "test",
-                        bitmap = item.bitmap.asImageBitmap(),       // 画像を表示するためのBitmap
-                        contentScale = ContentScale.Crop,
-                        //painter = painterResource1(pictureName[index].id),コメントアウト(中村)
-                        contentDescription = imageViewModel.pictureName[index].name,
-                        modifier = Modifier
-                            .size(128.dp)
-                            .clickable
-                            {
-                                //lsName=itemsIndexedList[index]
-                                println(/*itemsIndexedList*/imageViewModel.pictureName[index].name)
-                                openBottomSheet = true
-                            },
-                    )
-                    Box()
-                    {
-                        IconToggleButton(
+                        Box()
+                        {
+                            IconToggleButton(
 //                        checked = checked,
 //                        onCheckedChange = {checked = it },
-                            onCheckedChange = { checked = MyDto(it) },
-                            checked = checked.data,
+                                onCheckedChange = { checked = MyDto(it) },
+                                checked = checked.data,
 
 
-                            )
-                        {
-                            val tint by animateColorAsState(
-                                if (checked.data/*checked*/) {
-                                    Color(0xFFEC407A)
-                                } else {
-                                    Color(0xFFB0BEC5)
-                                }
-                            )
-                            Icon(
-                                Icons.Filled.Favorite,
-                                contentDescription = "Localized description",
-                                tint = tint
-                            )
+                                )
+                            {
+                                val tint by animateColorAsState(
+                                    if (checked.data/*checked*/) {
+                                        Color(0xFFEC407A)
+                                    } else {
+                                        Color(0xFFB0BEC5)
+                                    }
+                                )
+                                Icon(
+                                    Icons.Filled.Favorite,
+                                    contentDescription = "Localized description",
+                                    tint = tint
+                                )
 //                        if(checked.data==true)
 //                        {
 //                            SideEffect { Log.d("compose-log", "true") }
@@ -311,45 +353,50 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
 //                        {
 //                            SideEffect { Log.d("compose-log", "false") }
 //                        }
+                            }
                         }
-                    }
-                    if (openBottomSheet) {
-                        ModalBottomSheet(
-                            modifier = Modifier,
-                            //modifier = Modifier.padding(top = 16.dp),
-                            onDismissRequest = { openBottomSheet = false },
-                            sheetState = bottomSheetState,
-                        )
-                        {
-                            Column(
-                                modifier = Modifier
-                                //.padding(start = 16.dp, bottom = 50.dp)
-                                //.imePadding()//.padding(start = 16.dp, bottom = 24.dp)
-                            ) {
-                                println(imageViewModel.pictureName[index].name)
-                                Posts(
-                                    imageViewModel.pictureName[index].bitmap,
-                                    imageViewModel.pictureName[index].name,
-                                    imageViewModel.pictureName[index].title,
-                                    imageViewModel.pictureName[index].location,
-                                    imageViewModel.pictureName[index].discoveryDate,
-                                    imageViewModel.pictureName[index].latitude,
-                                    imageViewModel.pictureName[index].longitude,
-                                    imageViewModel.pictureName[index].id,
-                                )        // 画像情報、生物名、idを送る場合
+                        if (openBottomSheet) {
 
-                                //LoginScreen()
-                                //Posts(pictureName[index], lsName)
+                            ModalBottomSheet(
+                                modifier = Modifier,
+                                //modifier = Modifier.padding(top = 16.dp),
+                                onDismissRequest = {
+                                    openBottomSheet = false
+                                    isDebounced=false
+                                },
+                                sheetState = bottomSheetState,
+                            )
+                            {
+                                Column(
+                                    modifier = Modifier
+                                    //.padding(start = 16.dp, bottom = 50.dp)
+                                    //.imePadding()//.padding(start = 16.dp, bottom = 24.dp)
+                                ) {
+                                    println(imageViewModel.pictureName[index].name)
+                                    Posts(
+                                        imageViewModel.pictureName[index].bitmap,
+                                        imageViewModel.pictureName[index].name,
+                                        imageViewModel.pictureName[index].title,
+                                        imageViewModel.pictureName[index].location,
+                                        imageViewModel.pictureName[index].discoveryDate,
+                                        imageViewModel.pictureName[index].latitude,
+                                        imageViewModel.pictureName[index].longitude,
+                                        imageViewModel.pictureName[index].id,
+                                    )        // 画像情報、生物名、idを送る場合
+
+                                    //LoginScreen()
+                                    //Posts(pictureName[index], lsName)
 //                            println(imageViewModel.pictureName[index].name)
 //                            Posts(imageViewModel.pictureName[index].bitmap, imageViewModel.pictureName[index].name, imageViewModel.pictureName[index].id)        // 画像情報、生物名、idを送る場合
-                                //Posts(pictureName[index].bitmap, pictureName[index].name, pictureName[index].location, pictureName[index].discoveryDate, pictureName[index].id)       // 全てのデータを送る場合
+                                    //Posts(pictureName[index].bitmap, pictureName[index].name, pictureName[index].location, pictureName[index].discoveryDate, pictureName[index].id)       // 全てのデータを送る場合
 //                            println(pictureName[index].name)
-                                //LoginScreen()
-                                //Posts(pictureName[index].id, pictureName[index].name, pictureName[index].name /* 仮置き */)
+                                    //LoginScreen()
+                                    //Posts(pictureName[index].id, pictureName[index].name, pictureName[index].name /* 仮置き */)
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_share_24, text = "Share")
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_link_24, text = "Get link")
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_edit_24, text = "Edit name")
 //            BottomSheetIconTextRow(icon = R.drawable.baseline_delete_24, text = "Delete collection")
+                                }
                             }
                         }
                     }
