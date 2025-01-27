@@ -159,7 +159,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
         topBar = {
             // トップバーの設定
             TopAppBar(
-                title = { Text("投稿準備画面") }
+                title = { Text("Anomaly Post") }
             )
         },
         floatingActionButton = {
@@ -333,6 +333,7 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                 OutlinedTextField(
                     value = location,
                     onValueChange = { location = it },
+                    readOnly = true,
                     placeholder = { Text("  発見場所") },
                     modifier = Modifier
                         .fillMaxWidth()
