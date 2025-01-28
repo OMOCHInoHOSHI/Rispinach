@@ -4,8 +4,6 @@ package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
@@ -65,7 +62,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 //import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.content.ContextCompat
@@ -298,12 +294,13 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
+            properties = MapProperties(isMyLocationEnabled = true), //現在地
             onMapClick={latLng ->
                 // マップがクリックされたかの判定を取得
                 mapClicked=true
                 lastClickedIndex=null
             }
-            properties = MapProperties(isMyLocationEnabled = true), //現在地
+
 //            locationSource = locationSource
         ) {
 
