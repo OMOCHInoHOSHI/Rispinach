@@ -1,22 +1,43 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
+//import androidx.compose.ui.graphics.Color
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,43 +46,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.GeoApiContext
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import com.google.maps.GeoApiContext
-import com.google.maps.GeocodingApi
-import com.google.maps.model.GeocodingResult
 import fetchImagesFromFirebaseStorage
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-//import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.core.content.ContextCompat
-import com.google.android.gms.maps.model.BitmapDescriptor
-import android.graphics.Color
-import android.graphics.Paint
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.Path
 
 // マーカーを読み込む関数
 @Composable
@@ -224,6 +215,13 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     // ボトムシートの表示状態を管理
     var chatflg by remember { mutableStateOf(false )}
 
+    // マップがクリックされたかどうかを管理する状態
+    var mapClicked by remember { mutableStateOf(false) }
+
+//    var clickedPosition by remember { mutableStateOf<LatLng?>(null) }
+
+    // 前回クリックされたインデックスを記録する状態
+    var lastClickedIndex by remember { mutableStateOf<Int?>(null) }
 
     // 画面全体を埋めるBoxコンポーネント
     Box(Modifier.fillMaxSize()) {
@@ -231,19 +229,32 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
+            onMapClick={latLng ->
+                // マップがクリックされたかの判定を取得
+                mapClicked=true
+                lastClickedIndex=null
+            }
         ) {
+
             // 読み込んだマーカー情報をマップに追加
             markers.forEachIndexed  { index, markerOptions ->
-                // マーカーが何回クリックされたかを取得する貯めの変数
+                // マーカーが何回クリックされたかを取得するための変数
                 val position = markerOptions.position   //マーカーの位置を取得
                 var clickCount = markerClickCounts[position] ?: 0   //　マップからクリック回数を取得し、存在しない場合は0を返す
+                // InfoWindowが表示されているかどうかを管理する状態
+                var infoWindowVisible by remember(index) { mutableStateOf(false) }
+
+                var MarkerClickCount by remember(index) { mutableStateOf(0) }
+                var MarkerClicked by remember(index) { mutableStateOf(false) }
+
+
 
                 Marker(
                     state = rememberMarkerState(position = position),
                     title = markerOptions.title,
                     snippet = markerOptions.snippet,
-//                    icon = BitmapDescriptorFactory.defaultMarker(color_enemy),
                     icon = markerOptions.icon,
+//                    icon = BitmapDescriptorFactory.defaultMarker(color_enemy),
                     // マーカークリック
                     onClick = {
                         // クリックされたマーカーの位置を取得
@@ -283,9 +294,191 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
 //                        false
 //                    },
 
+                    onClick = {
+                        println("Marker at $position clicked for the second time!")
+
+                        println("$MarkerClickCount $index")
+                        println("$lastClickedIndex $index")
+
+
+                        if(mapClicked==true)
+                        {
+                            MarkerClickCount=0
+                            mapClicked=false
+                            lastClickedIndex=index
+//                            MarkerClicked=true
+                        }
+                        else
+                        {
+                            if(lastClickedIndex==index)
+                            {
+                                MarkerClickCount = 1
+                            }
+                            else
+                            {
+                                MarkerClickCount=0
+                                lastClickedIndex=index
+                            }
+                        }
+
+                        MarkerClickCount+=1
+
+
+                        if(MarkerClickCount==2)
+                        {
+                            // ここにinfo windowクリック時の動作を追加
+                            clickedMarkerIndex = index
+
+                            // ボトムシートを表示
+                            coroutineScope.launch()
+                            {
+                                bottomSheetState.show()
+                                Log.d("BottomSheet", "BottomSheet shown")
+                                chatflg = true
+//                                MarkerClickCount = 1
+                                lastClickedIndex=index
+                            }
+                        }
+
+
+//                        else
+//                        {
+//                            if(clickCount==1)
+//                            {
+//
+//                            }
+//                        }
+
+
+
+//                        //マップをタップしてからマーカーをタップした場合
+//                        if(mapClicked==true)
+//                        {
+//                            clickCount=0
+//                        }
+//                        //マーカーからマーカーにタップした場合
+//                        else
+//                        {
+//                            if()
+//                        }
+
+//                        if(infoWindowVisible)
+//                        {
+//                            // ここにinfo windowクリック時の動作を追加
+//                            clickedMarkerIndex = index
+//
+//                            // ボトムシートを表示
+//                            coroutineScope.launch()
+//                            {
+//                                bottomSheetState.show()
+//                                Log.d("BottomSheet", "BottomSheet shown")
+//                                chatflg = true
+////                                clickCount = 0
+////                                mapClicked = true
+//                            }
+//                        }
+
+
+
+
+                        false
+//                        if (mapClicked == true)
+//                        {
+//                            infoWindowVisible = true
+//                            mapClicked=false
+//                            clickCount=0
+//                        }
+//                        else
+//                        {
+//                            if(clickedMarkerIndex == index)
+//                            {
+//                                infoWindowVisible = true
+//                                clickCount=1
+//                            }
+//                            else
+//                            {
+//                                infoWindowVisible = true
+//                                clickCount=0
+//                            }
+//                        }
+//
+//                        clickCount+=1
+//
+//                        if(clickCount==2)
+//                        {
+//                            // ここにinfo windowクリック時の動作を追加
+//                            clickedMarkerIndex = index
+//
+//                            // ボトムシートを表示
+//                            coroutineScope.launch()
+//                            {
+//                                bottomSheetState.show()
+//                                Log.d("BottomSheet", "BottomSheet shown")
+//                                chatflg = true
+//                                clickCount = 0
+//                                mapClicked = true
+//                            }
+//                        }
+
+
+
+
+
+
+
+
+//                        if(position==clickedPosition)
+//                        {
+//                            clickCount=0
+//                        }
+//                        println("Marker at $clickedPosition clicked for the second time!")
+//                        println("Marker at $position clicked for the second time!")
+//                        if(position==clickedPosition) {
+
+//                        if(clickedPosition)
+//                        clickCount += 1
+//                        if (mapClicked == true) {
+//                            infoWindowVisible = true
+//                            mapClicked=false
+//                        }
+//                        else
+//                        {
+//                            mapClicked=false
+//                        }
+//                        mapClicked=false
+
+
+//                        if(infoWindowVisible==true) {
+//                        // ここにinfo windowクリック時の動作を追加
+//                        clickedMarkerIndex = index
+//
+//                        // ボトムシートを表示
+//                        coroutineScope.launch {
+//                            bottomSheetState.show()
+//                            Log.d("BottomSheet", "BottomSheet shown")
+//                            chatflg = true
+////                                    clickCount = 0
+////                                    mapClicked=true
+//                        }
+//
+//                        }
+//                        else
+//                        {
+//                            infoWindowVisible=false
+//                            mapClicked=false
+////                            clickCount = 1
+//                        }
+//                        clickCount=0
+//                        }
+//                        else
+//                        {
+//                            clickCount=0
+//                        }
+//                        false
+                    },
+
                     // ウィンドウクリック
                     onInfoWindowClick = {
-
                         // ここにinfo windowクリック時の動作を追加
                         clickedMarkerIndex = index
 
@@ -294,9 +487,18 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
                             bottomSheetState.show()
                             Log.d("BottomSheet", "BottomSheet shown")
                             chatflg = true
+
+                            MarkerClickCount = 0
+                            infoWindowVisible=true
                         }
                     }
                 )
+                {
+                    if(mapClicked==true)
+                    {
+                        MarkerClicked=false
+                    }
+                }
             }
         }
 
@@ -346,7 +548,10 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
 
 
         // 画面右上に配置するBoxコンポーネント
-        Box(Modifier.align(Alignment.TopEnd).padding(16.dp)) {
+        Box(
+            Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)) {
 
             Box(
                 modifier = Modifier
