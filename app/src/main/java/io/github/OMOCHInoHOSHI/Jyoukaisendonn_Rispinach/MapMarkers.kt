@@ -256,42 +256,22 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
                     icon = markerOptions.icon,
 //                    icon = BitmapDescriptorFactory.defaultMarker(color_enemy),
                     // マーカークリック
-                    onClick = {
-                        // クリックされたマーカーの位置を取得
-                        val markerPosition = markerOptions.position
-
-                        // オフセットを設定（例：緯度を0.008度上にズラす）
-                        val offset = 0.008
-                        val newPosition = LatLng(markerPosition.latitude + offset, markerPosition.longitude)
-
-                        // カメラを新しい位置に移動
-                        coroutineScope.launch {
-                            cameraPositionState.animate(
-                                CameraUpdateFactory.newLatLngZoom(newPosition, defaultZoom),
-                                750 // アニメーション時間（ミリ秒）
-                            )
-                        }
-                        false // マーカーのデフォルトの動作を無効にする
-                    },
-
-                    // マーカークリック
 //                    onClick = {
-//                        clickCount += 1
-//                        if (clickCount == 2) {
-//                            println("Marker at $position clicked for the second time!")
-//                            chatflg = true
-//                            clickCount = 0
-//                        }
+//                        // クリックされたマーカーの位置を取得
+//                        val markerPosition = markerOptions.position
 //
-//                        markerClickCounts[position] = clickCount
-//                        clickedMarkerIndex = index
+//                        // オフセットを設定（例：緯度を0.008度上にズラす）
+//                        val offset = 0.008
+//                        val newPosition = LatLng(markerPosition.latitude + offset, markerPosition.longitude)
 //
+//                        // カメラを新しい位置に移動
 //                        coroutineScope.launch {
-//                            bottomSheetState.show()
-//                            Log.d("BottomSheet", "BottomSheet shown")
+//                            cameraPositionState.animate(
+//                                CameraUpdateFactory.newLatLngZoom(newPosition, defaultZoom),
+//                                750 // アニメーション時間（ミリ秒）
+//                            )
 //                        }
-//
-//                        false
+//                        false // マーカーのデフォルトの動作を無効にする
 //                    },
 
                     onClick = {
@@ -341,140 +321,8 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
                         }
 
 
-//                        else
-//                        {
-//                            if(clickCount==1)
-//                            {
-//
-//                            }
-//                        }
-
-
-
-//                        //マップをタップしてからマーカーをタップした場合
-//                        if(mapClicked==true)
-//                        {
-//                            clickCount=0
-//                        }
-//                        //マーカーからマーカーにタップした場合
-//                        else
-//                        {
-//                            if()
-//                        }
-
-//                        if(infoWindowVisible)
-//                        {
-//                            // ここにinfo windowクリック時の動作を追加
-//                            clickedMarkerIndex = index
-//
-//                            // ボトムシートを表示
-//                            coroutineScope.launch()
-//                            {
-//                                bottomSheetState.show()
-//                                Log.d("BottomSheet", "BottomSheet shown")
-//                                chatflg = true
-////                                clickCount = 0
-////                                mapClicked = true
-//                            }
-//                        }
-
-
-
-
                         false
-//                        if (mapClicked == true)
-//                        {
-//                            infoWindowVisible = true
-//                            mapClicked=false
-//                            clickCount=0
-//                        }
-//                        else
-//                        {
-//                            if(clickedMarkerIndex == index)
-//                            {
-//                                infoWindowVisible = true
-//                                clickCount=1
-//                            }
-//                            else
-//                            {
-//                                infoWindowVisible = true
-//                                clickCount=0
-//                            }
-//                        }
-//
-//                        clickCount+=1
-//
-//                        if(clickCount==2)
-//                        {
-//                            // ここにinfo windowクリック時の動作を追加
-//                            clickedMarkerIndex = index
-//
-//                            // ボトムシートを表示
-//                            coroutineScope.launch()
-//                            {
-//                                bottomSheetState.show()
-//                                Log.d("BottomSheet", "BottomSheet shown")
-//                                chatflg = true
-//                                clickCount = 0
-//                                mapClicked = true
-//                            }
-//                        }
 
-
-
-
-
-
-
-
-//                        if(position==clickedPosition)
-//                        {
-//                            clickCount=0
-//                        }
-//                        println("Marker at $clickedPosition clicked for the second time!")
-//                        println("Marker at $position clicked for the second time!")
-//                        if(position==clickedPosition) {
-
-//                        if(clickedPosition)
-//                        clickCount += 1
-//                        if (mapClicked == true) {
-//                            infoWindowVisible = true
-//                            mapClicked=false
-//                        }
-//                        else
-//                        {
-//                            mapClicked=false
-//                        }
-//                        mapClicked=false
-
-
-//                        if(infoWindowVisible==true) {
-//                        // ここにinfo windowクリック時の動作を追加
-//                        clickedMarkerIndex = index
-//
-//                        // ボトムシートを表示
-//                        coroutineScope.launch {
-//                            bottomSheetState.show()
-//                            Log.d("BottomSheet", "BottomSheet shown")
-//                            chatflg = true
-////                                    clickCount = 0
-////                                    mapClicked=true
-//                        }
-//
-//                        }
-//                        else
-//                        {
-//                            infoWindowVisible=false
-//                            mapClicked=false
-////                            clickCount = 1
-//                        }
-//                        clickCount=0
-//                        }
-//                        else
-//                        {
-//                            clickCount=0
-//                        }
-//                        false
                     },
 
                     // ウィンドウクリック
