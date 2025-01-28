@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
         // 位置情報を取得の許可
         val location = LocationViewModel(context = this)
         location.requestLocationPermission(activity = this)
-        location.fusedLocation()
+//        location.fusedLocation()
 
         //enableEdgeToEdge()
         setContent {

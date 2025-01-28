@@ -63,6 +63,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.Path
+import com.google.maps.android.compose.MapProperties
 
 // マーカーを読み込む関数
 @Composable
@@ -166,27 +167,27 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     // 現在のコンテキストを取得
     val context = LocalContext.current
 
-    // ロケーション用
-    val locationViewModel: LocationViewModel = viewModel(
-        factory = LocationViewModelFactory(context)
-    )
-
-    // (2) 位置情報の権限リクエストと、位置情報の取得開始を行う
-    LaunchedEffect(Unit) {
-
-        locationViewModel.fusedLocation()
-    }
-
-    // (3) 現在地のLiveDataを観測
-    val currentLocation by locationViewModel.location.observeAsState()
-
-    // 緯度と経度を個別の変数に格納
-    val latitude = currentLocation?.latitude
-    val longitude = currentLocation?.longitude
-
-    // 取得できたか確認
-    println("latitude = $latitude")
-    println("longitude = $longitude")
+//    // ロケーション用
+//    val locationViewModel: LocationViewModel = viewModel(
+//        factory = LocationViewModelFactory(context)
+//    )
+//
+//    // (2) 位置情報の権限リクエストと、位置情報の取得開始を行う
+//    LaunchedEffect(Unit) {
+//
+//        locationViewModel.fusedLocation()
+//    }
+//
+//    // (3) 現在地のLiveDataを観測
+//    val currentLocation by locationViewModel.location.observeAsState()
+//
+//    // 緯度と経度を個別の変数に格納
+//    val latitude = currentLocation?.latitude
+//    val longitude = currentLocation?.longitude
+//
+//    // 取得できたか確認
+//    println("latitude = $latitude")
+//    println("longitude = $longitude")
 
 
 
@@ -214,16 +215,16 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
 
 
     // 現在地が存在したらdefaultPositionを現在地に変更
-    currentLocation?.let {
-        defaultPosition = LatLng(it.latitude, it.longitude)
-        // 現在地に青いマーカーを追加
-        markers.add(
-            MarkerOptions()
-                .position(defaultPosition)
-                .title("現在地")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-        )
-    }
+//    currentLocation?.let {
+//        defaultPosition = LatLng(it.latitude, it.longitude)
+//        // 現在地に青いマーカーを追加
+////        markers.add(
+////            MarkerOptions()
+////                .position(defaultPosition)
+////                .title("現在地")
+////                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+////        )
+//    }
 
 
     val defaultZoom = 13f
@@ -271,6 +272,8 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
+            properties = MapProperties(isMyLocationEnabled = true), //現在地
+//            locationSource = locationSource
         ) {
             // 読み込んだマーカー情報をマップに追加
             markers.forEachIndexed  { index, markerOptions ->
