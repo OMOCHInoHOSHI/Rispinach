@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -126,7 +125,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
     var btmEnabled by rememberSaveable { mutableStateOf(true) }
     var selectButton=currentTab
     var DismissibleDrawerEnabled=false
-    var goMap=false
+//    var goMap=false
     var drawerMenuWidth by remember { mutableStateOf(0.dp) }
     var iconWidth by remember { mutableStateOf(0.dp) }
     var dw=drawerMenuWidth
@@ -352,19 +351,19 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
             //ナビゲーションバー--------------------------------------------------------------------
             //ドロワーメニュー----------------------------------------------------------------------
             topBar = {
-                if(selectButton=="main/map")
-                {
-                    goMap=true
-//                    DismissibleDrawerEnabled=false
-                    coroutineScope.launch {
-                        drawerState.close()
-                    }
-                }
-                else
-                {
-                    goMap=false
-//                    DismissibleDrawerEnabled=true
-                }
+//                if(selectButton=="main/map")
+//                {
+//                    goMap=true
+////                    DismissibleDrawerEnabled=false
+//                    coroutineScope.launch {
+//                        drawerState.close()
+//                    }
+//                }
+//                else
+//                {
+//                    goMap=false
+////                    DismissibleDrawerEnabled=true
+//                }
 
 //                if(!goMap) {
                 TopAppBar(
@@ -380,59 +379,66 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                             contentAlignment = Alignment.Center
                         )
                         {
-                            if(!goMap) {
-                                Text(
-                                    text = "Rispinach",
-                                    modifier = Modifier
-                                        .align(Alignment.Center)
-                                        //.offset(x = (dw-iconWidth))
-                                )
-                            }
-                            else
-                            {
-                                Text(
-                                    text = "Rispinach",
-                                    modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .offset(x = ((dw + iconWidth) / 6) + 1.5.dp)
-                                )
-                            }
+                            Text(
+                                text = "Rispinach",
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                //.offset(x = (dw-iconWidth))
+                            )
+
+//                            if(!goMap) {
+//                                Text(
+//                                    text = "Rispinach",
+//                                    modifier = Modifier
+//                                        .align(Alignment.Center)
+//                                        //.offset(x = (dw-iconWidth))
+//                                )
+//                            }
+//                            else
+//                            {
+//                                Text(
+//                                    text = "Rispinach",
+//                                    modifier = Modifier
+//                                        .align(Alignment.Center)
+//                                        .offset(x = ((dw + iconWidth) / 6) + 1.5.dp)
+//                                )
+//                            }
                         }
 
                     },
 
                     navigationIcon = {
-                        if(!goMap) {
-                            IconButton(
-                                //modifier = Modifier.padding(start = 30.dp, top = 20.dp, end = 20.dp),
-                                onClick = {
-                                    println("a")
-                                    //DismissibleDrawerEnabled=true
-                                    //drawerState!=drawerState
-                                    coroutineScope.launch {
-                                        drawerState.open()
+//                        if(!goMap) {
+                        IconButton(
+                            //modifier = Modifier.padding(start = 30.dp, top = 20.dp, end = 20.dp),
+                            onClick = {
+                                println("a")
+                                //DismissibleDrawerEnabled=true
+                                //drawerState!=drawerState
+                                coroutineScope.launch {
+                                    drawerState.open()
+                                }
+                                //drawerState = DrawerState(initialValue = DrawerValue.Open)
+                            },
+//                            enabled = !goMap,
+                        )
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = null,
+                                //tint = Color.White,
+                                modifier = Modifier
+                                    .height(60.dp)
+                                    .width(60.dp)
+                                    .onGloballyPositioned { coordinates ->
+                                        drawerMenuWidth =
+                                            with(localDensity) { coordinates.size.width.toDp() }
                                     }
-                                    //drawerState = DrawerState(initialValue = DrawerValue.Open)
-                                },
-                                enabled = !goMap,
+                                //.border(2.dp, Color.White, RoundedCornerShape(20.dp))
                             )
-                            {
-                                Icon(
-                                    imageVector = Icons.Filled.Menu,
-                                    contentDescription = null,
-                                    //tint = Color.White,
-                                    modifier = Modifier
-                                        .height(60.dp)
-                                        .width(60.dp)
-                                        .onGloballyPositioned { coordinates ->
-                                            drawerMenuWidth =
-                                                with(localDensity) { coordinates.size.width.toDp() }
-                                        }
-                                    //.border(2.dp, Color.White, RoundedCornerShape(20.dp))
-                                )
 
-                            }
                         }
+//                        }
                     },
 
                     actions = {
