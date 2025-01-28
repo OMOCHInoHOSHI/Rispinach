@@ -167,8 +167,6 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     val context = LocalContext.current
 
     // ロケーション用
-//    val locationViewModel = LocationViewModel(context = context)
-    // ロケーション用
     val locationViewModel: LocationViewModel = viewModel(
         factory = LocationViewModelFactory(context)
     )
@@ -212,7 +210,22 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
         "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
         "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
     )
-    val defaultPosition = locations["大阪"]!! // 大阪府庁
+    var defaultPosition = locations["大阪"]!! // 大阪府庁
+
+
+    // 現在地が存在したらdefaultPositionを現在地に変更
+    currentLocation?.let {
+        defaultPosition = LatLng(it.latitude, it.longitude)
+        // 現在地に青いマーカーを追加
+        markers.add(
+            MarkerOptions()
+                .position(defaultPosition)
+                .title("現在地")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+        )
+    }
+
+
     val defaultZoom = 13f
     val cameraPositionState = rememberCameraPositionState {
         // Postsからマップを開く場合
