@@ -245,6 +245,25 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
 //                    icon = BitmapDescriptorFactory.defaultMarker(color_enemy),
                     icon = markerOptions.icon,
                     // マーカークリック
+                    onClick = {
+                        // クリックされたマーカーの位置を取得
+                        val markerPosition = markerOptions.position
+
+                        // オフセットを設定（例：緯度を0.008度上にズラす）
+                        val offset = 0.008
+                        val newPosition = LatLng(markerPosition.latitude + offset, markerPosition.longitude)
+
+                        // カメラを新しい位置に移動
+                        coroutineScope.launch {
+                            cameraPositionState.animate(
+                                CameraUpdateFactory.newLatLngZoom(newPosition, defaultZoom),
+                                750 // アニメーション時間（ミリ秒）
+                            )
+                        }
+                        false // マーカーのデフォルトの動作を無効にする
+                    },
+
+                    // マーカークリック
 //                    onClick = {
 //                        clickCount += 1
 //                        if (clickCount == 2) {
