@@ -74,23 +74,23 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
     // マーカーのリストを再作成
     val markers = mutableListOf<MarkerOptions>()
 
-    // Google Maps APIキーを取得
-    val ApiKey = BuildConfig.MAPS_API_KEY
-    val geoApiContext = GeoApiContext.Builder()
-        .apiKey(ApiKey)
-        .build()
+//    // Google Maps APIキーを取得
+//    val ApiKey = BuildConfig.MAPS_API_KEY
+//    val geoApiContext = GeoApiContext.Builder()
+//        .apiKey(ApiKey)
+//        .build()
 
     // 画像データのリストをループして各画像の位置情報を取得
     imageViewModel.pictureName.forEach { imageData ->
-        val address = imageData.location
+//        val address = imageData.location
         val Title = imageData.title
-        val Snippet = imageData.name
+        val Snippet = "AI判定：" + imageData.name
         val Lat = imageData.latitude
         val Lng = imageData.longitude
         val bitmap = imageData.bitmap
 
         // ビットマップをリサイズして白い枠と逆三角形を追加(色は別々にすること!!)
-        val resizedBitmap = ResizeMarkerIcon(bitmap, 180, 10, "#ed6d35", "#ed6d36") // 適切なサイズに変更(色：キャロットオレンジ、ほぼキャロットオレンジ)
+        val resizedBitmap = ResizeMarkerIcon(bitmap, 140, 10, "#ed6d35", "#ed6d36") // 適切なサイズに変更(色：キャロットオレンジ、ほぼキャロットオレンジ)
 
         if (Lat != null && Lng != null) {
             // 緯度経度が既にある場合
@@ -244,6 +244,25 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
                     snippet = markerOptions.snippet,
 //                    icon = BitmapDescriptorFactory.defaultMarker(color_enemy),
                     icon = markerOptions.icon,
+                    // マーカークリック
+                    onClick = {
+                        // クリックされたマーカーの位置を取得
+                        val markerPosition = markerOptions.position
+
+                        // オフセットを設定（例：緯度を0.008度上にズラす）
+                        val offset = 0.008
+                        val newPosition = LatLng(markerPosition.latitude + offset, markerPosition.longitude)
+
+                        // カメラを新しい位置に移動
+                        coroutineScope.launch {
+                            cameraPositionState.animate(
+                                CameraUpdateFactory.newLatLngZoom(newPosition, defaultZoom),
+                                750 // アニメーション時間（ミリ秒）
+                            )
+                        }
+                        false // マーカーのデフォルトの動作を無効にする
+                    },
+
                     // マーカークリック
 //                    onClick = {
 //                        clickCount += 1

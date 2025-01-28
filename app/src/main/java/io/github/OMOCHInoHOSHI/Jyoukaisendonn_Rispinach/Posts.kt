@@ -87,7 +87,7 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                         .background(Color.DarkGray.copy(alpha = 0.5f)) // 半透明の灰色
                 ) {
                     Text(
-                        text = "名前: $lName",
+                        text = "AI判定：$lName",
                         style = TextStyle(
                             color = Color.White,  // テキストの色
                             fontSize = 15.sp,
