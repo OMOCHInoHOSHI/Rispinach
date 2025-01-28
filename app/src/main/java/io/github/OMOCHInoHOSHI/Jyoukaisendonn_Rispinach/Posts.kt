@@ -1,6 +1,8 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 import android.graphics.Bitmap
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Canvas
@@ -53,6 +55,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,6 +64,8 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
     val scope = rememberCoroutineScope()
     var openBottomSheet by remember { mutableStateOf(false) }
     val bottomSheetState = rememberModalBottomSheetState()
+
+    var MapL by remember { mutableStateOf(false) }
 
     var isExpanded by remember { mutableStateOf(false) }
     val surfaceColor by animateColorAsState(
@@ -304,6 +310,7 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                                 style = MaterialTheme.typography.titleMedium.copy(fontSize = 13.sp),
                                 modifier = Modifier.clickable {     // クリック時の処理
 //                                    MapMarkers(Lat, Lng)        // マーカー付き地図
+                                    MapL = true
                                 },
                                 color = Color.Blue
                             )
@@ -334,6 +341,31 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                                 },
                                 color = Color.Blue
                             )
+                        }
+                    }
+                }
+                if(MapL){
+
+                    // 緯度と経度を保持する状態を追加
+                    var latitude by remember { mutableStateOf<Double?>(null) }
+                    var longitude by remember { mutableStateOf<Double?>(null) }
+                    // 地図表示
+                    Dialog(
+                        onDismissRequest = { var showPopup = false },
+                        properties = DialogProperties(usePlatformDefaultWidth = false) // 幅を制限しない
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+//                            .fillMaxWidth()
+//                            .height(300.dp) // 地図の高さを指定
+                        ) {
+                            MapMarkers(Lat, Lng)
+
+                            BackHandler{
+                                MapL = false
+                                Log.d("MapContent", "成功")
+                            }
                         }
                     }
                 }
