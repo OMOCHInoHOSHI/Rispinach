@@ -74,15 +74,15 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
     // マーカーのリストを再作成
     val markers = mutableListOf<MarkerOptions>()
 
-    // Google Maps APIキーを取得
-    val ApiKey = BuildConfig.MAPS_API_KEY
-    val geoApiContext = GeoApiContext.Builder()
-        .apiKey(ApiKey)
-        .build()
+//    // Google Maps APIキーを取得
+//    val ApiKey = BuildConfig.MAPS_API_KEY
+//    val geoApiContext = GeoApiContext.Builder()
+//        .apiKey(ApiKey)
+//        .build()
 
     // 画像データのリストをループして各画像の位置情報を取得
     imageViewModel.pictureName.forEach { imageData ->
-        val address = imageData.location
+//        val address = imageData.location
         val Title = imageData.title
         val Snippet = imageData.name
         val Lat = imageData.latitude
@@ -90,7 +90,7 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
         val bitmap = imageData.bitmap
 
         // ビットマップをリサイズして白い枠と逆三角形を追加(色は別々にすること!!)
-        val resizedBitmap = ResizeMarkerIcon(bitmap, 180, 10, "#ed6d35", "#ed6d36") // 適切なサイズに変更(色：キャロットオレンジ、ほぼキャロットオレンジ)
+        val resizedBitmap = ResizeMarkerIcon(bitmap, 140, 10, "#ed6d35", "#ed6d36") // 適切なサイズに変更(色：キャロットオレンジ、ほぼキャロットオレンジ)
 
         if (Lat != null && Lng != null) {
             // 緯度経度が既にある場合
