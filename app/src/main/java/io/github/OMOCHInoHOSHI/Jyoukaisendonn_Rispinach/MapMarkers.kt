@@ -182,27 +182,27 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     // 現在のコンテキストを取得
     val context = LocalContext.current
 
-//    // ロケーション用
-//    val locationViewModel: LocationViewModel = viewModel(
-//        factory = LocationViewModelFactory(context)
-//    )
-//
-//    // (2) 位置情報の権限リクエストと、位置情報の取得開始を行う
-//    LaunchedEffect(Unit) {
-//
-//        locationViewModel.fusedLocation()
-//    }
-//
-//    // (3) 現在地のLiveDataを観測
-//    val currentLocation by locationViewModel.location.observeAsState()
-//
-//    // 緯度と経度を個別の変数に格納
-//    val latitude = currentLocation?.latitude
-//    val longitude = currentLocation?.longitude
-//
-//    // 取得できたか確認
-//    println("latitude = $latitude")
-//    println("longitude = $longitude")
+    // ロケーション用
+    val locationViewModel: LocationViewModel = viewModel(
+        factory = LocationViewModelFactory(context)
+    )
+
+    // (2) 位置情報の権限リクエストと、位置情報の取得開始を行う
+    LaunchedEffect(Unit) {
+
+        locationViewModel.fusedLocation()
+    }
+
+    // (3) 現在地のLiveDataを観測
+    val currentLocation by locationViewModel.location.observeAsState()
+
+    // 緯度と経度を個別の変数に格納
+    val latitude = currentLocation?.latitude
+    val longitude = currentLocation?.longitude
+
+    // 取得できたか確認
+    println("latitude = $latitude")
+    println("longitude = $longitude")
 
 
 
@@ -218,15 +218,38 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     // マーカーを読み込む
     val markers = loadMarkers(context, imageViewModel)
 
-    // 地名と緯度経度の対応付け
-    val locations = mapOf(
-        "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
-        "東京" to LatLng(35.689501, 139.691722),  // 東京都庁
-        "名古屋" to LatLng(35.180202, 136.906144),  // 名古屋県庁
-        "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
-        "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
-    )
-    var defaultPosition = locations["大阪"]!! // 大阪府庁
+    // ロケーションリスト
+    var locations: Map<String, LatLng>
+
+    // デフォルトの位置
+    var defaultPosition:LatLng
+
+    if(currentLocation == null){
+        locations = mapOf(
+            "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
+            "東京" to LatLng(35.689501, 139.691722),  // 東京都庁
+            "名古屋" to LatLng(35.180202, 136.906144),  // 名古屋県庁
+            "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
+            "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
+        )
+
+        // 大阪をデフォルト位置に
+        defaultPosition = locations["大阪"]!!
+    }
+    else {
+        // 地名と緯度経度の対応付け
+        locations = mapOf(
+            "現在地" to LatLng(latitude!!, longitude!!),                //現在地を追加
+            "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
+            "東京" to LatLng(35.689501, 139.691722),  // 東京都庁
+            "名古屋" to LatLng(35.180202, 136.906144),  // 名古屋県庁
+            "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
+            "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
+        )
+
+        // 現在地をデフォルト位置に
+        defaultPosition = locations["現在地"]!!
+    }
 
 
     // 現在地が存在したらdefaultPositionを現在地に変更
