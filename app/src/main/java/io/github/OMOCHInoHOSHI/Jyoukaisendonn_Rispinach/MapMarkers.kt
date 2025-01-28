@@ -59,6 +59,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.Path
@@ -144,7 +145,7 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
 @Composable
 fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageViewModel = viewModel()) {
 
-    val locationViewModel = LocationViewModel(context = LocalContext.current)
+//    val locationViewModel = LocationViewModel(context = LocalContext.current)
 //
 //    // LiveDataを監視
 //    val location by locationViewModel.location.observeAsState()
@@ -157,13 +158,39 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
 //    // 必要に応じて権限リクエストを行う
 //    LaunchedEffect(Unit) {
 ////        locationViewModel.requestLocationPermission(activity)
-        locationViewModel.fusedLocation()
+//        locationViewModel.fusedLocation()
 //    }
 
     Log.i("GoogleMap", "GoogleMap_Start")
 
     // 現在のコンテキストを取得
     val context = LocalContext.current
+
+    // ロケーション用
+//    val locationViewModel = LocationViewModel(context = context)
+    // ロケーション用
+    val locationViewModel: LocationViewModel = viewModel(
+        factory = LocationViewModelFactory(context)
+    )
+
+    // (2) 位置情報の権限リクエストと、位置情報の取得開始を行う
+    LaunchedEffect(Unit) {
+
+        locationViewModel.fusedLocation()
+    }
+
+    // (3) 現在地のLiveDataを観測
+    val currentLocation by locationViewModel.location.observeAsState()
+
+    // 緯度と経度を個別の変数に格納
+    val latitude = currentLocation?.latitude
+    val longitude = currentLocation?.longitude
+
+    // 取得できたか確認
+    println("latitude = $latitude")
+    println("longitude = $longitude")
+
+
 
     // Firebase Storageからデータを読み込む
     LaunchedEffect(Unit) {
