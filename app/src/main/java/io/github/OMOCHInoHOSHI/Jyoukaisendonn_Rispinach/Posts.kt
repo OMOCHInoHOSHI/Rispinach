@@ -249,6 +249,7 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                                     .fillMaxWidth(),
                                 fontSize = 30.sp,
                                 maxLines = if (isExpanded) Int.MAX_VALUE else 2,
+                                lineHeight=32.sp, // 行間を32spに設定
                                 style = MaterialTheme.typography.bodyLarge,
                                 overflow = TextOverflow.Ellipsis, // 非表示部分を省略記号に
                             )
