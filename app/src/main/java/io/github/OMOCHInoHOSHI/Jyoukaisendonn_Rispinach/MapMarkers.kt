@@ -84,7 +84,7 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
     imageViewModel.pictureName.forEach { imageData ->
 //        val address = imageData.location
         val Title = imageData.title
-        val Snippet = imageData.name
+        val Snippet = "AI判定：" + imageData.name
         val Lat = imageData.latitude
         val Lng = imageData.longitude
         val bitmap = imageData.bitmap
