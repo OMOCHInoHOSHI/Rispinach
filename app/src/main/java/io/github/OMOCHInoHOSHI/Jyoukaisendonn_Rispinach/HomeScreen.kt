@@ -171,7 +171,8 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //                SideEffect { Log.d("compose-log", "ModalNavigationDrawer") }
 //                Text(text = "ナビゲーションドロワー")
                     MainScreenTab.entries.forEachIndexed { index, item ->
-                        if (selectButton == "main/camera") {
+                        if (selectButton == "main/camera")
+                        {
                             selectButton = "main/home"
                             //selectIndex=0
                         }
@@ -181,7 +182,9 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                             onClick = dropUnlessResumed()
                             {
                                 //デバッグ用
+                                println(selectButton)
                                 println(item.id)
+                                println(currentTab)
 //                            if(index==item.idx)
 //                            {
 //                                return@NavigationBarItem
@@ -196,14 +199,16 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 
                                 nestedNavController.navigate(item.id)
                                 {
-                                    //launchSingleTop = true
-                                    popUpTo(item.id)
-                                    {
-                                        saveState = true
-                                        //inclusive=true
+                                    if(currentTab!=item.id) {
+                                        //launchSingleTop = true
+                                        popUpTo(item.id)
+                                        {
+                                            saveState = true
+                                            //inclusive=true
+                                        }
+                                        launchSingleTop = true
+                                        //restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    //restoreState = true
                                 }
 //                            nestedNavController.navigate(item.id)
 //                            {
@@ -273,6 +278,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //                            }
 //                            .safeClickable {
 //                                //デバッグ用
+
 //                                println(item.id)
 //                                if(currentTab==item.id)
 //                                {
@@ -296,6 +302,9 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //                                Home()
 //                            }
                                 //デバッグ用
+                                println(selectButton)
+                                println(item.id)
+                                println(currentTab)
                                 //println(item.id)
                                 if(currentTab==item.id)
                                 {
@@ -311,7 +320,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                 {
                                     //launchSingleTop = true
 
-                                    println(currentTab)
+                                    //println(currentTab)
                                     //println(item.id)
 
                                     if(currentTab!=item.id)
