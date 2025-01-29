@@ -1,7 +1,6 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -18,8 +17,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Report
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +42,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -349,7 +352,7 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                     // 緯度と経度を保持する状態を追加
                     var latitude by remember { mutableStateOf<Double?>(null) }
                     var longitude by remember { mutableStateOf<Double?>(null) }
-                    // 地図表示
+// 地図表示
                     Dialog(
                         onDismissRequest = { var showPopup = false },
                         properties = DialogProperties(usePlatformDefaultWidth = false) // 幅を制限しない
@@ -357,14 +360,30 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-//                            .fillMaxWidth()
-//                            .height(300.dp) // 地図の高さを指定
                         ) {
-                            MapMarkers(Lat, Lng)
+                            MapMarkers(Lat, Lng, MapL)
 
-                            BackHandler{
+                            // 赤い✕ボタンを右上に配置
+                            IconButton(
+                                onClick = { MapL = false },
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(top = 16.dp, end = 24.dp) // 右の余白を増やして左にずらす
+                                    .size(28.dp) // ボタンのサイズを小さくする
+                                    .clip(CircleShape) // 円形にクリップ
+                                    .background(color = androidx.compose.ui.graphics.Color.White) // 白い背景
+
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Close Map",
+                                    tint = Color.Red
+                                )
+                            }
+
+                            BackHandler {
                                 MapL = false
-                                Log.d("MapContent", "成功")
+                                //Log.d("MapContent", "成功")
                             }
                         }
                     }

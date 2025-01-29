@@ -1,9 +1,12 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 //import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
@@ -43,42 +47,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.maps.GeoApiContext
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import fetchImagesFromFirebaseStorage
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
-//import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.core.content.ContextCompat
-import com.google.android.gms.maps.model.BitmapDescriptor
-import android.graphics.Color
-import android.graphics.Paint
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.Path
-import com.google.maps.android.compose.MapProperties
 
 // マーカーを読み込む関数
 @Composable
@@ -159,7 +134,7 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
 // マーカー付きマップを表示する関数
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageViewModel = viewModel()) {
+fun MapMarkers(Lat: Double? = null, Lng: Double? = null, mapL: Boolean = false, imageViewModel: ImageViewModel = viewModel()) {
 
 //    val locationViewModel = LocationViewModel(context = LocalContext.current)
 //
@@ -500,57 +475,113 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
         val options = locations.keys.toList()
         var selectedOptionText by remember { mutableStateOf(options[0]) }
 
-
-
-        // 画面右上に配置するBoxコンポーネント
-        Box(
-            Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)) {
-
+        //
+        if(mapL == true) {
+// 画面右上に配置するBoxコンポーネント
             Box(
-                modifier = Modifier
-                    .size(40.dp) // アイコンのサイズに合わせて調整
-                    .clip(CircleShape) // 円形にクリップ
-                    .background(color = androidx.compose.ui.graphics.Color.White) // 白い背景
-                    .align(Alignment.Center) // アイコンと重ねる
-            )
-            // アイコンボタンを表示
-            IconButton(onClick = { expanded = true }) {
-                Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
-            }
-            // ドロップダウンメニューを表示
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 55.dp, end = 14.dp) // 上の余白を増やす
             ) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(option) },
-                        onClick = {
-                            selectedOptionText = option
-                            expanded = false
-                            // 地名に対応する緯度経度を取得
-                            val selectedLocation = locations[option]
 
-                            // マップを移動
-                            if (selectedLocation != null) {
-                                coroutineScope.launch {
-                                    cameraPositionState.animate(
-                                        CameraUpdateFactory.newLatLngZoom(
-                                            selectedLocation,
-                                            10f
-                                        ), //ズームレベルも変更
-                                        1000 // アニメーション時間（ミリ秒）
-                                    )
+                Box(
+                    modifier = Modifier
+                        .size(45.dp) // アイコンのサイズに合わせて調整
+                        .clip(CircleShape) // 円形にクリップ
+                        .background(color = androidx.compose.ui.graphics.Color.White) // 白い背景
+                        .align(Alignment.Center) // アイコンと重ねる
+                )
+                // アイコンボタンを表示
+                IconButton(onClick = { expanded = true }) {
+                    Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
+                }
+                // ドロップダウンメニューを表示
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    options.forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option) },
+                            onClick = {
+                                selectedOptionText = option
+                                expanded = false
+                                // 地名に対応する緯度経度を取得
+                                val selectedLocation = locations[option]
+
+                                // マップを移動
+                                if (selectedLocation != null) {
+                                    coroutineScope.launch {
+                                        cameraPositionState.animate(
+                                            CameraUpdateFactory.newLatLngZoom(
+                                                selectedLocation,
+                                                10f
+                                            ), //ズームレベルも変更
+                                            1000 // アニメーション時間（ミリ秒）
+                                        )
+                                    }
+                                    Log.d("MapContent", "$option が選択されました")
                                 }
-                                Log.d("MapContent", "$option が選択されました")
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
+        else{
+            // 画面右上に配置するBoxコンポーネント
+            Box(
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+            ) {
+
+                Box(
+                    modifier = Modifier
+                        .size(40.dp) // アイコンのサイズに合わせて調整
+                        .clip(CircleShape) // 円形にクリップ
+                        .background(color = androidx.compose.ui.graphics.Color.White) // 白い背景
+                        .align(Alignment.Center) // アイコンと重ねる
+                )
+                // アイコンボタンを表示
+                IconButton(onClick = { expanded = true }) {
+                    Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
+                }
+                // ドロップダウンメニューを表示
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    options.forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option) },
+                            onClick = {
+                                selectedOptionText = option
+                                expanded = false
+                                // 地名に対応する緯度経度を取得
+                                val selectedLocation = locations[option]
+
+                                // マップを移動
+                                if (selectedLocation != null) {
+                                    coroutineScope.launch {
+                                        cameraPositionState.animate(
+                                            CameraUpdateFactory.newLatLngZoom(
+                                                selectedLocation,
+                                                10f
+                                            ), //ズームレベルも変更
+                                            1000 // アニメーション時間（ミリ秒）
+                                        )
+                                    }
+                                    Log.d("MapContent", "$option が選択されました")
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+        }
+
+
     }
 
     // マーカーの数をログに出力
