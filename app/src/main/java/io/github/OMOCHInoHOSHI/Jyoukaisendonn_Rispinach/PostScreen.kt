@@ -739,7 +739,7 @@ fun LocatePosition(lat: Double?=null, lng: Double?=null, onAddressChanged: (Stri
         Column(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(16.dp)
+                .padding(top = 48.dp, end = 16.dp)
                 .background(Color.White.copy(alpha = 0.5f), shape = CircleShape)
         ) {
             // ✕ボタンの表示

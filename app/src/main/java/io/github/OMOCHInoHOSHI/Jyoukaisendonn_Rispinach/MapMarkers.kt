@@ -482,7 +482,7 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, mapL: Boolean = false, 
             Box(
                 Modifier
                     .align(Alignment.TopEnd)
-                    .padding(top = 55.dp, end = 14.dp) // 上の余白を増やす
+                    .padding(top = 48.dp, end = 14.dp) // 上の余白を増やす
             ) {
 
                 Box(
@@ -534,7 +534,7 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, mapL: Boolean = false, 
             Box(
                 Modifier
                     .align(Alignment.TopEnd)
-                    .padding(16.dp)
+                    .padding(top = 48.dp, end = 14.dp) // 上の余白を増やす
             ) {
 
                 Box(
