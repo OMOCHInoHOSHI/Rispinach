@@ -1,15 +1,10 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -17,16 +12,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavGraphBuilder
 
 // showCameraを変更するためのViewModelS------------------------
 class CameraViewModel : ViewModel() {
@@ -57,6 +47,8 @@ fun Camera(cameraViewModel: CameraViewModel = viewModel())
     // ViewModel から showCamera を参照
     val showCamera = cameraViewModel.showCamera.value
 
+    val showDialog = remember { mutableStateOf(true) }
+
 //    println("1 camera_flg = $camera_flg")
 //    println("showCamera = $showCamera")
     if (showCamera) {
@@ -67,7 +59,7 @@ fun Camera(cameraViewModel: CameraViewModel = viewModel())
 //        }
 
         Dialog(
-            onDismissRequest = { var showPopup = false },
+            onDismissRequest = { /*var showPopup*/showDialog.value = false },
             properties = DialogProperties(usePlatformDefaultWidth = false) // 幅を制限しない
         ) {
             // バックボタン処理を追加
@@ -90,6 +82,7 @@ fun Camera(cameraViewModel: CameraViewModel = viewModel())
 //                    camera_flg = 0
 //                    showCamera = false // カメラ画面を閉じる
                     cameraViewModel.setShowCamera(false)
+                    //showDialog.value = false
 //                    if(camera_flg == 0){
 //                        showCamera = false // カメラ画面を閉じる
 //                        println("2 showCamera = $showCamera")
@@ -103,10 +96,10 @@ fun Camera(cameraViewModel: CameraViewModel = viewModel())
             }
         }
     } else {
-
         // カメラ画面を閉じた後の処理（元の画面）
-        Home()
-
+        //showDialog.value=false
+        LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher?.onBackPressed()
+        //Home()
     }
 }
 // カメラ～投稿画面E-----------------------------------------------------------------------------------
