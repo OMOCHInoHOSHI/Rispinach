@@ -83,19 +83,38 @@ class ImageViewModel : ViewModel() {
     // キャッシュされたデータを保持する変数
     private var isDataFetched = false
 
-    fun fetchImages() {
-        if (isDataFetched) {
+    // データ取得関数
+    // 強制再ロードのフラグ
+    fun fetchImages(flg:Boolean? = null) {
+
+//        if (isDataFetched) {
+//            println("既にデータが取得されています（ImageView）")
+//            // データが既に取得されている場合は何もしない
+//            return
+//        }
+//        else{
+//            viewModelScope.launch {
+//                println("データを取得します（ImageView）")
+//                fetchImagesFromFirebaseStorage { images ->
+//                    pictureName = images
+//                    isDataFetched = true // データが取得されたことを記録
+//                }
+//            }
+//        }
+
+        if(!isDataFetched || flg==true){
+            viewModelScope.launch {
+                println("データを取得します（ImageView）")
+                fetchImagesFromFirebaseStorage { images ->
+                    pictureName = images
+                    isDataFetched = true // データが取得されたことを記録
+                }
+            }
+        }
+        else{
             println("既にデータが取得されています（ImageView）")
             // データが既に取得されている場合は何もしない
             return
-        }
-
-        viewModelScope.launch {
-            println("データを取得します（ImageView）")
-            fetchImagesFromFirebaseStorage { images ->
-                pictureName = images
-                isDataFetched = true // データが取得されたことを記録
-            }
         }
     }
 }
@@ -179,6 +198,8 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
     val localDensity = LocalDensity.current
     var homeHeight by remember { mutableStateOf(0.dp) }
     var isDebounced by remember { mutableStateOf(false) }
+
+
     // ファイヤーベースを再読み込みS--------------------------------------------
     if(isRefreshing){
         println("再ロード中")
@@ -189,7 +210,7 @@ fun Home(imageViewModel: ImageViewModel = viewModel())
                 isLoading = false // ロード完了後にフラグをfalseにする
                 isRefreshing = false
             }
-            imageViewModel.fetchImages()
+            imageViewModel.fetchImages(true)
         }
 
     }
