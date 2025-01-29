@@ -73,6 +73,7 @@ import com.google.firebase.database.ktx.database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import androidx.compose.material.icons.filled.Clear
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MarkerState
 
 
@@ -660,6 +661,7 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
+            properties = MapProperties(isMyLocationEnabled = true), //現在地
             onMapClick = { latLng ->
                 // マップがクリックされたときの処理
                 markerPosition = latLng
