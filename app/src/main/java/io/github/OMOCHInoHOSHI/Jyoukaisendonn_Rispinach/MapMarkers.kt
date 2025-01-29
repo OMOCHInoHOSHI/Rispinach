@@ -483,7 +483,7 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
         Box(
             Modifier
                 .align(Alignment.TopEnd)
-                .padding(16.dp)) {
+                .padding(top = 48.dp, end = 16.dp)) {
 
             Box(
                 modifier = Modifier
