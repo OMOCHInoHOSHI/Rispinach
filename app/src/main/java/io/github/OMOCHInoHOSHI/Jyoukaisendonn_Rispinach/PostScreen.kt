@@ -454,19 +454,24 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
                         val Lat = currentLocation?.latitude    // 緯度
                         val Lang = currentLocation?.longitude  // 経度
 
-                        LocatePosition(
-                            Lat,Lang,
 
-                            onAddressChanged = { address ->
-                                markerAddress = address
-                            },
-                            onCloseMap = { lat, lng ->
-                                location = markerAddress
-                                latitude = lat
-                                longitude = lng
-                                showMap = false
-                            }
-                        )
+                        // 現在地の取得を確認したらmap開く
+                        if(Lat != null && Lang != null){
+                            LocatePosition(
+                                Lat,Lang,
+
+                                onAddressChanged = { address ->
+                                    markerAddress = address
+                                },
+                                onCloseMap = { lat, lng ->
+                                    location = markerAddress
+                                    latitude = lat
+                                    longitude = lng
+                                    showMap = false
+                                }
+                            )
+                        }
+
                     }
                 }
                 // 地図の後に隙間を追加
