@@ -182,8 +182,8 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     val currentLocation by locationViewModel.location.observeAsState()
 
     // 緯度と経度を個別の変数に格納
-    val latitude = currentLocation?.latitude
-    val longitude = currentLocation?.longitude
+    val latitude = currentLocation?.latitude    // 緯度
+    val longitude = currentLocation?.longitude  // 経度
 
     // 取得できたか確認
     println("latitude = $latitude")
