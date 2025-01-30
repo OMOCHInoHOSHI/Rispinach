@@ -170,21 +170,22 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                     //　動作が重い原因？頻繁にインスタンスを再生成している？
 //                SideEffect { Log.d("compose-log", "ModalNavigationDrawer") }
 //                Text(text = "ナビゲーションドロワー")
+//                    if (selectButton == "main/camera")
+//                    {
+//                        selectButton = "main/home"
+//                        //selectIndex=0
+//                    }
                     MainScreenTab.entries.forEachIndexed { index, item ->
-                        if (selectButton == "main/camera")
-                        {
-                            selectButton = "main/home"
-                            //selectIndex=0
-                        }
+
                         NavigationDrawerItem(
                             icon = { Icon(item.icon, contentDescription = item.label) },
                             label = { Text(item.label) },
                             onClick = dropUnlessResumed()
                             {
                                 //デバッグ用
-                                println(selectButton)
-                                println(item.id)
-                                println(currentTab)
+                                println("selectButton:$selectButton")
+                                println("item.id:$item.id")
+                                println("currentTab:$currentTab")
 //                            if(index==item.idx)
 //                            {
 //                                return@NavigationBarItem
@@ -236,6 +237,11 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                 )
                 {
                     SideEffect { Log.d("compose-log", "NavigationBar") }
+//                    if(selectButton=="main/camera")
+//                    {
+//                        selectButton="main/home"
+//                        //selectIndex=0
+//                    }
                     MainScreenTab.entries.forEachIndexed { index, item ->
 
                         //var selectIndex=item.idx
@@ -243,11 +249,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //                    var selectIndex=0
 //                    var selectBottom=currentTab
 
-                        if(selectButton=="main/camera")
-                        {
-                            selectButton="main/home"
-                            //selectIndex=0
-                        }
+
 //
 //                    if(currentTab=="main/camera")
 //                    {
@@ -302,11 +304,11 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //                                Home()
 //                            }
                                 //デバッグ用
-                                println(selectButton)
-                                println(item.id)
-                                println(currentTab)
+                                println("selectButton:$selectButton")
+                                println("item.id:$item.id")
+                                println("currentTab:$currentTab")
                                 //println(item.id)
-                                if(currentTab==item.id)
+                                if(selectButton==item.id)
                                 {
                                     btmEnabled=false
                                     //return@dropUnlessResumed
