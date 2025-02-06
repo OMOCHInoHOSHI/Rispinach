@@ -17,6 +17,8 @@ io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 ## 開発環境
  - **IDE：** Android Studio Koala Feature Drop
+ - AGPバージョン：8.6.0
+ - Gradle Version：8.7
  - **言語：** Kotlin
 
 ### 動作環境
