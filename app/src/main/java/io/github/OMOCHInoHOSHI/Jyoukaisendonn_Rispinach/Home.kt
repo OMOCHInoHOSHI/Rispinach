@@ -110,6 +110,11 @@ class ImageViewModel : ViewModel() {
 @Composable
 fun Home(imageViewModel: ImageViewModel = viewModel())
 {
+
+    // 仮　homeでカメラストップ
+    val cameraState = remenbreCameraState()
+    cameraState.stopCamera()
+
     // _uploadSuccessの値が変わったら、Homeを更新したい
     // Post_SucsessViewModelのインスタンスを取得
     val post_viewModel = viewModel<Post_SucsessViewModel>()
