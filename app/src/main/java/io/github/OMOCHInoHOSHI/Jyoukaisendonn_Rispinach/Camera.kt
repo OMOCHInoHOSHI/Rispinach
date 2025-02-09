@@ -86,8 +86,8 @@ fun Camera(cameraViewModel: CameraViewModel = viewModel())
 //                    showCamera = false // カメラ画面を閉じる
                     cameraViewModel.setShowCamera(false)
 
-                    // カメラストップ
-                    cameraState.stopCamera()
+//                    // カメラストップ
+//                    cameraState.stopCamera()
                     //showDialog.value = false
 //                    if(camera_flg == 0){
 //                        showCamera = false // カメラ画面を閉じる
@@ -106,6 +106,8 @@ fun Camera(cameraViewModel: CameraViewModel = viewModel())
         //showDialog.value=false
         LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher?.onBackPressed()
         //Home()
+        // カメラストップ
+        cameraState.stopCamera()
     }
 }
 // カメラ～投稿画面E-----------------------------------------------------------------------------------
