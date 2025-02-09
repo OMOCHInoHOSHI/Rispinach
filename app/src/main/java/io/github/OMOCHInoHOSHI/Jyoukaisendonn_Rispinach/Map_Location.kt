@@ -11,8 +11,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+
 
 // Androidアプリで位置情報を取得するためのクラスS----------------------------------------------------
 class LocationViewModel(private val context: Context) : ViewModel() {
@@ -21,7 +23,10 @@ class LocationViewModel(private val context: Context) : ViewModel() {
     private val _location: MutableLiveData<Location> = MutableLiveData<Location>()
     val location: LiveData<Location> = _location
 
-    // 位置情報へのアクセス権限を要求する関数S---------------------------------
+    var location_string_latitude: Double? = null
+    var location_string_longitude: Double? = null
+
+    // 位置情報へのアクセス権限を要求する関数
     fun requestLocationPermission(activity: Activity) {
         val LOCATION_PERMISSION_REQUEST_CODE = 1001
 
@@ -40,56 +45,6 @@ class LocationViewModel(private val context: Context) : ViewModel() {
             )
         }
     }
-    // 位置情報へのアクセス権限を要求する関数E---------------------------------
-
-//    // FusedLocationProviderClientを使ってデバイスの最後の既知の位置を取得S---------------
-//    fun fusedLocation():String {
-//
-//        // 緯度経度
-//        var locationString = ""
-//
-//        // 最後に確認された位置情報を取得
-//        val fusedLocationClient: FusedLocationProviderClient =
-//            LocationServices.getFusedLocationProviderClient(context)
-//
-//        // 一応権限のチェック
-//        if (ActivityCompat.checkSelfPermission(
-//                context,
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED
-//            && ActivityCompat.checkSelfPermission(
-//                context,
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            Log.d("LocationSensor","権限がない")
-//            // 権限もらえないと困っちゃうなぁ
-//            return null.toString()
-//        }
-//
-//        // 位置情報を取得したらListenerが反応する
-//        fusedLocationClient.lastLocation
-//            .addOnSuccessListener { location ->
-////                Log.d("LocationSensor", "$location")
-//
-//                if (location != null) {
-//                    val latitude = location.latitude
-//                    val longitude = location.longitude
-//                    // 緯度経度を文字列として結合
-//                    locationString = "$latitude, $longitude"
-//
-//                    Log.d("LocationSensor", "緯度経度: $locationString")
-//
-//                    _location.postValue(location)
-//                }
-//            }
-//            .addOnFailureListener { exception ->
-//                Log.e("LocationSensor", "Error getting location", exception)
-//            }
-//
-//        return locationString
-//    }
-//    // FusedLocationProviderClientを使ってデバイスの最後の既知の位置を取得E---------------
 
     // FusedLocationProviderClientを使ってデバイスの最後の既知の位置を取得
     fun fusedLocation() {
@@ -111,14 +66,19 @@ class LocationViewModel(private val context: Context) : ViewModel() {
             return
         }
 
-        // 位置情報を取得
+        // 位置情報を取得// 位置情報を取得したらListenerが反応する
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
                 if (location != null) {
                     _location.postValue(location) // LiveDataに結果を格納
                     // 緯度経度を文字列で結合し、ログに出力
                     val locationString = "${location.latitude}, ${location.longitude}"
+                    location_string_latitude = location.latitude
+                    location_string_longitude = location.longitude
+
                     Log.d("LocationSensor", "位置情報取得成功: $locationString")
+                    println("location_string_latitude = $location_string_latitude")
+                    println("location_string_longitude = $location_string_longitude")
                 } else {
                     Log.d("LocationSensor", "位置情報が取得できませんでした")
                 }
@@ -127,5 +87,21 @@ class LocationViewModel(private val context: Context) : ViewModel() {
                 Log.e("LocationSensor", "位置情報取得中にエラー", exception)
             }
     }
+
+
 }
 // Androidアプリで位置情報を取得するためのクラスE----------------------------------------------------
+
+// LocationViewModelを生成するFactoryクラスS-----------------------------------------------------
+class LocationViewModelFactory(
+    private val context: Context
+) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(LocationViewModel::class.java)) {
+            return LocationViewModel(context) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+// LocationViewModelを生成するFactoryクラスS-----------------------------------------------------

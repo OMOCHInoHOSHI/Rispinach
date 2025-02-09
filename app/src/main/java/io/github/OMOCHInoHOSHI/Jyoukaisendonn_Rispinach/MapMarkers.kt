@@ -1,22 +1,45 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
+//import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,42 +49,12 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import com.google.maps.GeoApiContext
-import com.google.maps.GeocodingApi
-import com.google.maps.model.GeocodingResult
 import fetchImagesFromFirebaseStorage
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-//import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.core.content.ContextCompat
-import com.google.android.gms.maps.model.BitmapDescriptor
-import android.graphics.Color
-import android.graphics.Paint
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.Path
 
 // マーカーを読み込む関数
 @Composable
@@ -74,23 +67,23 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
     // マーカーのリストを再作成
     val markers = mutableListOf<MarkerOptions>()
 
-    // Google Maps APIキーを取得
-    val ApiKey = BuildConfig.MAPS_API_KEY
-    val geoApiContext = GeoApiContext.Builder()
-        .apiKey(ApiKey)
-        .build()
+//    // Google Maps APIキーを取得
+//    val ApiKey = BuildConfig.MAPS_API_KEY
+//    val geoApiContext = GeoApiContext.Builder()
+//        .apiKey(ApiKey)
+//        .build()
 
     // 画像データのリストをループして各画像の位置情報を取得
     imageViewModel.pictureName.forEach { imageData ->
-        val address = imageData.location
+//        val address = imageData.location
         val Title = imageData.title
-        val Snippet = imageData.name
+        val Snippet = "AI判定：" + imageData.name
         val Lat = imageData.latitude
         val Lng = imageData.longitude
         val bitmap = imageData.bitmap
 
         // ビットマップをリサイズして白い枠と逆三角形を追加(色は別々にすること!!)
-        val resizedBitmap = ResizeMarkerIcon(bitmap, 180, 10, "#ed6d35", "#ed6d36") // 適切なサイズに変更(色：キャロットオレンジ、ほぼキャロットオレンジ)
+        val resizedBitmap = ResizeMarkerIcon(bitmap, 140, 10, "#ed6d35", "#ed6d36") // 適切なサイズに変更(色：キャロットオレンジ、ほぼキャロットオレンジ)
 
         if (Lat != null && Lng != null) {
             // 緯度経度が既にある場合
@@ -142,7 +135,7 @@ fun loadMarkers(context: Context, imageViewModel: ImageViewModel): MutableList<M
 // マーカー付きマップを表示する関数
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageViewModel = viewModel()) {
+fun MapMarkers(Lat: Double? = null, Lng: Double? = null, mapL: Boolean = false, imageViewModel: ImageViewModel = viewModel()) {
 
 //    val locationViewModel = LocationViewModel(context = LocalContext.current)
 //
@@ -165,6 +158,30 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     // 現在のコンテキストを取得
     val context = LocalContext.current
 
+    // ロケーション用
+    val locationViewModel: LocationViewModel = viewModel(
+        factory = LocationViewModelFactory(context)
+    )
+
+    // (2) 位置情報の権限リクエストと、位置情報の取得開始を行う
+    LaunchedEffect(Unit) {
+
+        locationViewModel.fusedLocation()
+    }
+
+    // (3) 現在地のLiveDataを観測
+    val currentLocation by locationViewModel.location.observeAsState()
+
+    // 緯度と経度を個別の変数に格納
+    val latitude = currentLocation?.latitude    // 緯度
+    val longitude = currentLocation?.longitude  // 経度
+
+    // 取得できたか確認
+    println("latitude = $latitude")
+    println("longitude = $longitude")
+
+
+
     // Firebase Storageからデータを読み込む
     LaunchedEffect(Unit) {
         fetchImagesFromFirebaseStorage { images ->
@@ -177,15 +194,53 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     // マーカーを読み込む
     val markers = loadMarkers(context, imageViewModel)
 
-    // 地名と緯度経度の対応付け
-    val locations = mapOf(
-        "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
-        "東京" to LatLng(35.689501, 139.691722),  // 東京都庁
-        "名古屋" to LatLng(35.180202, 136.906144),  // 名古屋県庁
-        "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
-        "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
-    )
-    val defaultPosition = locations["大阪"]!! // 大阪府庁
+    // ロケーションリスト
+    var locations: Map<String, LatLng>
+
+    // デフォルトの位置
+    var defaultPosition:LatLng
+
+    if(currentLocation == null){
+        locations = mapOf(
+            "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
+            "東京" to LatLng(35.689501, 139.691722),  // 東京都庁
+            "名古屋" to LatLng(35.180202, 136.906144),  // 名古屋県庁
+            "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
+            "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
+        )
+
+        // 大阪をデフォルト位置に
+        defaultPosition = locations["大阪"]!!
+    }
+    else {
+        // 地名と緯度経度の対応付け
+        locations = mapOf(
+            "現在地" to LatLng(latitude!!, longitude!!),                //現在地を追加
+            "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
+            "東京" to LatLng(35.689501, 139.691722),  // 東京都庁
+            "名古屋" to LatLng(35.180202, 136.906144),  // 名古屋県庁
+            "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
+            "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
+        )
+
+        // 現在地をデフォルト位置に
+        defaultPosition = locations["現在地"]!!
+    }
+
+
+    // 現在地が存在したらdefaultPositionを現在地に変更
+//    currentLocation?.let {
+//        defaultPosition = LatLng(it.latitude, it.longitude)
+//        // 現在地に青いマーカーを追加
+////        markers.add(
+////            MarkerOptions()
+////                .position(defaultPosition)
+////                .title("現在地")
+////                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+////        )
+//    }
+
+
     val defaultZoom = 13f
     val cameraPositionState = rememberCameraPositionState {
         // Postsからマップを開く場合
@@ -224,6 +279,13 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
     // ボトムシートの表示状態を管理
     var chatflg by remember { mutableStateOf(false )}
 
+    // マップがクリックされたかどうかを管理する状態
+    var mapClicked by remember { mutableStateOf(false) }
+
+//    var clickedPosition by remember { mutableStateOf<LatLng?>(null) }
+
+    // 前回クリックされたインデックスを記録する状態
+    var lastClickedIndex by remember { mutableStateOf<Int?>(null) }
 
     // 画面全体を埋めるBoxコンポーネント
     Box(Modifier.fillMaxSize()) {
@@ -231,42 +293,123 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
+            properties = MapProperties(isMyLocationEnabled = true), //現在地
+            onMapClick={latLng ->
+                // マップがクリックされたかの判定を取得
+                mapClicked=true
+                lastClickedIndex=null
+            }
+
+//            locationSource = locationSource
         ) {
+
             // 読み込んだマーカー情報をマップに追加
             markers.forEachIndexed  { index, markerOptions ->
-                // マーカーが何回クリックされたかを取得する貯めの変数
+                // マーカーが何回クリックされたかを取得するための変数
                 val position = markerOptions.position   //マーカーの位置を取得
                 var clickCount = markerClickCounts[position] ?: 0   //　マップからクリック回数を取得し、存在しない場合は0を返す
+                // InfoWindowが表示されているかどうかを管理する状態
+                var infoWindowVisible by remember(index) { mutableStateOf(false) }
+
+                var MarkerClickCount by remember(index) { mutableStateOf(0) }
+                var MarkerClicked by remember(index) { mutableStateOf(false) }
+
+
 
                 Marker(
                     state = rememberMarkerState(position = position),
                     title = markerOptions.title,
                     snippet = markerOptions.snippet,
-//                    icon = BitmapDescriptorFactory.defaultMarker(color_enemy),
                     icon = markerOptions.icon,
+//                    icon = BitmapDescriptorFactory.defaultMarker(color_enemy),
                     // マーカークリック
 //                    onClick = {
-//                        clickCount += 1
-//                        if (clickCount == 2) {
-//                            println("Marker at $position clicked for the second time!")
-//                            chatflg = true
-//                            clickCount = 0
-//                        }
+//                        // クリックされたマーカーの位置を取得
+//                        val markerPosition = markerOptions.position
 //
-//                        markerClickCounts[position] = clickCount
-//                        clickedMarkerIndex = index
+//                        // オフセットを設定（例：緯度を0.008度上にズラす）
+//                        val offset = 0.008
+//                        val newPosition = LatLng(markerPosition.latitude + offset, markerPosition.longitude)
 //
+//                        // カメラを新しい位置に移動
 //                        coroutineScope.launch {
-//                            bottomSheetState.show()
-//                            Log.d("BottomSheet", "BottomSheet shown")
+//                            cameraPositionState.animate(
+//                                CameraUpdateFactory.newLatLngZoom(newPosition, defaultZoom),
+//                                750 // アニメーション時間（ミリ秒）
+//                            )
 //                        }
-//
-//                        false
+//                        false // マーカーのデフォルトの動作を無効にする
 //                    },
+
+                    onClick = {
+
+                        // クリックされたマーカーの位置を取得
+                        val markerPosition = markerOptions.position
+
+                        // オフセットを設定（例：緯度を0.008度上にズラす）
+                        val offset = 0.008
+                        val newPosition = LatLng(markerPosition.latitude + offset, markerPosition.longitude)
+
+                        // カメラを新しい位置に移動
+                        coroutineScope.launch {
+                            cameraPositionState.animate(
+                                CameraUpdateFactory.newLatLngZoom(newPosition, defaultZoom),
+                                750 // アニメーション時間（ミリ秒）
+                            )
+                        }
+
+                        println("Marker at $position clicked for the second time!")
+
+                        println("$MarkerClickCount $index")
+                        println("$lastClickedIndex $index")
+
+
+                        if(mapClicked==true)
+                        {
+                            MarkerClickCount=0
+                            mapClicked=false
+                            lastClickedIndex=index
+//                            MarkerClicked=true
+                        }
+                        else
+                        {
+                            if(lastClickedIndex==index)
+                            {
+                                MarkerClickCount = 1
+                            }
+                            else
+                            {
+                                MarkerClickCount=0
+                                lastClickedIndex=index
+                            }
+                        }
+
+                        MarkerClickCount+=1
+
+
+                        if(MarkerClickCount==2)
+                        {
+                            // ここにinfo windowクリック時の動作を追加
+                            clickedMarkerIndex = index
+
+                            // ボトムシートを表示
+                            coroutineScope.launch()
+                            {
+                                bottomSheetState.show()
+                                Log.d("BottomSheet", "BottomSheet shown")
+                                chatflg = true
+//                                MarkerClickCount = 1
+                                lastClickedIndex=index
+                            }
+                        }
+
+
+                        false
+
+                    },
 
                     // ウィンドウクリック
                     onInfoWindowClick = {
-
                         // ここにinfo windowクリック時の動作を追加
                         clickedMarkerIndex = index
 
@@ -275,9 +418,18 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
                             bottomSheetState.show()
                             Log.d("BottomSheet", "BottomSheet shown")
                             chatflg = true
+
+                            MarkerClickCount = 0
+                            infoWindowVisible=true
                         }
                     }
                 )
+                {
+                    if(mapClicked==true)
+                    {
+                        MarkerClicked=false
+                    }
+                }
             }
         }
 
@@ -324,54 +476,113 @@ fun MapMarkers(Lat: Double? = null, Lng: Double? = null, imageViewModel: ImageVi
         val options = locations.keys.toList()
         var selectedOptionText by remember { mutableStateOf(options[0]) }
 
-
-
-        // 画面右上に配置するBoxコンポーネント
-        Box(Modifier.align(Alignment.TopEnd).padding(16.dp)) {
-
+        //
+        if(mapL == true) {
+// 画面右上に配置するBoxコンポーネント
             Box(
-                modifier = Modifier
-                    .size(40.dp) // アイコンのサイズに合わせて調整
-                    .clip(CircleShape) // 円形にクリップ
-                    .background(color = androidx.compose.ui.graphics.Color.White) // 白い背景
-                    .align(Alignment.Center) // アイコンと重ねる
-            )
-            // アイコンボタンを表示
-            IconButton(onClick = { expanded = true }) {
-                Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
-            }
-            // ドロップダウンメニューを表示
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 48.dp, end = 14.dp) // 上の余白を増やす
             ) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(option) },
-                        onClick = {
-                            selectedOptionText = option
-                            expanded = false
-                            // 地名に対応する緯度経度を取得
-                            val selectedLocation = locations[option]
 
-                            // マップを移動
-                            if (selectedLocation != null) {
-                                coroutineScope.launch {
-                                    cameraPositionState.animate(
-                                        CameraUpdateFactory.newLatLngZoom(
-                                            selectedLocation,
-                                            10f
-                                        ), //ズームレベルも変更
-                                        1000 // アニメーション時間（ミリ秒）
-                                    )
+                Box(
+                    modifier = Modifier
+                        .size(45.dp) // アイコンのサイズに合わせて調整
+                        .clip(CircleShape) // 円形にクリップ
+                        .background(color = androidx.compose.ui.graphics.Color.White) // 白い背景
+                        .align(Alignment.Center) // アイコンと重ねる
+                )
+                // アイコンボタンを表示
+                IconButton(onClick = { expanded = true }) {
+                    Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
+                }
+                // ドロップダウンメニューを表示
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    options.forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option) },
+                            onClick = {
+                                selectedOptionText = option
+                                expanded = false
+                                // 地名に対応する緯度経度を取得
+                                val selectedLocation = locations[option]
+
+                                // マップを移動
+                                if (selectedLocation != null) {
+                                    coroutineScope.launch {
+                                        cameraPositionState.animate(
+                                            CameraUpdateFactory.newLatLngZoom(
+                                                selectedLocation,
+                                                10f
+                                            ), //ズームレベルも変更
+                                            1000 // アニメーション時間（ミリ秒）
+                                        )
+                                    }
+                                    Log.d("MapContent", "$option が選択されました")
                                 }
-                                Log.d("MapContent", "$option が選択されました")
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
+        else{
+            // 画面右上に配置するBoxコンポーネント
+            Box(
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 48.dp, end = 14.dp) // 上の余白を増やす
+            ) {
+
+                Box(
+                    modifier = Modifier
+                        .size(40.dp) // アイコンのサイズに合わせて調整
+                        .clip(CircleShape) // 円形にクリップ
+                        .background(color = androidx.compose.ui.graphics.Color.White) // 白い背景
+                        .align(Alignment.Center) // アイコンと重ねる
+                )
+                // アイコンボタンを表示
+                IconButton(onClick = { expanded = true }) {
+                    Icon(Icons.Rounded.MoreVert, contentDescription = "その他のオプション")
+                }
+                // ドロップダウンメニューを表示
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    options.forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option) },
+                            onClick = {
+                                selectedOptionText = option
+                                expanded = false
+                                // 地名に対応する緯度経度を取得
+                                val selectedLocation = locations[option]
+
+                                // マップを移動
+                                if (selectedLocation != null) {
+                                    coroutineScope.launch {
+                                        cameraPositionState.animate(
+                                            CameraUpdateFactory.newLatLngZoom(
+                                                selectedLocation,
+                                                10f
+                                            ), //ズームレベルも変更
+                                            1000 // アニメーション時間（ミリ秒）
+                                        )
+                                    }
+                                    Log.d("MapContent", "$option が選択されました")
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+        }
+
+
     }
 
     // マーカーの数をログに出力

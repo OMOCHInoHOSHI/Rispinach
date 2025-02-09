@@ -73,6 +73,8 @@ import com.google.firebase.database.ktx.database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.runtime.livedata.observeAsState
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MarkerState
 
 
@@ -431,17 +433,45 @@ fun PostScreen(bitmap: Bitmap?, cameraViewModel: CameraViewModel = viewModel()) 
 //                            .fillMaxWidth()
 //                            .height(300.dp) // 地図の高さを指定
                     ) {
-                        LocatePosition(
-                            onAddressChanged = { address ->
-                                markerAddress = address
-                            },
-                            onCloseMap = { lat, lng ->
-                                location = markerAddress
-                                latitude = lat
-                                longitude = lng
-                                showMap = false
-                            }
+                        // 現在のコンテキストを取得
+                        val context = LocalContext.current
+
+                        // ロケーション用
+                        val locationViewModel: LocationViewModel = viewModel(
+                            factory = LocationViewModelFactory(context)
                         )
+
+                        // (2) 位置情報の権限リクエストと、位置情報の取得開始を行う
+                        LaunchedEffect(Unit) {
+
+                            locationViewModel.fusedLocation()
+                        }
+
+                        // (3) 現在地のLiveDataを観測
+                        val currentLocation by locationViewModel.location.observeAsState()
+
+                        // 緯度と経度を個別の変数に格納
+                        val Lat = currentLocation?.latitude    // 緯度
+                        val Lang = currentLocation?.longitude  // 経度
+
+
+                        // 現在地の取得を確認したらmap開く
+                        if(Lat != null && Lang != null){
+                            LocatePosition(
+                                Lat,Lang,
+
+                                onAddressChanged = { address ->
+                                    markerAddress = address
+                                },
+                                onCloseMap = { lat, lng ->
+                                    location = markerAddress
+                                    latitude = lat
+                                    longitude = lng
+                                    showMap = false
+                                }
+                            )
+                        }
+
                     }
                 }
                 // 地図の後に隙間を追加
@@ -630,16 +660,46 @@ fun resizeBitmap(bitmap: Bitmap, targetWidth: Int, targetHeight: Int): Bitmap {
 
 // 発見場所指定マップの表示
 @Composable
-fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Double?) -> Unit) {
-    // 地名と緯度経度の対応付け
-    val locations = mapOf(
-        "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
-        "東京" to LatLng(35.689501, 139.691722),  // 東京都庁
-        "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
-        "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
-    )
-    // デフォルトのカメラ位置を東京都庁に設定
-    val defaultPosition = locations["東京"]!!
+fun LocatePosition(lat: Double?=null, lng: Double?=null, onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Double?) -> Unit) {
+
+    // ロケーションリスト
+    val locations: Map<String, LatLng>
+
+    // デフォルトの位置
+    val defaultPosition:LatLng
+
+    // 現在地がある場合の初期位置設定
+    if(lat==null && lng==null){
+        // 地名と緯度経度の対応付け
+        locations = mapOf(
+            "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
+            "東京" to LatLng(35.689501, 139.691722),  // 東京都庁
+            "名古屋" to LatLng(35.180202, 136.906144),  // 名古屋県庁
+            "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
+            "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
+        )
+
+        // 大阪をデフォルト位置に
+        defaultPosition = locations["大阪"]!!
+    }
+    else{
+        // 地名と緯度経度の対応付け
+        locations = mapOf(
+            "現在地" to LatLng(lat!!, lng!!),                //現在地を追加
+            "札幌" to LatLng(43.061944, 141.348889),  // 札幌市役所
+            "東京" to LatLng(35.689501, 139.691722),  // 東京都庁
+            "名古屋" to LatLng(35.180202, 136.906144),  // 名古屋県庁
+            "大阪" to LatLng(34.6937, 135.5023),      // 大阪府庁
+            "福岡" to LatLng(33.5890, 130.4020)       // 福岡市役所
+        )
+
+        // 現在地をデフォルト位置に
+        defaultPosition = locations["現在地"]!!
+    }
+
+
+
+
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(defaultPosition, 13f)
     }
@@ -660,6 +720,7 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
+            properties = MapProperties(isMyLocationEnabled = true), //現在地
             onMapClick = { latLng ->
                 // マップがクリックされたときの処理
                 markerPosition = latLng
@@ -683,7 +744,7 @@ fun LocatePosition(onAddressChanged: (String) -> Unit, onCloseMap: (Double?, Dou
         Column(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(16.dp)
+                .padding(top = 48.dp, end = 16.dp)
                 .background(Color.White.copy(alpha = 0.5f), shape = CircleShape)
         ) {
             // ✕ボタンの表示

@@ -70,6 +70,9 @@ fun LoginScreen(): Boolean {
 
     var signSuccess by remember { mutableStateOf(false) }
 
+    var emailError by remember { mutableStateOf(false) }
+    var passwordError by remember { mutableStateOf(false) }
+
     Scaffold(
 //        topBar = {
 //            TopAppBar(
@@ -117,12 +120,24 @@ fun LoginScreen(): Boolean {
                     )
                     TextField(
                         value = email,
-                        onValueChange = { email = it },
+                        onValueChange = {
+                            email = it
+                            if (it.isNotEmpty()) emailError = false
+                        },
                         label = { Text("メールアドレス") },
+                        isError = emailError,
                         modifier = Modifier.fillMaxWidth().clickable {
                             isTextFieldClicked = true
                         }
                     )
+                    if (emailError) {
+                        Text(
+                            text = "メールアドレスを入力してください。",
+                            color = Color.Red,
+                            style = TextStyle(fontSize = 12.sp),
+                            modifier = Modifier.align(Alignment.Start).padding(start = 4.dp)
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
@@ -136,22 +151,43 @@ fun LoginScreen(): Boolean {
 
                     TextField(
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = {
+                            password = it
+                            if (it.isNotEmpty()) passwordError = false
+                        },
                         label = { Text("パスワード") },
+                        isError = passwordError,
                         modifier = Modifier.fillMaxWidth(),
                         visualTransformation = PasswordVisualTransformation()
                     )
+
+                    if (passwordError) {
+                        Text(
+                            text = "パスワードを入力してください。",
+                            color = Color.Red,
+                            style = TextStyle(fontSize = 12.sp),
+                            modifier = Modifier.align(Alignment.Start).padding(start = 4.dp)
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Button(
                         onClick = {
-                            isLoading = true
-                            auth.signInWithEmailAndPassword(email, password)
-                                .addOnCompleteListener { task ->
-                                    isLoading = false
-                                    signSuccess = task.isSuccessful
-                                }
+                            if (email.isEmpty()) {
+                                emailError = true
+                            }
+                            if (password.isEmpty()) {
+                                passwordError = true
+                            }
+                            if (!emailError && !passwordError) {
+                                isLoading = true
+                                auth.signInWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener { task ->
+                                        isLoading = false
+                                        signSuccess = task.isSuccessful
+                                    }
+                            }
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -162,16 +198,22 @@ fun LoginScreen(): Boolean {
 
                     Button(
                         onClick = {
-                            isLoading = true
-                            auth.createUserWithEmailAndPassword(email, password)
-                                .addOnCompleteListener { task ->
-                                    isLoading = false
-                                    signSuccess = task.isSuccessful
-                                }
+                            if (email.isEmpty()) {
+                                emailError = true
+                            }
+                            if (password.isEmpty()) {
+                                passwordError = true
+                            }
+                            if (!emailError && !passwordError) {
+                                isLoading = true
+                                auth.createUserWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener { task ->
+                                        isLoading = false
+                                        signSuccess = task.isSuccessful
+                                    }
+                            }
                         },
                         modifier = Modifier.fillMaxWidth()
-
-
                     ) {
                         Text("新規登録", fontSize = 18.sp)
                     }

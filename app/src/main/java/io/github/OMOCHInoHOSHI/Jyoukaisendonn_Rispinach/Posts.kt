@@ -1,6 +1,7 @@
 package io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 import android.graphics.Bitmap
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Canvas
@@ -16,8 +17,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Report
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,6 +42,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -53,6 +58,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,6 +67,8 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
     val scope = rememberCoroutineScope()
     var openBottomSheet by remember { mutableStateOf(false) }
     val bottomSheetState = rememberModalBottomSheetState()
+
+    var MapL by remember { mutableStateOf(false) }
 
     var isExpanded by remember { mutableStateOf(false) }
     val surfaceColor by animateColorAsState(
@@ -87,7 +96,7 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                         .background(Color.DarkGray.copy(alpha = 0.5f)) // 半透明の灰色
                 ) {
                     Text(
-                        text = "名前: $lName",
+                        text = "AI判定：$lName",
                         style = TextStyle(
                             color = Color.White,  // テキストの色
                             fontSize = 15.sp,
@@ -249,6 +258,7 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                                     .fillMaxWidth(),
                                 fontSize = 30.sp,
                                 maxLines = if (isExpanded) Int.MAX_VALUE else 2,
+                                lineHeight=32.sp, // 行間を32spに設定
                                 style = MaterialTheme.typography.bodyLarge,
                                 overflow = TextOverflow.Ellipsis, // 非表示部分を省略記号に
                             )
@@ -303,6 +313,7 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                                 style = MaterialTheme.typography.titleMedium.copy(fontSize = 13.sp),
                                 modifier = Modifier.clickable {     // クリック時の処理
 //                                    MapMarkers(Lat, Lng)        // マーカー付き地図
+                                    MapL = true
                                 },
                                 color = Color.Blue
                             )
@@ -333,6 +344,47 @@ fun Posts(pName: Bitmap, lName: String, Title: String, location: String, discove
                                 },
                                 color = Color.Blue
                             )
+                        }
+                    }
+                }
+                if(MapL){
+
+                    // 緯度と経度を保持する状態を追加
+                    var latitude by remember { mutableStateOf<Double?>(null) }
+                    var longitude by remember { mutableStateOf<Double?>(null) }
+// 地図表示
+                    Dialog(
+                        onDismissRequest = { var showPopup = false },
+                        properties = DialogProperties(usePlatformDefaultWidth = false) // 幅を制限しない
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            MapMarkers(Lat, Lng, MapL)
+
+                            // 赤い✕ボタンを右上に配置
+                            IconButton(
+                                onClick = { MapL = false },
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(top = 16.dp, end = 24.dp) // 右の余白を増やして左にずらす
+                                    .size(28.dp) // ボタンのサイズを小さくする
+                                    .clip(CircleShape) // 円形にクリップ
+                                    .background(color = androidx.compose.ui.graphics.Color.White) // 白い背景
+
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Close Map",
+                                    tint = Color.Red
+                                )
+                            }
+
+                            BackHandler {
+                                MapL = false
+                                //Log.d("MapContent", "成功")
+                            }
                         }
                     }
                 }

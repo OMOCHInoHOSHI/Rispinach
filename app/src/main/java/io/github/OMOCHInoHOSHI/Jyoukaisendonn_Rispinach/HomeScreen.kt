@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -126,7 +125,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
     var btmEnabled by rememberSaveable { mutableStateOf(true) }
     var selectButton=currentTab
     var DismissibleDrawerEnabled=false
-    var goMap=false
+//    var goMap=false
     var drawerMenuWidth by remember { mutableStateOf(0.dp) }
     var iconWidth by remember { mutableStateOf(0.dp) }
     var dw=drawerMenuWidth
@@ -171,18 +170,22 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                     //　動作が重い原因？頻繁にインスタンスを再生成している？
 //                SideEffect { Log.d("compose-log", "ModalNavigationDrawer") }
 //                Text(text = "ナビゲーションドロワー")
+//                    if (selectButton == "main/camera")
+//                    {
+//                        selectButton = "main/home"
+//                        //selectIndex=0
+//                    }
                     MainScreenTab.entries.forEachIndexed { index, item ->
-                        if (selectButton == "main/camera") {
-                            selectButton = "main/home"
-                            //selectIndex=0
-                        }
+
                         NavigationDrawerItem(
                             icon = { Icon(item.icon, contentDescription = item.label) },
                             label = { Text(item.label) },
                             onClick = dropUnlessResumed()
                             {
                                 //デバッグ用
-                                println(item.id)
+                                println("selectButton:$selectButton")
+                                println("item.id:$item.id")
+                                println("currentTab:$currentTab")
 //                            if(index==item.idx)
 //                            {
 //                                return@NavigationBarItem
@@ -197,14 +200,16 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 
                                 nestedNavController.navigate(item.id)
                                 {
-                                    //launchSingleTop = true
-                                    popUpTo(item.id)
-                                    {
-                                        saveState = true
-                                        //inclusive=true
+                                    if(currentTab!=item.id) {
+                                        //launchSingleTop = true
+                                        popUpTo(item.id)
+                                        {
+                                            saveState = true
+                                            //inclusive=true
+                                        }
+                                        launchSingleTop = true
+                                        //restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    //restoreState = true
                                 }
 //                            nestedNavController.navigate(item.id)
 //                            {
@@ -232,6 +237,11 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                 )
                 {
                     SideEffect { Log.d("compose-log", "NavigationBar") }
+//                    if(selectButton=="main/camera")
+//                    {
+//                        selectButton="main/home"
+//                        //selectIndex=0
+//                    }
                     MainScreenTab.entries.forEachIndexed { index, item ->
 
                         //var selectIndex=item.idx
@@ -239,11 +249,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //                    var selectIndex=0
 //                    var selectBottom=currentTab
 
-                        if(selectButton=="main/camera")
-                        {
-                            selectButton="main/home"
-                            //selectIndex=0
-                        }
+
 //
 //                    if(currentTab=="main/camera")
 //                    {
@@ -274,6 +280,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //                            }
 //                            .safeClickable {
 //                                //デバッグ用
+
 //                                println(item.id)
 //                                if(currentTab==item.id)
 //                                {
@@ -297,8 +304,11 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
 //                                Home()
 //                            }
                                 //デバッグ用
+                                println("selectButton:$selectButton")
+                                println("item.id:$item.id")
+                                println("currentTab:$currentTab")
                                 //println(item.id)
-                                if(currentTab==item.id)
+                                if(selectButton==item.id)
                                 {
                                     btmEnabled=false
                                     //return@dropUnlessResumed
@@ -312,7 +322,7 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                                 {
                                     //launchSingleTop = true
 
-                                    println(currentTab)
+                                    //println(currentTab)
                                     //println(item.id)
 
                                     if(currentTab!=item.id)
@@ -352,19 +362,19 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
             //ナビゲーションバー--------------------------------------------------------------------
             //ドロワーメニュー----------------------------------------------------------------------
             topBar = {
-                if(selectButton=="main/map")
-                {
-                    goMap=true
-//                    DismissibleDrawerEnabled=false
-                    coroutineScope.launch {
-                        drawerState.close()
-                    }
-                }
-                else
-                {
-                    goMap=false
-//                    DismissibleDrawerEnabled=true
-                }
+//                if(selectButton=="main/map")
+//                {
+//                    goMap=true
+////                    DismissibleDrawerEnabled=false
+//                    coroutineScope.launch {
+//                        drawerState.close()
+//                    }
+//                }
+//                else
+//                {
+//                    goMap=false
+////                    DismissibleDrawerEnabled=true
+//                }
 
 //                if(!goMap) {
                 TopAppBar(
@@ -380,59 +390,66 @@ fun MainScreen(/*onBClick:(()->Unit)?=null,*/)
                             contentAlignment = Alignment.Center
                         )
                         {
-                            if(!goMap) {
-                                Text(
-                                    text = "Rispinach",
-                                    modifier = Modifier
-                                        .align(Alignment.Center)
-                                        //.offset(x = (dw-iconWidth))
-                                )
-                            }
-                            else
-                            {
-                                Text(
-                                    text = "Rispinach",
-                                    modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .offset(x = ((dw + iconWidth) / 6) + 1.5.dp)
-                                )
-                            }
+                            Text(
+                                text = "Rispinach",
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                //.offset(x = (dw-iconWidth))
+                            )
+
+//                            if(!goMap) {
+//                                Text(
+//                                    text = "Rispinach",
+//                                    modifier = Modifier
+//                                        .align(Alignment.Center)
+//                                        //.offset(x = (dw-iconWidth))
+//                                )
+//                            }
+//                            else
+//                            {
+//                                Text(
+//                                    text = "Rispinach",
+//                                    modifier = Modifier
+//                                        .align(Alignment.Center)
+//                                        .offset(x = ((dw + iconWidth) / 6) + 1.5.dp)
+//                                )
+//                            }
                         }
 
                     },
 
                     navigationIcon = {
-                        if(!goMap) {
-                            IconButton(
-                                //modifier = Modifier.padding(start = 30.dp, top = 20.dp, end = 20.dp),
-                                onClick = {
-                                    println("a")
-                                    //DismissibleDrawerEnabled=true
-                                    //drawerState!=drawerState
-                                    coroutineScope.launch {
-                                        drawerState.open()
+//                        if(!goMap) {
+                        IconButton(
+                            //modifier = Modifier.padding(start = 30.dp, top = 20.dp, end = 20.dp),
+                            onClick = {
+                                println("a")
+                                //DismissibleDrawerEnabled=true
+                                //drawerState!=drawerState
+                                coroutineScope.launch {
+                                    drawerState.open()
+                                }
+                                //drawerState = DrawerState(initialValue = DrawerValue.Open)
+                            },
+//                            enabled = !goMap,
+                        )
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = null,
+                                //tint = Color.White,
+                                modifier = Modifier
+                                    .height(60.dp)
+                                    .width(60.dp)
+                                    .onGloballyPositioned { coordinates ->
+                                        drawerMenuWidth =
+                                            with(localDensity) { coordinates.size.width.toDp() }
                                     }
-                                    //drawerState = DrawerState(initialValue = DrawerValue.Open)
-                                },
-                                enabled = !goMap,
+                                //.border(2.dp, Color.White, RoundedCornerShape(20.dp))
                             )
-                            {
-                                Icon(
-                                    imageVector = Icons.Filled.Menu,
-                                    contentDescription = null,
-                                    //tint = Color.White,
-                                    modifier = Modifier
-                                        .height(60.dp)
-                                        .width(60.dp)
-                                        .onGloballyPositioned { coordinates ->
-                                            drawerMenuWidth =
-                                                with(localDensity) { coordinates.size.width.toDp() }
-                                        }
-                                    //.border(2.dp, Color.White, RoundedCornerShape(20.dp))
-                                )
 
-                            }
                         }
+//                        }
                     },
 
                     actions = {
