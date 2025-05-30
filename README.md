@@ -34,6 +34,7 @@ io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 ### 成果
  - DW出場、準大賞＆企画アイデア賞受賞
+ - https://youtu.be/jSlwLWeI3P8?si=qXSRPsqpgStveIo8
 
 ### 今後の目的
  - アプリのリリース
