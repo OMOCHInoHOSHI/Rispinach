@@ -36,6 +36,9 @@ class CameraViewModel : ViewModel() {
 @Composable
 fun Camera(cameraViewModel: CameraViewModel = viewModel())
 {
+    // カメラ
+    val cameraState = remenbreCameraState()
+
 //    var isCameraOpen by remember { mutableStateOf(false) }
 
     var camera_flg by rememberSaveable { mutableIntStateOf(1) }
@@ -82,6 +85,9 @@ fun Camera(cameraViewModel: CameraViewModel = viewModel())
 //                    camera_flg = 0
 //                    showCamera = false // カメラ画面を閉じる
                     cameraViewModel.setShowCamera(false)
+
+                    // カメラストップ
+                    cameraState.stopCamera()
                     //showDialog.value = false
 //                    if(camera_flg == 0){
 //                        showCamera = false // カメラ画面を閉じる

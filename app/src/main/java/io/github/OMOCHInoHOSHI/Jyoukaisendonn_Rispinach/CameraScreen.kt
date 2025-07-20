@@ -89,6 +89,7 @@ fun CameraScreen_2(flg: Int): Int{
     }
 
     BackHandler{
+        cameraState.stopCamera()
         currentFlg = 0
     }
 
