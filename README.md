@@ -15,6 +15,10 @@ for Android & Chrome OS ([beta](url))
 io.github.OMOCHInoHOSHI.Jyoukaisendonn_Rispinach
 
 
+## 資料
+
+https://www.canva.com/design/DAGzxjY8P1U/RwC3bYouIoMvPE9OjPv_0A/edit?utm_content=DAGzxjY8P1U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+
 ## 開発環境
  - **IDE：** Android Studio Koala Feature Drop
  - AGPバージョン：8.6.0
